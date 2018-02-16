@@ -1,6 +1,11 @@
 Taskscape
 ================
 
+The pleasing view of tasks —task management web app for teams and freelancers.
+
+**Taskscape** is a combination of task and scape! Definition of -scape suffix form [dictionary.com](http://www.dictionary.com/browse/scape) is:
+>a combining form extracted from **landscape**, denoting “an extensive view, scenery,” or “a picture or representation” of such a view, as specified by the initial element: <br>*cityscape; moonscape; seascape*.
+
 [![Deploy to Heroku](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
 
 This application was generated with the [rails_apps_composer](https://github.com/RailsApps/rails_apps_composer) gem
