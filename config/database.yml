@@ -35,7 +35,7 @@ production:
   adapter: mysql2
   encoding: utf8
   reconnect: false
-  database: taskscape_production
+  database: taskscape
   pool: 5
   username: taskscape
   password: 5iveL!fe

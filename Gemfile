@@ -32,7 +32,7 @@ gem 'devise_invitable'
 gem 'haml-rails'
 gem 'high_voltage'
 gem 'jquery-rails'
-gem 'mysql2', '~> 0.3.18'
+gem 'mysql2', '~> 0.4'
 gem 'pundit'
 group :development do
   gem 'better_errors'
@@ -45,6 +45,7 @@ group :development do
   gem 'rb-fsevent', :require=>false
   gem 'rb-inotify', :require=>false
   gem 'spring-commands-rspec'
+  gem 'annotate'
 end
 group :development, :test do
   gem 'factory_bot_rails'
