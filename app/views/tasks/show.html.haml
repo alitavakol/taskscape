@@ -1,0 +1,48 @@
+%p#notice= notice
+
+%p
+  %b Title:
+  = @task.title
+%p
+  %b Description:
+  = @task.description
+%p
+  %b Visibility:
+  = @task.visibility
+%p
+  %b Status:
+  = @task.status
+%p
+  %b Urgency:
+  = @task.urgency
+%p
+  %b Importance:
+  = @task.importance
+%p
+  %b Effort:
+  = @task.effort
+%p
+  %b Due date:
+  = @task.due_date
+%p
+  %b Project:
+  = @task.project
+%p
+  %b Creator:
+  = @task.creator
+%p
+  %b X:
+  = @task.x
+%p
+  %b Y:
+  = @task.y
+%p
+  %b Color:
+  = @task.color
+%p
+  %b Archived:
+  = @task.archived
+
+= link_to 'Edit', edit_task_path(@task)
+\|
+= link_to 'Back', tasks_path

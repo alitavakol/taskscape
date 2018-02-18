@@ -24,7 +24,7 @@ group :development do
   gem 'binding_of_caller'
 end
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
-gem 'administrate'
+gem 'rails_admin'
 gem 'bootstrap', '~> 4.0.0'
 gem 'bourbon'
 gem 'devise'

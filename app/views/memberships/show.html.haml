@@ -1,0 +1,15 @@
+%p#notice= notice
+
+%p
+  %b Project:
+  = @membership.project
+%p
+  %b Member:
+  = @membership.member
+%p
+  %b Creator:
+  = @membership.creator
+
+= link_to 'Edit', edit_membership_path(@membership)
+\|
+= link_to 'Back', memberships_path

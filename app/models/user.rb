@@ -39,8 +39,32 @@ class User < ApplicationRecord
     self.role ||= :user
   end
 
+  before_save :defaults
+  def defaults
+    self.name ||= email[/[^@]+/]
+  end
+
   # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable and :omniauthable
-  # :invitable, :database_authenticatable, :registerable, :confirmable, :recoverable, :rememberable, :trackable, :validatable
-  devise :database_authenticatable, :registerable
+  devise :invitable, :database_authenticatable, :registerable, :recoverable, 
+    :rememberable, :trackable, :validatable, :confirmable
+
+  validates_presence_of :name, :email
+
+  has_many :memberships, foreign_key: "member_id", dependent: :destroy
+  has_many :projects, through: :memberships # projects that this user is a member of
+
+  has_many :assignments, foreign_key: "assignee_id", dependent: :destroy
+  has_many :tasks, through: :assignments # tasks that this user is assigned to do
+
+  has_many :created_projects, class_name: "Task", foreign_key: "creator_id", dependent: :nullify # projects/tasks created by this user
+
+  def attrs
+    attributes.slice('id', 'name', 'email').merge(confirmed: self.confirmed?)
+  end
+
+  protected
+
+  def confirmation_required?
+    Rails.env.production? && !admin?
+  end
 end

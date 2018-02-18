@@ -10,7 +10,52 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180216213248) do
+ActiveRecord::Schema.define(version: 20180218110323) do
+
+  create_table "assignments", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.bigint "task_id", null: false
+    t.bigint "assignee_id", null: false
+    t.bigint "creator_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["assignee_id", "task_id"], name: "index_assignments_on_assignee_id_and_task_id", unique: true
+    t.index ["assignee_id"], name: "index_assignments_on_assignee_id"
+    t.index ["creator_id"], name: "index_assignments_on_creator_id"
+    t.index ["task_id"], name: "index_assignments_on_task_id"
+  end
+
+  create_table "memberships", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.bigint "project_id", null: false
+    t.bigint "member_id", null: false
+    t.bigint "creator_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["creator_id"], name: "index_memberships_on_creator_id"
+    t.index ["member_id", "project_id"], name: "index_memberships_on_member_id_and_project_id", unique: true
+    t.index ["member_id"], name: "index_memberships_on_member_id"
+    t.index ["project_id"], name: "index_memberships_on_project_id"
+  end
+
+  create_table "tasks", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string "title", null: false
+    t.text "description"
+    t.integer "visibility", null: false
+    t.integer "status"
+    t.integer "urgency"
+    t.integer "importance"
+    t.integer "effort"
+    t.datetime "due_date"
+    t.bigint "project_id"
+    t.bigint "creator_id", null: false
+    t.integer "x"
+    t.integer "y"
+    t.string "color"
+    t.boolean "archived", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["creator_id"], name: "index_tasks_on_creator_id"
+    t.index ["project_id"], name: "index_tasks_on_project_id"
+  end
 
   create_table "users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "email", default: "", null: false
@@ -47,4 +92,12 @@ ActiveRecord::Schema.define(version: 20180216213248) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "assignments", "tasks"
+  add_foreign_key "assignments", "users", column: "assignee_id"
+  add_foreign_key "assignments", "users", column: "creator_id"
+  add_foreign_key "memberships", "tasks", column: "project_id"
+  add_foreign_key "memberships", "users", column: "creator_id"
+  add_foreign_key "memberships", "users", column: "member_id"
+  add_foreign_key "tasks", "tasks", column: "project_id"
+  add_foreign_key "tasks", "users", column: "creator_id"
 end
