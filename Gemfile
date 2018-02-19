@@ -9,7 +9,7 @@ gem 'puma', '~> 3.7'
 gem 'sass-rails', '~> 5.0'
 gem 'uglifier', '>= 1.3.0'
 gem 'coffee-rails', '~> 4.2'
-gem 'turbolinks', '~> 5'
+# gem 'turbolinks', '~> 5'
 gem 'jbuilder', '~> 2.5'
 group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
@@ -56,3 +56,6 @@ group :test do
   gem 'database_cleaner'
   gem 'launchy'
 end
+
+# javascript MVC library for the client side
+gem 'rails-backbone', github: 'codebrew/backbone-rails', branch: 'master'
