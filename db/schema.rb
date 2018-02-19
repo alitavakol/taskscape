@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180218110323) do
+ActiveRecord::Schema.define(version: 20180219074643) do
 
   create_table "assignments", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.bigint "task_id", null: false
@@ -45,7 +45,7 @@ ActiveRecord::Schema.define(version: 20180218110323) do
     t.integer "importance"
     t.integer "effort"
     t.datetime "due_date"
-    t.bigint "project_id"
+    t.bigint "supertask_id"
     t.bigint "creator_id", null: false
     t.integer "x"
     t.integer "y"
@@ -54,7 +54,7 @@ ActiveRecord::Schema.define(version: 20180218110323) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["creator_id"], name: "index_tasks_on_creator_id"
-    t.index ["project_id"], name: "index_tasks_on_project_id"
+    t.index ["supertask_id"], name: "index_tasks_on_supertask_id"
   end
 
   create_table "users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -98,6 +98,6 @@ ActiveRecord::Schema.define(version: 20180218110323) do
   add_foreign_key "memberships", "tasks", column: "project_id"
   add_foreign_key "memberships", "users", column: "creator_id"
   add_foreign_key "memberships", "users", column: "member_id"
-  add_foreign_key "tasks", "tasks", column: "project_id"
+  add_foreign_key "tasks", "tasks", column: "supertask_id"
   add_foreign_key "tasks", "users", column: "creator_id"
 end

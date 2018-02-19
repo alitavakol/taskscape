@@ -51,7 +51,7 @@ class User < ApplicationRecord
   validates_presence_of :name, :email
 
   has_many :memberships, foreign_key: "member_id", dependent: :destroy
-  has_many :projects, through: :memberships # projects that this user is a member of
+  has_many :projects, through: :memberships, class_name: "Project" # projects that this user is a member of
 
   has_many :assignments, foreign_key: "assignee_id", dependent: :destroy
   has_many :tasks, through: :assignments # tasks that this user is assigned to do

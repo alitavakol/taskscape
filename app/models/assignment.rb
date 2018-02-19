@@ -25,7 +25,7 @@ class Assignment < ApplicationRecord
   # assigned user should be a member of the supertask (the parent project/task of this task)
   before_create :create_membership_in_project
   def create_membership_in_project
-    task.project.memberships.where(member_id: assignee_id, creator_id: creator_id).first_or_create if task.project
+    task.supertask.memberships.where(member_id: assignee_id, creator_id: creator_id).first_or_create if task.supertask
   end
 
   # assigned user should be a member of the task
