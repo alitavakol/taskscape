@@ -22,7 +22,7 @@
 #
 
 class Task < Project
-  belongs_to :supertask, class_name: "Project"
+  belongs_to :supertask, class_name: "Task"
 
   # task assignees
   has_many :assignments, dependent: :destroy
@@ -33,7 +33,20 @@ class Task < Project
   enum importance: [:low_importance, :normal_importance, :high_importance, :very_high_importance]
   enum effort: [:small_effort, :medium_effort, :large_effort, :very_large_effort]
 
-  validates_presence_of :supertask_id
+  validates_presence_of :supertask
+
+  # avoid a supertask_id value that makes a circular reference to task itself at some point
+  validate :avoid_circular_supertask, on: :update
+  def avoid_circular_supertask
+    t = supertask
+    while t != nil
+      if t.supertask_id == id
+        errors.add(:supertask_id, "can't be used due to circular dependency")
+        break
+      end
+      t = t.supertask
+    end
+  end
 
   after_initialize :defaults
   def defaults

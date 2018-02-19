@@ -15,7 +15,7 @@ class Assignment < ApplicationRecord
   belongs_to :assignee, class_name: "User"
   belongs_to :creator, class_name: "User"
 
-  validates_presence_of :creator_id, :assignee_id, :task_id
+  validates_presence_of :creator, :assignee, :task
   validates_uniqueness_of :task_id, scope: :assignee_id
 
   def attrs

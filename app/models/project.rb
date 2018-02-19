@@ -24,8 +24,6 @@
 class Project < ApplicationRecord
   self.table_name = "tasks"
 
-  validates_presence_of :creator_id, :title
-
   enum visibility: [:public_project, :private_project]
 
   belongs_to :creator, class_name: "User"
@@ -36,6 +34,8 @@ class Project < ApplicationRecord
 
   # self joining to identify tasks of this supertask/project (like a manager/subordinates relationship)
   has_many :tasks, foreign_key: "supertask_id", dependent: :destroy
+
+  validates_presence_of :creator, :title
 
   after_create :make_creator_member
   def make_creator_member
