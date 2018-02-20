@@ -62,7 +62,8 @@ class Task < Project
 
   # returns attributes as a task
   def attrs_recursive
-    r = attributes.slice('id', 'status', 'supertask_id', 'archived', 'x', 'y', 'color', 'effort', 'title', 'description', 'visibility', 'urgency', 'importance', 'due_date').merge(
+    r = attributes.slice('id', 'status', 'archived', 'x', 'y', 'color', 'effort', 'title', 'description', 'visibility', 'urgency', 'importance', 'due_date').merge(
+      supertask: supertask_id,
       assignments: assignments.map { |r| r.attrs }
     )
     r
@@ -70,7 +71,10 @@ class Task < Project
 
   # returns minimal list of attributes (for index view)
   def attrs_recursive_brief
-    attributes.slice('id', 'status', 'urgency', 'supertask_id', 'archived', 'x', 'y', 'color', 'effort', 'title')
+    r = attributes.slice('id', 'status', 'urgency', 'archived', 'x', 'y', 'color', 'effort', 'title').merge(
+      supertask: supertask_id
+    )
+    r
   end
 
   # make it a public if parent project (supertask) is public

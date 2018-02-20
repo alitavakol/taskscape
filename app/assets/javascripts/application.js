@@ -20,6 +20,4 @@
 //= require backbone_rails_sync
 //= require backbone_datalink
 //= require backbone/taskscape
-//= require svg
-//= require tinycolor-min
 //= require_tree .

@@ -50,7 +50,7 @@ class Project < ApplicationRecord
 
   # returns attributes as a project (i.e. supertask)
   def attrs_recursive
-    attributes.slice('id', 'status', 'archived', 'title', 'supertask_id').merge(
+    attributes.slice('id', 'archived', 'title', 'supertask_id').merge(
       tasks: tasks.map { |t| t.attrs_recursive },
       memberships: memberships.map { |m| m.attrs },
       members: members.map { |m| m.attrs }
@@ -59,10 +59,9 @@ class Project < ApplicationRecord
 
   # returns minimal list of attributes (for index view)
   def attrs_recursive_brief
-    attributes.slice('id', 'status', 'visibility', 'archived', 'title', 'visibility', 'due_date', 'supertask_id').merge(
+    attributes.slice('id', 'visibility', 'archived', 'title', 'visibility', 'supertask_id').merge(
       tasks: tasks.map { |t| t.attrs_recursive_brief },
-      members_count: members.count,
-      creator: creator ? creator.attrs_min : nil
+      members_count: members.count
     )
   end
 end

@@ -8,13 +8,14 @@ class Taskscape.Routers.ProjectsRouter extends Backbone.Router
     "index"    : "index"
     ":id/edit" : "edit"
     ":id"      : "show"
-    ".*"        : "index"
+    ".*"       : "index"
 
   newProject: ->
     @view = new Taskscape.Views.Projects.NewView(collection: @projects)
     $("#projects").html(@view.render().el)
 
   index: ->
+    Backbone.Relational.store.reset()
     @projects ?= new Taskscape.Collections.ProjectsCollection()
     @projects.fetch
       success: (c) ->
