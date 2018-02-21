@@ -1,30 +1,30 @@
 class MembershipsController < ApplicationController
-  before_action :set_membership, only: [:show, :edit, :update, :destroy]
+  before_action :set_membership, only: [:show, :update, :destroy]
 
   # GET /memberships
   # GET /memberships.json
   def index
+    authorize Membership
     @memberships = Membership.all
   end
 
   # GET /memberships/1
   # GET /memberships/1.json
   def show
+    authorize @membership
   end
 
   # GET /memberships/new
   def new
+    authorize Membership
     @membership = Membership.new
-  end
-
-  # GET /memberships/1/edit
-  def edit
   end
 
   # POST /memberships
   # POST /memberships.json
   def create
     @membership = Membership.new(membership_params)
+    authorize @membership
 
     respond_to do |format|
       if @membership.save
@@ -37,23 +37,11 @@ class MembershipsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /memberships/1
-  # PATCH/PUT /memberships/1.json
-  def update
-    respond_to do |format|
-      if @membership.update(membership_params)
-        format.html { redirect_to @membership, notice: 'Membership was successfully updated.' }
-        format.json { render :show, status: :ok, location: @membership }
-      else
-        format.html { render :edit }
-        format.json { render json: @membership.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-
   # DELETE /memberships/1
   # DELETE /memberships/1.json
   def destroy
+    authorize @membership
+
     @membership.destroy
     respond_to do |format|
       format.html { redirect_to memberships_url, notice: 'Membership was successfully destroyed.' }

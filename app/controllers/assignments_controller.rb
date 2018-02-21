@@ -1,30 +1,30 @@
 class AssignmentsController < ApplicationController
-  before_action :set_assignment, only: [:show, :edit, :update, :destroy]
+  before_action :set_assignment, only: [:show, :update, :destroy]
 
   # GET /assignments
   # GET /assignments.json
   def index
+    authorize Assignment
     @assignments = Assignment.all
   end
 
   # GET /assignments/1
   # GET /assignments/1.json
   def show
+    authorize @assignment
   end
 
   # GET /assignments/new
   def new
+    authorize Assignment
     @assignment = Assignment.new
-  end
-
-  # GET /assignments/1/edit
-  def edit
   end
 
   # POST /assignments
   # POST /assignments.json
   def create
     @assignment = Assignment.new(assignment_params)
+    authorize @assignment
 
     respond_to do |format|
       if @assignment.save
@@ -37,23 +37,11 @@ class AssignmentsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /assignments/1
-  # PATCH/PUT /assignments/1.json
-  def update
-    respond_to do |format|
-      if @assignment.update(assignment_params)
-        format.html { redirect_to @assignment, notice: 'Assignment was successfully updated.' }
-        format.json { render :show, status: :ok, location: @assignment }
-      else
-        format.html { render :edit }
-        format.json { render json: @assignment.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-
   # DELETE /assignments/1
   # DELETE /assignments/1.json
   def destroy
+    authorize @assignment
+
     @assignment.destroy
     respond_to do |format|
       format.html { redirect_to assignments_url, notice: 'Assignment was successfully destroyed.' }
