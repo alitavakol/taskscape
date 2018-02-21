@@ -59,3 +59,6 @@ end
 
 # javascript MVC library for the client side
 gem 'rails-backbone', github: 'codebrew/backbone-rails', branch: 'master'
+
+# use haml code in assets
+gem 'haml_coffee_assets'
