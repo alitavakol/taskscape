@@ -1,23 +1,11 @@
 class MembershipsController < ApplicationController
-  before_action :set_membership, only: [:show, :update, :destroy]
-
-  # GET /memberships
-  # GET /memberships.json
-  def index
-    authorize Membership
-    @memberships = Membership.all
-  end
+  before_action :set_membership, only: [:show, :destroy]
 
   # GET /memberships/1
   # GET /memberships/1.json
   def show
     authorize @membership
-  end
-
-  # GET /memberships/new
-  def new
-    authorize Membership
-    @membership = Membership.new
+    respond_to :json
   end
 
   # POST /memberships
@@ -28,10 +16,8 @@ class MembershipsController < ApplicationController
 
     respond_to do |format|
       if @membership.save
-        format.html { redirect_to @membership, notice: 'Membership was successfully created.' }
         format.json { render :show, status: :created, location: @membership }
       else
-        format.html { render :new }
         format.json { render json: @membership.errors, status: :unprocessable_entity }
       end
     end

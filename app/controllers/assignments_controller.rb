@@ -1,23 +1,11 @@
 class AssignmentsController < ApplicationController
-  before_action :set_assignment, only: [:show, :update, :destroy]
-
-  # GET /assignments
-  # GET /assignments.json
-  def index
-    authorize Assignment
-    @assignments = Assignment.all
-  end
+  before_action :set_assignment, only: [:show, :destroy]
 
   # GET /assignments/1
   # GET /assignments/1.json
   def show
     authorize @assignment
-  end
-
-  # GET /assignments/new
-  def new
-    authorize Assignment
-    @assignment = Assignment.new
+    respond_to :json
   end
 
   # POST /assignments
@@ -28,10 +16,8 @@ class AssignmentsController < ApplicationController
 
     respond_to do |format|
       if @assignment.save
-        format.html { redirect_to @assignment, notice: 'Assignment was successfully created.' }
         format.json { render :show, status: :created, location: @assignment }
       else
-        format.html { render :new }
         format.json { render json: @assignment.errors, status: :unprocessable_entity }
       end
     end

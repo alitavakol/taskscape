@@ -5,6 +5,8 @@ class TasksController < ApplicationController
   # GET /tasks.json
   def index
     authorize Task
+    respond_to :html, :json
+
     @tasks = current_user.tasks
   end
 
@@ -24,6 +26,7 @@ class TasksController < ApplicationController
   def create
     @task = Task.new(task_params)
     @task.creator = current_user
+
     authorize @task
 
     respond_to do |format|

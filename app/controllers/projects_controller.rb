@@ -1,10 +1,11 @@
 class ProjectsController < ApplicationController
-  before_action :set_project, only: [:show, :edit, :update, :destroy]
+  before_action :set_project, only: [:show, :update, :destroy]
 
   # GET /projects
   # GET /projects.json
   def index
     authorize Project
+    respond_to :html, :json
 
     case current_user.role
     when 'user'
@@ -44,14 +45,13 @@ class ProjectsController < ApplicationController
   def create
     @project = Project.new(project_params)
     @project.creator = current_user
+
     authorize @project
 
     respond_to do |format|
       if @project.save
-        format.html { redirect_to @project, notice: 'Project was successfully created.' }
         format.json { render :show, status: :created, location: @project }
       else
-        format.html { render :new }
         format.json { render json: @project.errors, status: :unprocessable_entity }
       end
     end
@@ -64,10 +64,8 @@ class ProjectsController < ApplicationController
 
     respond_to do |format|
       if @project.update(project_params)
-        format.html { redirect_to @project, notice: 'Project was successfully updated.' }
         format.json { render :show, status: :ok, location: @project }
       else
-        format.html { render :edit }
         format.json { render json: @project.errors, status: :unprocessable_entity }
       end
     end
