@@ -32,23 +32,18 @@ class ProjectsController < ApplicationController
   # GET /projects/1.json
   def show
     authorize @project
-  end
 
-  # GET /projects/new
-  def new
-    @project = Project.new
-    authorize @project
-  end
-
-  # GET /projects/1/edit
-  def edit
-    authorize @project
+    respond_to do |format|
+      format.json
+      format.html { redirect_to project_path(@project, format: :json) }
+    end
   end
 
   # POST /projects
   # POST /projects.json
   def create
     @project = Project.new(project_params)
+    @project.creator = current_user
     authorize @project
 
     respond_to do |format|

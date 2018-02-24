@@ -58,7 +58,8 @@ group :test do
 end
 
 # javascript MVC library for the client side
-gem 'rails-backbone', github: 'codebrew/backbone-rails', branch: 'master'
+# I customized backbone.js, so comment the gem and add it manually into vendor/assets
+# gem 'rails-backbone', github: 'codebrew/backbone-rails', branch: 'master'
 
 # use haml code in assets
 gem 'haml_coffee_assets'

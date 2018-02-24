@@ -1,6 +1,7 @@
 #= require_self
 #= require_tree ./templates
 #= require_tree ./models
+#= require_tree ./collections
 #= require_tree ./views
 #= require_tree ./routers
 
@@ -11,8 +12,6 @@ window.Taskscape =
   Views: {}
 
   initialize: ->
-    window.router = new Taskscape.Routers.ProjectsRouter()
-    Backbone.history.start()
 
 # https://www.npmjs.com/package/coffeescript-mixins
 Function::include = (mixin) ->

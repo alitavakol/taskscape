@@ -4,8 +4,6 @@ class Taskscape.Models.Project extends Backbone.Relational.Model
 
   defaults:
     title: null
-    visibility: null
-    archived: null
 
   relations: [
     type: 'HasMany',
@@ -14,12 +12,15 @@ class Taskscape.Models.Project extends Backbone.Relational.Model
     collectionType: Taskscape.Collections.TasksCollection
     includeInJSON: false
     reverseRelation:
-      key: 'supertask'
-      includeInJSON: 'id'
+      key: 'supertask_id'
+  ,
+    type: 'HasMany',
+    key: 'memberships'
+    relatedModel: 'Taskscape.Models.Membership'
+    collectionType: Taskscape.Collections.MembershipsCollection
+    includeInJSON: false
+    reverseRelation:
+      key: 'project_id'
   ]
-
-class Taskscape.Collections.ProjectsCollection extends Backbone.Collection
-  model: Taskscape.Models.Project
-  url: '/projects'
 
 Taskscape.Models.Project.setup()

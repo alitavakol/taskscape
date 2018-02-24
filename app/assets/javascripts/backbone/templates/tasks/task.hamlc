@@ -1,0 +1,17 @@
+%td=@title
+%td=@description
+%td=@x
+%td=@y
+%td=@color
+%td=@status
+%td=@urgency
+%td=@importance
+%td=@effort
+%td=@due_date
+
+%td
+  %a{href: "#/#{@id}"} Show
+%td
+  %a{href: "#/#{@id}/edit"} Edit
+%td
+  %a.destroy{href: "#/#{@id}/destroy"} Destroy

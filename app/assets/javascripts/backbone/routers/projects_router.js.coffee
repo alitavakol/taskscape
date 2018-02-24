@@ -30,7 +30,8 @@ class Taskscape.Routers.ProjectsRouter extends Backbone.Router
         $("#projects").html(view.render().el)
 
   edit: (id) ->
-    project = @projects.get(id)
-
-    @view = new Taskscape.Views.Projects.EditView(model: project)
-    $("#projects").html(@view.render().el)
+    project = Taskscape.Models.Project.find(id) ? new Taskscape.Models.Project(id: id)
+    project.fetch
+      success: (m) ->
+        view = new Taskscape.Views.Projects.EditView(model: m)
+        $("#projects").html(view.render().el)

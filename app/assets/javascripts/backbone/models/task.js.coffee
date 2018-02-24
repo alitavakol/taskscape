@@ -14,8 +14,14 @@ class Taskscape.Models.Task extends Backbone.Relational.Model
     y: null
     color: null
 
-class Taskscape.Collections.TasksCollection extends Backbone.Collection
-  model: Taskscape.Models.Task
-  url: '/tasks'
+  relations: [
+    type: 'HasMany',
+    key: 'assignments'
+    relatedModel: 'Taskscape.Models.Assignment'
+    collectionType: Taskscape.Collections.AssignmentsCollection
+    includeInJSON: false
+    reverseRelation:
+      key: 'task_id'
+  ]
 
 Taskscape.Models.Task.setup()

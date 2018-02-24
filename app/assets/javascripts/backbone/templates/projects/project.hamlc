@@ -1,5 +1,4 @@
-%td
-  =@title
+%td=@title
 
 %td
   %a{href:"#/#{@id}"} Show

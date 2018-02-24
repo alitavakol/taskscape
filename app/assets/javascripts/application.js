@@ -14,7 +14,7 @@
 //= require popper
 //= require rails-ujs
 //= require bootstrap-sprockets
-//= require underscore
+//= require underscore-min
 //= require backbone
 //= require backbone-relational
 //= require backbone_rails_sync

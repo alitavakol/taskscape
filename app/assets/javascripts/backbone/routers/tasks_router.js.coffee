@@ -1,31 +1,43 @@
 class Taskscape.Routers.TasksRouter extends Backbone.Router
   initialize: (options) ->
     @tasks = new Taskscape.Collections.TasksCollection()
-    @tasks.reset options.tasks
+    @tasks.reset options.tasks if options?
 
   routes:
     "new"      : "newTask"
     "index"    : "index"
     ":id/edit" : "edit"
     ":id"      : "show"
-    ".*"        : "index"
+    ".*"       : "index"
 
   newTask: ->
     @view = new Taskscape.Views.Tasks.NewView(collection: @tasks)
     $("#tasks").html(@view.render().el)
 
   index: ->
+    Backbone.Relational.store.reset()
+    @tasks ?= new Taskscape.Collections.TasksCollection()
+    @tasks.fetch
+      success: (c) ->
+        view = new Taskscape.Views.Tasks.IndexView(collection: c)
+        $("#tasks").html(view.render().el)
+
     @view = new Taskscape.Views.Tasks.IndexView(collection: @tasks)
     $("#tasks").html(@view.render().el)
 
   show: (id) ->
-    task = @tasks.get(id)
-
-    @view = new Taskscape.Views.Tasks.ShowView(model: task)
-    $("#tasks").html(@view.render().el)
+    task = Taskscape.Models.Task.find(id) ? new Taskscape.Models.Task(id: id)
+    task.fetch
+      success: (m) ->
+        view = new Taskscape.Views.Tasks.ShowView(model: m)
+        $("#tasks").html(view.render().el)
+      error: (e, f) =>
+        console.log f.responseJSON
+        @navigate 'index'
 
   edit: (id) ->
-    task = @tasks.get(id)
-
-    @view = new Taskscape.Views.Tasks.EditView(model: task)
-    $("#tasks").html(@view.render().el)
+    task = Taskscape.Models.Task.find(id) ? new Taskscape.Models.Task(id: id)
+    task.fetch
+      success: (m) ->
+        view = new Taskscape.Views.Tasks.EditView(model: m)
+        $("#tasks").html(view.render().el)

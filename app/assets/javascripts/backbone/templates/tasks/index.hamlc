@@ -1,0 +1,21 @@
+%h1 Listing tasks
+
+%table#tasks-table
+  %tr
+    %th Title
+    %th Description
+    %th X
+    %th Y
+    %th Color
+    %th Status
+    %th Urgency
+    %th Importance
+    %th Effort
+    %th Due date
+    %th
+    %th
+    %th
+
+%br
+
+%a{href: "#/new"} New Task

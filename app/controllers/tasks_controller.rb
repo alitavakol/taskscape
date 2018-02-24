@@ -1,30 +1,30 @@
 class TasksController < ApplicationController
-  before_action :set_task, only: [:show, :edit, :update, :destroy]
+  before_action :set_task, only: [:show, :update, :destroy]
 
   # GET /tasks
   # GET /tasks.json
   def index
-    @tasks = Task.all
+    authorize Task
+    @tasks = current_user.tasks
   end
 
   # GET /tasks/1
   # GET /tasks/1.json
   def show
-  end
+    authorize @task
 
-  # GET /tasks/new
-  def new
-    @task = Task.new
-  end
-
-  # GET /tasks/1/edit
-  def edit
+    respond_to do |format|
+      format.json
+      format.html { redirect_to task_path(@task, format: :json) }
+    end
   end
 
   # POST /tasks
   # POST /tasks.json
   def create
     @task = Task.new(task_params)
+    @task.creator = current_user
+    authorize @task
 
     respond_to do |format|
       if @task.save
@@ -40,6 +40,8 @@ class TasksController < ApplicationController
   # PATCH/PUT /tasks/1
   # PATCH/PUT /tasks/1.json
   def update
+    authorize @task
+
     respond_to do |format|
       if @task.update(task_params)
         format.html { redirect_to @task, notice: 'Task was successfully updated.' }
@@ -54,6 +56,8 @@ class TasksController < ApplicationController
   # DELETE /tasks/1
   # DELETE /tasks/1.json
   def destroy
+    authorize @task
+
     @task.destroy
     respond_to do |format|
       format.html { redirect_to tasks_url, notice: 'Task was successfully destroyed.' }
