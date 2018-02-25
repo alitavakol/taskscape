@@ -1340,7 +1340,7 @@
     // Produces a DOM element to be assigned to your view. Exposed for
     // subclasses using an alternative DOM manipulation API.
     _createElement: function(tagName) {
-      if (tagName == 'g')
+      if (tagName == 'g' || tagName == 'svg')
         return document.createElementNS("http://www.w3.org/2000/svg", tagName);
       else
         return document.createElement(tagName);

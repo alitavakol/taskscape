@@ -29,8 +29,15 @@ class Taskscape.Routers.TasksRouter extends Backbone.Router
     task = Taskscape.Models.Task.find(id) ? new Taskscape.Models.Task(id: id)
     task.fetch
       success: (m) ->
-        view = new Taskscape.Views.Tasks.ShowView(model: m)
+        view = new Taskscape.Views.Tasks.ShowView
+          model: m
+          tagName: 'svg'
+          attributes:
+            width: "100%"
+            height: "400px"
+            viewBox: "0 -100 200 400"
         $("#tasks").html(view.render().el)
+
       error: (e, f) =>
         console.log f.responseJSON
         @navigate 'index'
