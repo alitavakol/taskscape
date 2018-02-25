@@ -35,7 +35,7 @@ class Taskscape.Routers.TasksRouter extends Backbone.Router
           attributes:
             width: "100%"
             height: "400px"
-            viewBox: "0 -100 200 400"
+            viewBox: "-200 -200 400 400"
         $("#tasks").html(view.render().el)
 
       error: (e, f) =>

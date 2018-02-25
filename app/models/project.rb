@@ -53,7 +53,7 @@ class Project < ApplicationRecord
     attributes.slice('id', 'archived', 'title', 'supertask_id').merge(
       tasks: tasks.map { |t| t.attrs_recursive },
       memberships: memberships.map { |m| m.attrs },
-      members: members.map { |m| m.attrs }
+      members: members.map { |m| m.attrs.merge(project_id: id) }
     )
   end
 

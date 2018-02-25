@@ -63,8 +63,10 @@ class Task < Project
   # returns attributes of the task
   def attrs_recursive
     attrs_recursive_brief
-      .merge(attributes.slice('description', 'visibility', 'importance', 'due_date'))
-      .merge(assignments: assignments.map { |r| r.attrs })
+      .merge(attributes.slice('description', 'visibility', 'importance', 'due_date')).merge(
+        assignments: assignments.map { |r| r.attrs },
+        assignees: assignees.map { |m| m.attrs.merge(task_id: id) }
+      )
   end
 
   # returns minimal set of attributes (for index view)

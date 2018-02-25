@@ -36,3 +36,7 @@ Function::include = (mixin) ->
 
   mixin.included?.apply(this)
   this
+
+# https://github.com/jashkenas/backbone/issues/630
+$.ajaxSetup
+  cache: false

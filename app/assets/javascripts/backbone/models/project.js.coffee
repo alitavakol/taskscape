@@ -21,6 +21,14 @@ class Taskscape.Models.Project extends Backbone.Relational.Model
     includeInJSON: false
     reverseRelation:
       key: 'project_id'
+  ,
+    type: 'HasMany',
+    key: 'members'
+    relatedModel: 'Taskscape.Models.User'
+    collectionType: Taskscape.Collections.UsersCollection
+    includeInJSON: false
+    reverseRelation:
+      key: 'project_id'
   ]
 
 Taskscape.Models.Project.setup()
