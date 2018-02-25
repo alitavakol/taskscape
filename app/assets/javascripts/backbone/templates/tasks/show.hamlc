@@ -5,15 +5,15 @@
 
 / reference radius
 - if @effort == 'small_effort'
-  - r = 56
+  - r = 72
 - else if @effort == 'medium_effort'
-  - r = 80
-- else if @effort == 'large_effort'
   - r = 104
+- else if @effort == 'large_effort'
+  - r = 136
 - else if @effort == 'very_large_effort'
-  - r = 128
+  - r = 198
 
-%g.task{transform: "scale(#{r/72})"}
+%g.task{transform: "scale(#{r/72})", "stroke-width" => "#{180/r}"}
   / shadow, shown when task is selected
   %image{"xlink:href" => "/images/shadow.png", preserveAspectRatio: "none", width: "168", height: "168", x: "-84", y: "-84"}
 
@@ -28,7 +28,7 @@
       %title #{assignee.name}
 
   / main circle
-  %circle{r: "72", fill: "#{tinycolor(@color).lighten().toHexString()}", stroke: "#{if selected then tinycolor(@color).darken().darken().darken().toHexString() else tinycolor(@color).darken().toHexString()}", "stroke-width" => "#{180/r}"}
+  %circle{r: "72", fill: "#{tinycolor(@color).lighten().toHexString()}", stroke: "#{if selected then tinycolor(@color).darken().darken().darken().toHexString() else tinycolor(@color).darken().toHexString()}"}
 
   / status, as a centered big sign
   - if @status != 'not_started'
@@ -43,12 +43,15 @@
   / title
   %text{fill: "#{tinycolor(@color).darken().toHexString()}", style: "font-size: 20px; text-anchor: middle; font-weight: bold; alignment-baseline: middle;"} #{@title}
 
+  / overlay circle for dragging
+  %circle.draggable.drop_area{r: "72", fill: "#000000", stroke: "rgba(0,0,0,0)", style: "opacity: 0.1;"}
+
   - can = "M 54.512 -17.702 A 6 6 0 0 1 57.55 -25.62 L 79.47 -35.38 A 6 6 0 0 1 87.40 -32.34 A 93 93 0 0 1 93 -6 A 6 6 0 0 1 87 0 L 63 0 A 6 6 0 0 1 57 -6 A 57 57 0 0 0 54.512 -17.702 Z"
   - smallifier = "translate(0 -20) scale(.7)"
 
   / importance, as a chess piece
   - if @importance != 'normal_importance'
-    %g
+    %g{transform: "rotate(7)"}
       - if @importance == 'low_importance'
         - path = "M170.07,190.338v25.724H45.992v-25.724H170.07z M63.23,181.176h89.604v-25.723H63.23V181.176z M76.849,80.986v64.926 h62.368V80.986c9.41-8.505,15.344-20.779,15.344-34.454c0-25.7-20.823-46.533-46.529-46.533S61.499,20.833,61.499,46.533 C61.499,60.213,67.442,72.481,76.849,80.986z" # pawn
         - color = '#ad7'
@@ -62,15 +65,16 @@
         - color = '#d22'
         - tr = "matrix(0.055,0,0,0.055,-11.55,-89.65)"
       / border
-      %path{d: can, stroke: "#ffffff", transform: "#{if @importance == 'low_importance' then smallifier else ''} rotate(-76.5)", fill: "#{color}", "stroke-width" => "#{180/r}"}
+      %path{d: can, stroke: "#ffffff", transform: "#{if @importance == 'low_importance' then smallifier else ''} rotate(-76.5)", fill: "#{color}"}
       / chess piece
       %path{d: "#{path}", fill: "#ffffff", transform: "#{if @importance == 'low_importance' then smallifier else ''} #{tr}"}
-
+      %title Task importance is #{@importance.replace(/_/g, ' ').replace(' importance', '.')}
 
   / urgency, as a clock
   - if @urgency != 'normal_urgency'
-    %g
+    %g{transform: "rotate(7)"}
       / border
-      %path{d: can, stroke: "#ffffff", transform: "rotate(#{if @urgency == 'low_urgency' then -25 else -30}) #{if @urgency == 'low_urgency' then smallifier else ''} rotate(-76.5)", "stroke-width" => "#{180/r}", fill: "#{if @urgency == 'low_urgency' then '#aa7' else if @urgency == 'high_urgency' then '#ec3' else if @urgency == 'very_high_urgency' then '#d22'}"}
+      %path{d: can, stroke: "#ffffff", transform: "rotate(#{if @urgency == 'low_urgency' then -25 else -30}) #{if @urgency == 'low_urgency' then smallifier else ''} rotate(-76.5)", fill: "#{if @urgency == 'low_urgency' then '#aa7' else if @urgency == 'high_urgency' then '#ec3' else if @urgency == 'very_high_urgency' then '#d22'}"}
       / clock
       %path{d: "M0.0,-92.3C-9.4,-92.3,-17.2,-84.67,-17.30,-75.19C-17.4,-65.72,-9.7,-57.89,-0.2,-57.79C9.2,-57.79,17.0,-65.39,17.19,-74.98C17.30,-84.5,9.5,-92.3,0.0,-92.3C0.0,-92.3,0.0,-92.3,0.0,-92.3M8.1,-69.30C8.1,-69.30,8.0,-69.20,8.0,-69.20C7.5,-68.4,6.5,-68.20,5.6,-68.7C5.6,-68.7,3.39,-70.2,1.2,-71.62C0.89,-71.52,0.49,-71.42,-2.8e-14,-71.42C-2.00,-71.42,-3.60,-73.05,-3.60,-75.06C-3.60,-76.36,-2.9,-77.56,-1.80,-78.16C-1.80,-78.16,-1.80,-86.86,-1.80,-86.86C-1.80,-87.76,-1.10,-88.46,-0.2,-88.46C-0.2,-88.46,-2.8e-14,-88.46,-2.8e-14,-88.46C0.89,-88.46,1.5,-87.7,1.5,-86.7C1.5,-86.7,1.5,-78.0,1.5,-78.0C2.5,-77.48,3.39,-76.3,3.39,-74.98C3.39,-74.98,3.39,-74.88,3.39,-74.7C3.39,-74.7,7.6,-71.8,7.6,-71.8C8.5,-71.19,8.8,-70.1,8.1,-69.30C8.1,-69.30,8.1,-69.30,8.1,-69.30", fill: "#ffffff", transform: "rotate(#{if @urgency == 'low_urgency' then -25 else -30}) #{if @urgency == 'low_urgency' then smallifier else ''} scale(0.6) translate(0,-50) rotate(2.5)"}
+      %title Task urgency is #{@urgency.replace(/_/g, ' ').replace(' urgency', '.')}

@@ -21,4 +21,5 @@
 #= require backbone_datalink
 #= require backbone/taskscape
 #= require tinycolor-min
+#= require interact
 #= require_tree .
