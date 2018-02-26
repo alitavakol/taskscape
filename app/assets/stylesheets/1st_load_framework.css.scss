@@ -32,11 +32,17 @@ img {
   @extend .btn-lg;
 }
 
+html {
+  height: 100%;
+}
+
 // apply styles to HTML elements
 // to make views framework-neutral
 main {
-  @extend .container;
-  margin-top: 30px; // accommodate the navbar
+  // @extend .container;
+  display: flex;
+  flex: 1 1 auto;
+  flex-flow: column;
 }
 
 section {

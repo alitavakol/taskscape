@@ -1,17 +1,7 @@
 %mask#Sje2ctgx4di
   %rect{x: "-14", y: "-14", width: "28", height: "28", rx: "5", ry: "5", fill: "#ffffff"}
 
-/ reference radius
-- if @effort == 'small_effort'
-  - r = 72
-- else if @effort == 'medium_effort'
-  - r = 104
-- else if @effort == 'large_effort'
-  - r = 136
-- else if @effort == 'very_large_effort'
-  - r = 198
-
-%g.tappable.task{transform: "scale(#{r/72})", "stroke-width" => "#{180/r}"}
+%g.tappable.task{transform: "scale(#{@R/72})", "stroke-width" => "#{180/@R}"}
   / shadow, shown when task is selected
   %image.shadow{"xlink:href" => "/images/shadow.png", preserveAspectRatio: "none", width: "168", height: "168", x: "-84", y: "-84"}
 

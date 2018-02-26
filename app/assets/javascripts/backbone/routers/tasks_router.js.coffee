@@ -34,7 +34,7 @@ class Taskscape.Routers.TasksRouter extends Backbone.Router
           tagName: 'svg'
           attributes:
             width: "100%"
-            height: "400px"
+            height: "100%"
             viewBox: "-200 -200 400 400"
         $("#tasks").html(view.render().el)
 

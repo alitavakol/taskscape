@@ -1,3 +1,1 @@
 %svg.tappable{width: "100%", height: "400px", viewBox: "-200 -200 400 400"}
-
-%a{href: "#/index"} Back

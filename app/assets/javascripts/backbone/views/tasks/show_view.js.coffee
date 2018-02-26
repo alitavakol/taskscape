@@ -3,16 +3,28 @@ Taskscape.Views.Tasks ||= {}
 class Taskscape.Views.Tasks.ShowView extends Backbone.View
   template: JST["backbone/templates/tasks/show"]
 
-  render: ->
-    @$el.html(@template(@model.toJSON()))
-
-    @$('.draggable,.tappable').data('view_object', @)
-    @focus false
+  initialize: ->
+    # radius of the shape
+    effort = @model.get('effort')
+    if effort == 'small_effort'
+      @R = 72
+    else if effort == 'medium_effort'
+      @R = 104
+    else if effort == 'large_effort'
+      @R = 136
+    else if effort == 'very_large_effort'
+      @R = 198
 
     @x = @model.get('x')
     @y = @model.get('y')
 
-    @
+  render: ->
+    @$el.html @template _.extend @model.toJSON(), R: @R
+
+    @$('.draggable,.tappable').data('view_object', @)
+    @focus false
+
+    return @
 
   on_drag_start: ->
     @$el.attr opacity: .85
@@ -23,10 +35,7 @@ class Taskscape.Views.Tasks.ShowView extends Backbone.View
     false
 
   on_drag: (dx, dy) ->
-    @x += dx
-    @y += dy
-    @$el.attr transform: "translate(#{@x} #{@y})"
-
+    @move dx, dy
     false
 
   on_drag_end: (e) ->
@@ -39,6 +48,11 @@ class Taskscape.Views.Tasks.ShowView extends Backbone.View
       pick: ['x', 'y'] # save group_id, for the case that the shape is fininshed dropping
 
     false # do not remove this!
+
+  move: (dx, dy) ->
+    @x += dx
+    @y += dy
+    @$el.attr transform: "translate(#{@x} #{@y})"
 
   focus: (focused) ->
     if focused

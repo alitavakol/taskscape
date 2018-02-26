@@ -1,3 +1,10 @@
 // Place all the styles related to the tasks controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+#tasks, #tasks svg {
+	display: flex;
+  flex-flow: column;
+  height: 100%;
+	flex: 1 1 auto;
+}
