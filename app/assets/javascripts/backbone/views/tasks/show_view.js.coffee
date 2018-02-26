@@ -6,16 +6,16 @@ class Taskscape.Views.Tasks.ShowView extends Backbone.View
   render: ->
     @$el.html(@template(@model.toJSON()))
 
+    @$('.draggable,.tappable').data('view_object', @)
+    @focus false
+
     @x = @model.get('x')
     @y = @model.get('y')
-
-    @$el.attr transform: "translate(#{@x} #{@y})"
-    @$('.draggable').data('view_object', @)
 
     @
 
   on_drag_start: ->
-    @$el.attr opacity: .75
+    @$el.attr opacity: .85
 
     @x0 = @x
     @y0 = @y
@@ -39,3 +39,17 @@ class Taskscape.Views.Tasks.ShowView extends Backbone.View
       pick: ['x', 'y'] # save group_id, for the case that the shape is fininshed dropping
 
     false # do not remove this!
+
+  focus: (focused) ->
+    if focused
+      if window.focused_view != @
+        window.focused_view.focus false if window.focused_view
+        @$('.shadow').attr opacity: 1
+        @$('.plate').attr
+          stroke: tinycolor(@model.get('color')).darken().darken().darken().toHexString()
+        window.focused_view = @
+
+    else
+      @$('.shadow').attr opacity: .3
+      @$('.plate').attr
+        stroke: tinycolor(@model.get('color')).darken().toHexString()

@@ -1,5 +1,3 @@
-- selected = false
-
 %mask#Sje2ctgx4di
   %rect{x: "-14", y: "-14", width: "28", height: "28", rx: "5", ry: "5", fill: "#ffffff"}
 
@@ -13,9 +11,9 @@
 - else if @effort == 'very_large_effort'
   - r = 198
 
-%g.task{transform: "scale(#{r/72})", "stroke-width" => "#{180/r}"}
+%g.tappable.task{transform: "scale(#{r/72})", "stroke-width" => "#{180/r}"}
   / shadow, shown when task is selected
-  %image{"xlink:href" => "/images/shadow.png", preserveAspectRatio: "none", width: "168", height: "168", x: "-84", y: "-84"}
+  %image.shadow{"xlink:href" => "/images/shadow.png", preserveAspectRatio: "none", width: "168", height: "168", x: "-84", y: "-84"}
 
   / tooltip text
   / %title Double click to go inside task.
@@ -28,7 +26,7 @@
       %title #{assignee.name}
 
   / main circle
-  %circle{r: "72", fill: "#{tinycolor(@color).lighten().toHexString()}", stroke: "#{if selected then tinycolor(@color).darken().darken().darken().toHexString() else tinycolor(@color).darken().toHexString()}"}
+  %circle.plate{r: "72", fill: "#{tinycolor(@color).lighten().toHexString()}"}
 
   / status, as a centered big sign
   - if @status != 'not_started'
