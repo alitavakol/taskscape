@@ -8,7 +8,7 @@
     = javascript_include_tag 'application' #, 'data-turbolinks-track' => 'reload'
     = csrf_meta_tags
   %body
-    %header
+    %header{style: "display: none !important;"}
       = render 'layouts/navigation'
     %main{:role => "main"}
       = render 'layouts/messages'

@@ -4,7 +4,7 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
   template: JST["backbone/templates/projects/show"]
 
   events:
-    "mousewheel svg" : "mousewheel"
+    "mousewheel svg" : "on_mousewheel"
 
   initialize: ->
     @objects = []
@@ -36,17 +36,7 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
         window.dragging_view.focus true
         window.dragging_view.on_drag_start()
 
-        v = @svg.getAttribute('viewBox').split(' ')
-        x = parseFloat(v[0])
-        y = parseFloat(v[1])
-        w = parseFloat(v[2])
-        h = parseFloat(v[3])
-
-        r = @svg.getBoundingClientRect()
-        w2 = r.right - r.left
-        h2 = r.bottom - r.top
-
-        window.drag_scale = if w2 > h2 then (h / h2) else (w / w2)
+        @update_viewbox()
 
       # call this function on every dragmove e
       onmove: (e) ->
@@ -66,6 +56,10 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
         window.focused_view.$el.appendTo window.focused_view.$el.parent()
 
       e.stopPropagation()
+
+    # update svg viewbox on resize
+    $(window).resize =>
+      @update_viewbox()
 
     return this
 
@@ -123,7 +117,8 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
 
     return false
 
-  mousewheel: (e) ->
+  # updates svg viewbox according to dimensions of svg element on screen
+  update_viewbox: ->
     v = @svg.getAttribute('viewBox').split(' ')
     x = parseFloat(v[0])
     y = parseFloat(v[1])
@@ -136,11 +131,38 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
 
     window.drag_scale = if m > n then (h / n) else (w / m)
 
-    s = 1
-    xx = e.offsetX * drag_scale
-    yy = e.offsetY * drag_scale
+    if m > n
+      w_ = w
+      h_ = w_ * n / m
+    else
+      h_ = h
+      w_ = h_ * m / n
+
+    @svg.setAttribute('viewBox', "#{x+(w-w_)/2} #{y+(h-h_)/2} #{w_} #{h_}")
+
+  on_mousewheel: (e) ->
+    v = @svg.getAttribute('viewBox').split(' ')
+    x = parseFloat(v[0])
+    y = parseFloat(v[1])
+    w = parseFloat(v[2])
+    h = parseFloat(v[3])
+
+    r = @svg.getBoundingClientRect()
+    m = r.right - r.left
+    n = r.bottom - r.top
+
+    window.drag_scale = if m > n then (h / n) else (w / m)
+
+    s = if e.originalEvent.wheelDelta > 0 then 1/1.1 else 1.1
+    xx = e.offsetX
+    yy = e.offsetY
 
     w *= s
     h *= s
+    x += xx * window.drag_scale * (1-s);
+    y += yy * window.drag_scale * (1-s);
 
-    # @svg.setAttribute('viewBox', "#{x+(x-xx)*s} #{y+(yy-y)*s} #{w*s} #{h*s}")
+    @svg.setAttribute('viewBox', "#{x} #{y} #{w} #{h}")
+
+  on_resize: (e) ->
+    console.log hi
