@@ -40,9 +40,8 @@ html {
 // to make views framework-neutral
 main {
   // @extend .container;
-  display: flex;
-  flex: 1 1 auto;
-  flex-flow: column;
+  flex: auto;
+  height: 100%;
 }
 
 section {

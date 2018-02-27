@@ -74,3 +74,24 @@ class Taskscape.Views.Tasks.ShowView extends Backbone.View
       @$('.shadow').attr opacity: .3
       @$('.plate').attr
         stroke: tinycolor(@model.get('color')).darken().toHexString()
+
+  post_render: ->
+    @autofit_title()
+
+  # this function tries to decrease title font size and ellipsize it
+  # until it fits into bounding box defined by .title-container
+  autofit_title: ->
+    m = @$('.title-container').height()
+
+    title = @$('.title')
+    font_size = parseInt title.css 'font-size'
+    min_font_size = 1600 / @R
+
+    while title.height() > m && --font_size > min_font_size
+      title.css 'font-size', "#{font_size}px"
+
+    while title.height() > m
+      str = title.html()
+      title.html str.substring(0, str.lastIndexOf(' ')) + '…'
+
+    true

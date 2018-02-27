@@ -4,7 +4,7 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
   template: JST["backbone/templates/projects/show"]
 
   events:
-    "mousewheel svg" : "on_mousewheel"
+    "wheel     svg" : "on_mousewheel"
 
   initialize: ->
     @objects = []
@@ -26,13 +26,13 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
       @objects.push view
 
     # enable dragging tasks
-    interact('.draggable').draggable
+    interact('.draggable,.not-select').draggable
       # allow dragging of multple elements at the same time
       max: Infinity
       inertia: true
 
       onstart: (e) =>
-        window.dragging_view = $(e.target).data('view_object')
+        window.dragging_view = (if e.currentTarget.className == 'not-select' then $(e.currentTarget).closest('.tappable').find('.draggable') else $(e.currentTarget)).data('view_object')
         window.dragging_view.focus true
         window.dragging_view.on_drag_start()
 
@@ -139,6 +139,14 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
 
     return false
 
+  init_viewbox: ->
+    # dimensions of the svg node in display pixels
+    r = @svg.getBoundingClientRect()
+    m = r.right - r.left
+    n = r.bottom - r.top
+
+    @svg.setAttribute('viewBox', "#{-m/2} #{-n/2} #{m} #{n}")
+
   # updates svg viewbox according to dimensions of svg element on screen
   update_viewbox: (reset) ->
     # svg viewbox dimensions
@@ -174,7 +182,7 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
   on_mousewheel: (e) ->
     @update_viewbox false
 
-    s = if e.originalEvent.wheelDelta > 0 then 1/1.1 else 1.1
+    s = if (e.originalEvent.deltaY || -e.originalEvent.wheelDelta) < 0 then 1/1.1 else 1.1
 
     @vbw *= s
     @vbh *= s
@@ -182,6 +190,9 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
     @vby += e.offsetY * window.drag_scale * (1-s)
 
     @svg.setAttribute('viewBox', "#{@vbx} #{@vby} #{@vbw} #{@vbh}")
+
+    # e.stopPropagation()
+    false
 
   # compute and set svg viewbox to fit content
   autofit: ->
@@ -209,3 +220,10 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
 
     @svg.setAttribute('viewBox', "#{@vbx} #{@vby} #{@vbw} #{@vbh}")
     @update_viewbox false
+
+  post_render: ->
+    @init_viewbox()
+    @objects.forEach (view) ->
+      view.post_render()
+    @remove_overlaps()
+    @autofit()

@@ -28,7 +28,7 @@ class Taskscape.Routers.ProjectsRouter extends Backbone.Router
       success: (m) ->
         view = new Taskscape.Views.Projects.ShowView(model: m)
         $("#projects").html(view.render().el)
-        view.autofit()
+        view.post_render()
 
   edit: (id) ->
     project = Taskscape.Models.Project.find(id) ? new Taskscape.Models.Project(id: id)
