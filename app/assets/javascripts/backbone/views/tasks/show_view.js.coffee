@@ -55,15 +55,22 @@ class Taskscape.Views.Tasks.ShowView extends Backbone.View
     @$el.attr transform: "translate(#{@x} #{@y})"
 
   focus: (focused) ->
-    if focused
-      if window.focused_view != @
-        window.focused_view.focus false if window.focused_view
-        @$('.shadow').attr opacity: 1
-        @$('.plate').attr
-          stroke: tinycolor(@model.get('color')).darken().darken().darken().toHexString()
-        window.focused_view = @
+    if focused && window.focused_view != @
+      # remove focus from previously focused object
+      window.focused_view.focus false if window.focused_view
 
-    else
+      # update view
+      @$('.shadow').attr opacity: 1
+      @$('.plate').attr
+        stroke: tinycolor(@model.get('color')).darken().darken().darken().toHexString()
+
+      # show this object on top of other objects
+      @$el.appendTo @$el.parent()
+
+      window.focused_view = @
+
+    else if !focused
+      # update view
       @$('.shadow').attr opacity: .3
       @$('.plate').attr
         stroke: tinycolor(@model.get('color')).darken().toHexString()

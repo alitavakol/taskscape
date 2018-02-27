@@ -33,7 +33,6 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
 
       onstart: (e) =>
         window.dragging_view = $(e.target).data('view_object')
-        window.dragging_view.$el.appendTo window.dragging_view.$el.parent()
         window.dragging_view.focus true
         window.dragging_view.on_drag_start()
 
@@ -87,8 +86,9 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
   focus: (focused) ->
     if focused
       if window.focused_view != @
-        window.focused_view.focus false if window.focused_view
+        window.focused_view.focus false if window.focused_view # remove focus from previously focused object
         window.focused_view = @
+      @autofit()
 
   # this function re-arranges objects (shapes) so to ensure they do not overlap any other
   # returns true if arrangements changed
@@ -116,6 +116,7 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
     vx = 0
     vy = 0
 
+    # calculate direction and size of the movement vector
     for b in @objects
       continue if a == b
 
@@ -140,18 +141,22 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
 
   # updates svg viewbox according to dimensions of svg element on screen
   update_viewbox: (reset) ->
+    # svg viewbox dimensions
     v = @svg.getAttribute('viewBox').split(' ')
     x = parseFloat(v[0])
     y = parseFloat(v[1])
     w = parseFloat(v[2])
     h = parseFloat(v[3])
 
+    # dimensions of the svg node in display pixels
     r = @svg.getBoundingClientRect()
     m = r.right - r.left
     n = r.bottom - r.top
 
+    # ratio of svg pixels to display pixels
     window.drag_scale = if m > n then (h / n) else (w / m)
 
+    # set viewbox width and height
     if m > n
       @vbw = w
       @vbh = w * n / m
@@ -159,11 +164,13 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
       @vbh = h
       @vbw = h * m / n
 
+    # set viewbox top-left corner
     @vbx = x + (w - @vbw) / 2
     @vby = y + (h - @vbh) / 2
 
     @svg.setAttribute('viewBox', "#{@vbx} #{@vby} #{@vbw} #{@vbh}") if reset
 
+  # handle zoom-in/zoom-out on mouse wheel
   on_mousewheel: (e) ->
     @update_viewbox false
 
@@ -176,9 +183,11 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
 
     @svg.setAttribute('viewBox', "#{@vbx} #{@vby} #{@vbw} #{@vbh}")
 
+  # compute and set svg viewbox to fit content
   autofit: ->
-    @update_viewbox true
+    @update_viewbox false
 
+    # get smallest bounding box of the svg node
     bb = @svg.getBBox()
     return if bb.width == 0 || bb.height == 0
 
