@@ -15,6 +15,7 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
     @$('.tappable').data('view_object', @)
     @svg = @$('svg')[0]
 
+    # render tasks of this project (supertask)
     @model.get('tasks').forEach (t) =>
       view = new Taskscape.Views.Tasks.ShowView
         model: t
@@ -36,7 +37,7 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
         window.dragging_view.focus true
         window.dragging_view.on_drag_start()
 
-        @update_viewbox()
+        @update_viewbox true
 
       # call this function on every dragmove e
       onmove: (e) ->
@@ -47,6 +48,25 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
         # call object to save its new position only if remove_overlaps did not call it
         window.dragging_view.on_drag_end() unless @remove_overlaps()
 
+    # enable panning the canvas svg
+    interact('.pannable').draggable
+      # allow dragging of multple elements at the same time
+      max: Infinity
+      inertia: true
+
+      onstart: (e) =>
+        @update_viewbox true
+
+      # call this function on every dragmove e
+      onmove: (e) =>
+        @vbx -= e.dx * window.drag_scale
+        @vby -= e.dy * window.drag_scale
+        @svg.setAttribute('viewBox', "#{@vbx} #{@vby} #{@vbw} #{@vbh}")
+
+      # call this function on every dragend e
+      onend: (e) ->
+
+    # focus tapped object
     interact('.tappable').on 'tap', (e) =>
       if e.target.classList.contains('shadow')
         @focus true # treat shadow image as if it is not part of clicked object
@@ -59,10 +79,11 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
 
     # update svg viewbox on resize
     $(window).resize =>
-      @update_viewbox()
+      @update_viewbox true
 
     return this
 
+  # reflect focus state in view
   focus: (focused) ->
     if focused
       if window.focused_view != @
@@ -118,7 +139,7 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
     return false
 
   # updates svg viewbox according to dimensions of svg element on screen
-  update_viewbox: ->
+  update_viewbox: (reset) ->
     v = @svg.getAttribute('viewBox').split(' ')
     x = parseFloat(v[0])
     y = parseFloat(v[1])
@@ -132,37 +153,50 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
     window.drag_scale = if m > n then (h / n) else (w / m)
 
     if m > n
-      w_ = w
-      h_ = w_ * n / m
+      @vbw = w
+      @vbh = w * n / m
     else
-      h_ = h
-      w_ = h_ * m / n
+      @vbh = h
+      @vbw = h * m / n
 
-    @svg.setAttribute('viewBox', "#{x+(w-w_)/2} #{y+(h-h_)/2} #{w_} #{h_}")
+    @vbx = x + (w - @vbw) / 2
+    @vby = y + (h - @vbh) / 2
+
+    @svg.setAttribute('viewBox', "#{@vbx} #{@vby} #{@vbw} #{@vbh}") if reset
 
   on_mousewheel: (e) ->
-    v = @svg.getAttribute('viewBox').split(' ')
-    x = parseFloat(v[0])
-    y = parseFloat(v[1])
-    w = parseFloat(v[2])
-    h = parseFloat(v[3])
-
-    r = @svg.getBoundingClientRect()
-    m = r.right - r.left
-    n = r.bottom - r.top
-
-    window.drag_scale = if m > n then (h / n) else (w / m)
+    @update_viewbox false
 
     s = if e.originalEvent.wheelDelta > 0 then 1/1.1 else 1.1
-    xx = e.offsetX
-    yy = e.offsetY
 
-    w *= s
-    h *= s
-    x += xx * window.drag_scale * (1-s);
-    y += yy * window.drag_scale * (1-s);
+    @vbw *= s
+    @vbh *= s
+    @vbx += e.offsetX * window.drag_scale * (1-s)
+    @vby += e.offsetY * window.drag_scale * (1-s)
 
-    @svg.setAttribute('viewBox', "#{x} #{y} #{w} #{h}")
+    @svg.setAttribute('viewBox', "#{@vbx} #{@vby} #{@vbw} #{@vbh}")
 
-  on_resize: (e) ->
-    console.log hi
+  autofit: ->
+    @update_viewbox true
+
+    bb = @svg.getBBox()
+    return if bb.width == 0 || bb.height == 0
+
+    @vbx = bb.x
+    @vby = bb.y
+
+    u = @vbh / @vbw
+    v = bb.height / bb.width
+
+    if u > v
+      @vbw = bb.width
+      @vbh = @vbw * u
+      @vby += (bb.height - @vbh) / 2
+
+    else
+      @vbh = bb.height
+      @vbw = @vbh / u
+      @vbx += (bb.width - @vbw) / 2
+
+    @svg.setAttribute('viewBox', "#{@vbx} #{@vby} #{@vbw} #{@vbh}")
+    @update_viewbox false
