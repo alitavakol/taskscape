@@ -21,9 +21,11 @@ class Taskscape.Views.Tasks.ShowView extends Backbone.View
   render: ->
     @$el.html @template _.extend @model.toJSON(), R: @R
 
-    @$('.draggable,.tappable').data('view_object', @)
-    @focus false
+    # register some nodes so we can find this view from them
+    @$('.draggable,.tappable,.task-container').data('view_object', @)
+    @$el.data('view_object', @)
 
+    @focus false
     return @
 
   on_drag_start: ->
@@ -81,19 +83,19 @@ class Taskscape.Views.Tasks.ShowView extends Backbone.View
   # this function tries to decrease title font size and ellipsize it
   # until it fits into bounding box defined by .title-container
   autofit_title: ->
-    m = @$('.title-container').attr('height')
+    m = parseInt @$('.title-container').parent().attr('height')
 
     title = @$('.title')
-    font_size = parseInt title.css 'font-size'
+    font_size = parseInt title.css('font-size')
     min_font_size = 1600 / @R
 
     while title.height() > m && --font_size > min_font_size
       title.css 'font-size', "#{font_size}px"
 
     while title.height() > m
-      str = title.html()
-      str = str.substring(0, str.lastIndexOf(' '))
-      break unless str.length > 0
-      title.html(str + '…')
+      str = title.html() unless str
+      str = str.substring(0, str.lastIndexOf(' ')) + '…'
+      break unless str.length > 1
+      title.html(str)
 
     true

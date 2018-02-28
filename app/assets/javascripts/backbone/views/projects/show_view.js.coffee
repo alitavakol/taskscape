@@ -184,12 +184,8 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
 
     s = if (e.originalEvent.deltaY ? -e.originalEvent.wheelDelta) < 0 then 1/1.1 else 1.1
 
-    offsetX = (e.originalEvent.layerX ? e.offsetX)
-    offsetY = (e.originalEvent.layerY ? e.offsetY)
-    if e.target.nodeName == 'span' || e.target.nodeName == 'SPAN'
-      m = $(e.target).closest('.tappable').find('.draggable').data('view_object').model
-      offsetX += m.get('x') / window.drag_scale
-      offsetY += m.get('y') / window.drag_scale
+    offsetX = e.originalEvent.layerX ? e.offsetX
+    offsetY = e.originalEvent.layerY ? e.offsetY
 
     @vbw *= s
     @vbh *= s

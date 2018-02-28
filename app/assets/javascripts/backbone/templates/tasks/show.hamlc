@@ -1,4 +1,4 @@
-%g.tappable.task{transform: "scale(#{@R/72})", "stroke-width" => "#{180/@R}"}
+%g.tappable.task-container{transform: "scale(#{@R/72})", "stroke-width" => "#{180/@R}"}
   / shadow, shown when task is selected
   %image.shadow{"xlink:href" => "/images/shadow.png", preserveAspectRatio: "none", width: "168", height: "168", x: "-84", y: "-84"}
 
@@ -26,8 +26,9 @@
     %path{d: "#{path}", fill: "#{tinycolor(@color).lighten().lighten().lighten().toHexString()}"}
 
   / title
-  %text.title{fill: "#{tinycolor(@color).darken().desaturate().toHexString()}", style: "text-shadow: #{tinycolor(@color).darken().darken().darken().toRgbString()} 0px 1px 1px;"} 
-    %tspan #{@title}
+  %foreignObject{x: "-60", y: "-37", width: "120", height: "70"}
+    %div.title-container
+      %span.title{style: "text-shadow: #{tinycolor(@color).darken().darken().darken().toRgbString()} 0px .5px .5px; color: #{tinycolor(@color).darken().darken().toHexString()}"} #{@title}
 
   / overlay circle for dragging
   %circle.draggable.drop_area{r: "72", fill: "#000000", stroke: "rgba(0,0,0,0)", style: "opacity: 0.1;"}
