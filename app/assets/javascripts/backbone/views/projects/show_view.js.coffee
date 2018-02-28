@@ -4,7 +4,7 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
   template: JST["backbone/templates/projects/show"]
 
   events:
-    "wheel     svg" : "on_mousewheel"
+    "wheel svg" : "on_mousewheel"
 
   initialize: ->
     @objects = []
@@ -26,13 +26,13 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
       @objects.push view
 
     # enable dragging tasks
-    interact('.draggable,.not-select').draggable
+    interact('.draggable').draggable
       # allow dragging of multple elements at the same time
       max: Infinity
       inertia: true
 
       onstart: (e) =>
-        window.dragging_view = (if e.currentTarget.className == 'not-select' then $(e.currentTarget).closest('.tappable').find('.draggable') else $(e.currentTarget)).data('view_object')
+        window.dragging_view = $(e.currentTarget).data('view_object')
         window.dragging_view.focus true
         window.dragging_view.on_drag_start()
 
@@ -182,16 +182,23 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
   on_mousewheel: (e) ->
     @update_viewbox false
 
-    s = if (e.originalEvent.deltaY || -e.originalEvent.wheelDelta) < 0 then 1/1.1 else 1.1
+    s = if (e.originalEvent.deltaY ? -e.originalEvent.wheelDelta) < 0 then 1/1.1 else 1.1
+
+    offsetX = (e.originalEvent.layerX ? e.offsetX)
+    offsetY = (e.originalEvent.layerY ? e.offsetY)
+    if e.target.nodeName == 'span' || e.target.nodeName == 'SPAN'
+      m = $(e.target).closest('.tappable').find('.draggable').data('view_object').model
+      offsetX += m.get('x') / window.drag_scale
+      offsetY += m.get('y') / window.drag_scale
 
     @vbw *= s
     @vbh *= s
-    @vbx += e.offsetX * window.drag_scale * (1-s)
-    @vby += e.offsetY * window.drag_scale * (1-s)
+    @vbx += offsetX * window.drag_scale * (1-s)
+    @vby += offsetY * window.drag_scale * (1-s)
 
     @svg.setAttribute('viewBox', "#{@vbx} #{@vby} #{@vbw} #{@vbh}")
 
-    # e.stopPropagation()
+    e.stopPropagation()
     false
 
   # compute and set svg viewbox to fit content

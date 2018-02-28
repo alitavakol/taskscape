@@ -81,7 +81,7 @@ class Taskscape.Views.Tasks.ShowView extends Backbone.View
   # this function tries to decrease title font size and ellipsize it
   # until it fits into bounding box defined by .title-container
   autofit_title: ->
-    m = @$('.title-container').height()
+    m = @$('.title-container').attr('height')
 
     title = @$('.title')
     font_size = parseInt title.css 'font-size'
@@ -92,6 +92,8 @@ class Taskscape.Views.Tasks.ShowView extends Backbone.View
 
     while title.height() > m
       str = title.html()
-      title.html str.substring(0, str.lastIndexOf(' ')) + '…'
+      str = str.substring(0, str.lastIndexOf(' '))
+      break unless str.length > 0
+      title.html(str + '…')
 
     true

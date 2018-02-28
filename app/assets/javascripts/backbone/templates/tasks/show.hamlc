@@ -26,11 +26,8 @@
     %path{d: "#{path}", fill: "#{tinycolor(@color).lighten().lighten().lighten().toHexString()}"}
 
   / title
-  / %text{fill: "#{tinycolor(@color).darken().desaturate().toHexString()}", style: "font-size: 20px; text-anchor: middle; alignment-baseline: middle; text-shadow: #{tinycolor(@color).darken().darken().darken().toRgbString()} 0px 1px 1px;"} #{@title}
-
-  %foreignObject.title-container{x: "-60", y: "-37", width: "120", height: "70"}
-    %div{style: "display: table; width: 120px; height: 70px; text-align: center;"}
-      %span.not-select.title{style: "display: table-cell; vertical-align: middle; font-size: 20px; text-shadow: #{tinycolor(@color).darken().darken().darken().toRgbString()} 0px 1px 1px; text-overflow:ellipsis; max-width: 120px; max-height: 70px; overflow: hidden; color: #{tinycolor(@color).darken().darken().toHexString()}"} #{@title}
+  %text.title{fill: "#{tinycolor(@color).darken().desaturate().toHexString()}", style: "text-shadow: #{tinycolor(@color).darken().darken().darken().toRgbString()} 0px 1px 1px;"} 
+    %tspan #{@title}
 
   / overlay circle for dragging
   %circle.draggable.drop_area{r: "72", fill: "#000000", stroke: "rgba(0,0,0,0)", style: "opacity: 0.1;"}
