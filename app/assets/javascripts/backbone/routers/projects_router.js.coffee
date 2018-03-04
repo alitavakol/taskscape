@@ -27,7 +27,11 @@ class Taskscape.Routers.ProjectsRouter extends Backbone.Router
     project.fetch
       success: (m) ->
         view = new Taskscape.Views.Projects.ShowView(model: m)
-        $("#projects").html(view.render().el)
+        $("#project").html(view.render().el)
+
+        members_view = new Taskscape.Views.ProjectMembers.IndexView(collection: m.get('members'))
+        $("#project-members").html(members_view.render().el)
+
         view.post_render()
 
   edit: (id) ->
