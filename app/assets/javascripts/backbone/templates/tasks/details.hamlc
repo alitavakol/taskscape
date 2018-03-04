@@ -1,0 +1,47 @@
+.col
+  .row
+    %h4.title{style: "background-color: #{tinycolor(@color).darken().darken().toHexString()}; border-bottom: solid 1px #{tinycolor(@color).darken().darken().darken().toHexString()}"}
+      .label-container
+        %span.label #{@title}
+        %span.clickable.fa.fa-pencil
+      %input{type: 'text', style: 'display: none;'}
+
+  .row.detail
+    .col.col-md-4
+      %b Status
+    .col.col-md-6
+      .table.status{"data-attribute": "status"}
+        %i{class: "clickable fa fa-pause-circle-o #{if @status == 'on_hold' then 'selected' else ''}", "data-value": "on_hold"}
+        %i{class: "clickable fa fa-stop-circle-o #{if @status == 'not_started' then 'selected' else ''}", "data-value": "not_started"}
+        %i{class: "clickable fa fa-play-circle-o #{if @status == 'in_progress' then 'selected' else ''}", "data-value": "in_progress"}
+        %i{class: "clickable fa fa-check-circle-o #{if @status == 'completed' then 'selected' else ''}", "data-value": "completed"}
+
+  .row.detail
+    .col.col-md-4
+      %b Importance
+    .col.col-md-6
+      .table.importance{"data-attribute": "importance"}
+        %i{class: "clickable #{if @importance == 'low_importance' then 'selected' else ''}", "data-value": "low_importance"} ♟
+        %i{class: "clickable #{if @importance == 'normal_importance' then 'selected' else ''}", "data-value": "normal_importance"} ♞
+        %i{class: "clickable #{if @importance == 'high_importance' then 'selected' else ''}", "data-value": "high_importance"} ♜
+        %i{class: "clickable #{if @importance == 'very_high_importance' then 'selected' else ''}", "data-value": "very_high_importance"} ♛
+
+  .row.detail
+    .col.col-md-4
+      %b Effort
+    .col.col-md-6
+      .table.effort{"data-attribute": "effort"}
+        %i{class: "clickable fa fa-circle-thin #{if @effort == 'small_effort' then 'selected' else ''}", "data-value": "small_effort"}
+        %i{class: "clickable fa fa-circle-thin #{if @effort == 'medium_effort' then 'selected' else ''}", "data-value": "medium_effort"}
+        %i{class: "clickable fa fa-circle-thin #{if @effort == 'large_effort' then 'selected' else ''}", "data-value": "large_effort"}
+        %i{class: "clickable fa fa-circle-thin #{if @effort == 'very_large_effort' then 'selected' else ''}", "data-value": "very_large_effort"}
+
+  .row.detail
+    .col.col-md-4
+      %b Urgency
+    .col.col-md-6
+      .table.urgency{"data-attribute": "urgency"}
+        %i{class: "clickable fa fa-arrow-circle-o-down #{if @urgency == 'low_urgency' then 'selected' else ''}", "data-value": "low_urgency"}
+        %i{class: "clickable fa fa-circle-thin #{if @urgency == 'normal_urgency' then 'selected' else ''}", "data-value": "normal_urgency"}
+        %i{class: "clickable fa fa-arrow-circle-o-up #{if @urgency == 'high_urgency' then 'selected' else ''}", "data-value": "high_urgency"}
+        %i{class: "clickable fa fa-arrow-circle-up #{if @urgency == 'very_high_urgency' then 'selected' else ''}", "data-value": "very_high_urgency"}

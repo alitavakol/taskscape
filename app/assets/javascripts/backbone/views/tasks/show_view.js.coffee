@@ -15,9 +15,9 @@ class Taskscape.Views.Tasks.ShowView extends Backbone.View
     @x = @model.get('x')
     @y = @model.get('y')
 
-    # @details = new Taskscape.Views.Tasks.DetailsView
-    #   model: @model
-    #   className: 'task-details'
+    @details = new Taskscape.Views.Tasks.DetailsView
+      model: @model
+      className: 'task-details'
 
     # bind view to model, so if model changes, it will be reflected into view
     @listenTo @model, 'change:title', (model, response, options) -> @render_title()
@@ -147,7 +147,7 @@ class Taskscape.Views.Tasks.ShowView extends Backbone.View
       @$el.appendTo @$el.parent()
 
       # show task details side bar
-      # @details.$el.show()
+      @details.$el.show()
 
       window.focused_view = @
 
@@ -158,7 +158,7 @@ class Taskscape.Views.Tasks.ShowView extends Backbone.View
         stroke: tinycolor(@model.get('color')).darken().toHexString()
 
       # hide task details side bar
-      # @details.$el.hide()
+      @details.$el.hide()
 
     @
 

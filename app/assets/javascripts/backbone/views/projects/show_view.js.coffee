@@ -15,6 +15,10 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
     @$('.tappable').data('view_object', @)
     @svg = @$('svg')[0]
 
+    # render members side bar
+    members_view = new Taskscape.Views.ProjectMembers.IndexView(collection: @model.get('members'))
+    @$("#project-members").html(members_view.render().el)
+
     # render tasks of this project (supertask)
     @model.get('tasks').forEach (t) =>
       view = new Taskscape.Views.Tasks.ShowView
@@ -23,7 +27,7 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
           transform: "translate(#{t.get('x')} #{t.get('y')})"
 
       @$('svg').append(view.render().el)
-      # @$el.append(view.details.render().el)
+      @$el.append(view.details.render().el)
 
       @objects.push view
       @listenTo t, 'change:effort', (model, response, options) -> @remove_overlaps() # ensure no overlap if task size changes (as a consequence of changing effort)
