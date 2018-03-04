@@ -1,10 +1,93 @@
 Taskscape.Views.Tasks ||= {}
 
 class Taskscape.Views.Tasks.ShowView extends Backbone.View
-  template: JST["backbone/templates/tasks/show"]
+  template: JST["backbone/templates/tasks/show"] # skeleton template
+
   details_template: JST["backbone/templates/tasks/details"]
+  avatars_template: JST["backbone/templates/tasks/avatars"]
+  status_template: JST["backbone/templates/tasks/status"]
+  title_template: JST["backbone/templates/tasks/title"]
+  importance_and_urgency_template: JST["backbone/templates/tasks/importance_and_urgency"]
+
+  tagName: 'g'
 
   initialize: ->
+    @x = @model.get('x')
+    @y = @model.get('y')
+
+    # @details = new Taskscape.Views.Tasks.DetailsView
+    #   model: @model
+    #   className: 'task-details'
+
+    # bind view to model, so if model changes, it will be reflected into view
+    @listenTo @model, 'change:title', (model, response, options) -> @render_title()
+    @listenTo @model, 'change:effort', (model, response, options) -> @render_effort()
+    @listenTo @model, 'change:status', (model, response, options) -> @render_status()
+    @listenTo @model, 'change:importance change:urgency', (model, response, options) -> @render_importance_and_urgency()
+    @listenTo @model, 'change:assignees', (model, response, options) -> @render_avatars()
+
+    @
+
+  # this function renders task's skeleton and calls render_* to render attributes
+  render: ->
+    # render skeleton
+    @$el.html @template @model.toJSON()
+
+    @render_effort() # render effort of the task (change shape size)
+    @render_status() # render status of the task
+    @render_importance_and_urgency() # render importance and urgency of the task
+    @render_avatars() # attach avatar of assignees to task's shape
+
+    # register some nodes so we can find this view from them
+    @$('.draggable,.tappable,.task-container').data('view_object', @)
+    @$el.data('view_object', @)
+
+    @focus false
+    @
+
+  # this function renders avatar of assignees attached to task's shape
+  render_avatars: ->
+    @$('.avatar-container').html @avatars_template(@model.toJSON())
+    @
+
+  # this function renders importance and urgency indicators
+  render_importance_and_urgency: ->
+    @$('.importance_and_urgency').html @importance_and_urgency_template(@model.toJSON())
+    @
+
+  # this function renders status indicator
+  render_status: ->
+    @$('.status').html @status_template(@model.toJSON())
+    @
+
+  # this function scales task's skeleton shape to reflect effort attribute
+  render_effort: ->
+    @update_shape_size()
+
+    @$('.task-container').attr
+      transform: "scale(#{@R / 72})"
+      "stroke-width": 180 / @R
+
+    # re-draw title when task's shape size changes
+    @render_title()
+
+  # this function renders title of the task
+  render_title: ->
+    @$('.title-container').html @title_template(@model.toJSON())
+    @autofit_title()
+    @
+
+  # performs necessary steps that require elements to be rendered by browser,
+  # and size of elements are calculated
+  post_render: ->
+    if @tagName == 'svg'
+      SVG.init_viewbox @el # initialize svg viewbox
+      SVG.autofit @el # autofit content
+
+    @autofit_title()
+
+  # computes reference size of the shape according to its effort
+  update_shape_size: ->
     # radius of the shape
     effort = @model.get('effort')
     if effort == 'small_effort'
@@ -15,29 +98,9 @@ class Taskscape.Views.Tasks.ShowView extends Backbone.View
       @R = 136
     else if effort == 'very_large_effort'
       @R = 198
-
-    @x = @model.get('x')
-    @y = @model.get('y')
-
-    @details = new Taskscape.Views.Tasks.DetailsView
-      model: @model
-      className: 'task-details'
-
-    @listenTo @model, 'change:title', (model, response, options) ->
-      @$('.title').html model.get('title')
-
     @
 
-  render: ->
-    @$el.html @template _.extend @model.toJSON(), R: @R
-
-    # register some nodes so we can find this view from them
-    @$('.draggable,.tappable,.task-container').data('view_object', @)
-    @$el.data('view_object', @)
-
-    @focus false
-    return @
-
+  # called when dragging of task's shape is just started
   on_drag_start: ->
     @$el.attr opacity: .85
 
@@ -46,10 +109,12 @@ class Taskscape.Views.Tasks.ShowView extends Backbone.View
 
     false
 
+  # called while task's shape is dragging
   on_drag: (dx, dy) ->
     @move dx, dy
     false
 
+  # called when dragging of task's shape is finished
   on_drag_end: (e) ->
     @$el.attr opacity: 1
 
@@ -57,15 +122,17 @@ class Taskscape.Views.Tasks.ShowView extends Backbone.View
       x: @x
       y: @y
     ,
-      pick: ['x', 'y'] # save group_id, for the case that the shape is fininshed dropping
+      pick: ['x', 'y', 'effort'] # save effort too, because changing it may result in change of position if the task with new size, was overlapping other objects
 
     false # do not remove this!
 
+  # moves task's shape on screen
   move: (dx, dy) ->
     @x += dx
     @y += dy
     @$el.attr transform: "translate(#{@x} #{@y})"
 
+  # this function reflects set/kill focus into view
   focus: (focused) ->
     if focused && window.focused_view != @
       # remove focus from previously focused object
@@ -79,7 +146,8 @@ class Taskscape.Views.Tasks.ShowView extends Backbone.View
       # show this object on top of other objects
       @$el.appendTo @$el.parent()
 
-      @details.$el.show()
+      # show task details side bar
+      # @details.$el.show()
 
       window.focused_view = @
 
@@ -89,10 +157,10 @@ class Taskscape.Views.Tasks.ShowView extends Backbone.View
       @$('.plate').attr
         stroke: tinycolor(@model.get('color')).darken().toHexString()
 
-      @details.$el.hide()
+      # hide task details side bar
+      # @details.$el.hide()
 
-  post_render: ->
-    @autofit_title()
+    @
 
   # this function tries to decrease title font size and ellipsize it
   # until it fits into bounding box defined by .title-container
@@ -101,11 +169,13 @@ class Taskscape.Views.Tasks.ShowView extends Backbone.View
 
     title = @$('.title')
     font_size = parseInt title.css('font-size')
-    min_font_size = 1600 / @R
+    min_font_size = 1520 / @R
 
+    # decrease font-size until it fits
     while title.height() > m && --font_size > min_font_size
       title.css 'font-size', "#{font_size}px"
 
+    # trim and ellipsize text until it fits
     while title.height() > m
       str = title.html() unless str
       str = str.substring(0, str.lastIndexOf(' ')) + '…'

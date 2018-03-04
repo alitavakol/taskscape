@@ -1,0 +1,1 @@
+%span.title{style: "text-shadow: #{tinycolor(@color).darken().darken().darken().toRgbString()} 0px .5px .5px; color: #{tinycolor(@color).darken().darken().toHexString()}"} #{@title}

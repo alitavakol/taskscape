@@ -1,0 +1,43 @@
+/ container box
+- can = "M 54.512 -17.702 A 6 6 0 0 1 57.55 -25.62 L 79.47 -35.38 A 6 6 0 0 1 87.40 -32.34 A 93 93 0 0 1 93 -6 A 6 6 0 0 1 87 0 L 63 0 A 6 6 0 0 1 57 -6 A 57 57 0 0 0 54.512 -17.702 Z"
+
+/ a transformation matrix that makes object smaller
+- smallifier = "translate(0 -20) scale(.7)"
+
+/ importance, as a chess piece
+- if @importance != 'normal_importance'
+  - if @importance == 'low_importance'
+    - path = "M170.07,190.338v25.724H45.992v-25.724H170.07z M63.23,181.176h89.604v-25.723H63.23V181.176z M76.849,80.986v64.926 h62.368V80.986c9.41-8.505,15.344-20.779,15.344-34.454c0-25.7-20.823-46.533-46.529-46.533S61.499,20.833,61.499,46.533 C61.499,60.213,67.442,72.481,76.849,80.986z" # pawn
+    - color = '#ad7'
+    - tr = "translate(0 -18) scale(.75) matrix(0.123,0,0,0.123,-11.316,-88.56)"
+
+  - else if @importance == 'high_importance'
+    - path = "M29.84,35.68h-24v-5.908h24V35.68z M26.54,11.889H9.141v16.098H26.54V11.889z M24.626,0v4.208h-4.36V0h-4.852v4.208h-4.36 V0H6.59v10.244h22.5V0H24.626z" # rook
+    - color = '#ec3'
+    - tr = "matrix(0.65,0,0,0.65,-9.75,-86.45)"
+
+  - else if @importance == 'very_high_importance'
+    - path = "M495.97,151.65c0,25.024-20.277,45.304-45.303,45.304c-2.774,0-5.488-0.288-8.115-0.764L405.36,328.962v47.727H90.61 v-49.581L53.745,196.14c-2.738,0.515-5.559,0.813-8.442,0.813C20.281,196.954,0,176.674,0,151.65 c0-25.025,20.281-45.308,45.303-45.308c25.017,0,45.302,20.282,45.302,45.308c0,6.16-1.244,12.025-3.469,17.382 c45.265,15.272,115.155,27.718,146.6-24.93c-18.038-5.973-31.059-22.944-31.059-42.982c0-25.024,20.285-45.309,45.302-45.309 s45.304,20.285,45.304,45.309c0,20.019-12.997,36.982-31.021,42.971c18.358,33.91,59.267,69.336,148.455,28.941 c-3.403-6.372-5.36-13.644-5.36-21.376c0-25.026,20.283-45.309,45.301-45.309S495.97,126.625,495.97,151.65z M90.615,440.159 H405.37v-42.906H90.615V440.159z" # queen
+    - color = '#d22'
+    - tr = "matrix(0.055,0,0,0.055,-11.55,-89.65)"
+
+  / border
+  %path.border{d: can, stroke: "#ffffff", transform: "#{if @importance == 'low_importance' then smallifier else ''} rotate(-76.5)", fill: "#{color}"}
+
+  / chess piece
+  %path{d: "#{path}", fill: "#ffffff", transform: "#{if @importance == 'low_importance' then smallifier else ''} #{tr}"}
+
+  / tooltip text
+  %title Task importance is #{@importance.replace(/_/g, ' ').replace(' importance', '.')}
+
+
+/ urgency, as a clock
+- if @urgency != 'normal_urgency'
+  / border
+  %path.border{d: can, stroke: "#ffffff", transform: "rotate(#{if @urgency == 'low_urgency' then -25 else -30}) #{if @urgency == 'low_urgency' then smallifier else ''} rotate(-76.5)", fill: "#{if @urgency == 'low_urgency' then '#aa7' else if @urgency == 'high_urgency' then '#ec3' else if @urgency == 'very_high_urgency' then '#d22'}"}
+
+  / clock
+  %path{d: "M0.0,-92.3C-9.4,-92.3,-17.2,-84.67,-17.30,-75.19C-17.4,-65.72,-9.7,-57.89,-0.2,-57.79C9.2,-57.79,17.0,-65.39,17.19,-74.98C17.30,-84.5,9.5,-92.3,0.0,-92.3C0.0,-92.3,0.0,-92.3,0.0,-92.3M8.1,-69.30C8.1,-69.30,8.0,-69.20,8.0,-69.20C7.5,-68.4,6.5,-68.20,5.6,-68.7C5.6,-68.7,3.39,-70.2,1.2,-71.62C0.89,-71.52,0.49,-71.42,-2.8e-14,-71.42C-2.00,-71.42,-3.60,-73.05,-3.60,-75.06C-3.60,-76.36,-2.9,-77.56,-1.80,-78.16C-1.80,-78.16,-1.80,-86.86,-1.80,-86.86C-1.80,-87.76,-1.10,-88.46,-0.2,-88.46C-0.2,-88.46,-2.8e-14,-88.46,-2.8e-14,-88.46C0.89,-88.46,1.5,-87.7,1.5,-86.7C1.5,-86.7,1.5,-78.0,1.5,-78.0C2.5,-77.48,3.39,-76.3,3.39,-74.98C3.39,-74.98,3.39,-74.88,3.39,-74.7C3.39,-74.7,7.6,-71.8,7.6,-71.8C8.5,-71.19,8.8,-70.1,8.1,-69.30C8.1,-69.30,8.1,-69.30,8.1,-69.30", fill: "#ffffff", transform: "rotate(#{if @urgency == 'low_urgency' then -25 else -30}) #{if @urgency == 'low_urgency' then smallifier else ''} scale(0.6) translate(0,-50) rotate(2.5)"}
+
+  / tooltip text
+  %title Task urgency is #{@urgency.replace(/_/g, ' ').replace(' urgency', '.')}

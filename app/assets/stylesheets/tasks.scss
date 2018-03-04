@@ -2,6 +2,15 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
+#tasks {
+	user-select: none;
+	overflow: hidden;
+}
+
+#tasks, #tasks > div, #tasks > div svg {
+	height: 100%;
+}
+
 foreignObject {
 	pointer-events: none;
 }
