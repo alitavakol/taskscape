@@ -37,6 +37,23 @@ Function::include = (mixin) ->
   mixin.included?.apply(this)
   this
 
+
+# override the Backbone.sync to send only the changed fields for update (PUT) request
+Original_BackboneSync = Backbone.sync
+
+Backbone.sync = (method, model, options) ->
+  # custom behavior if pick option is provided
+  if (options.pick)
+    model = jQuery.extend({}, model) # clone
+    model.attributes = _.pick(model.attributes, options.pick, '__proto__', 'uid', 'id')
+
+  if (options.pick || method != 'read')
+    model.attributes['uid'] = window.uid # server response should resend this UID as is
+
+  # invoke the original backbone sync method
+  Original_BackboneSync.apply(this, arguments)
+
+
 # https://github.com/jashkenas/backbone/issues/630
 $.ajaxSetup
   cache: false

@@ -63,3 +63,5 @@ end
 
 # use haml code in assets
 gem 'haml_coffee_assets'
+
+gem 'font-awesome-rails'

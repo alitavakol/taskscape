@@ -23,6 +23,7 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
         attributes: 
           transform: "translate(#{t.get('x')} #{t.get('y')})"
       @$('svg').append(view.render().el)
+      @$el.append(view.details.render().el)
       @objects.push view
 
     # enable dragging tasks

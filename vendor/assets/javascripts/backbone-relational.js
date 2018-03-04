@@ -1652,7 +1652,7 @@
 				}
 
 				if ( includeInJSON ) {
-					json[ rel.keyDestination ] = value;
+					// json[ rel.keyDestination ] = value;
 				}
 
 				if ( rel.keyDestination !== rel.key ) {

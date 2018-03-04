@@ -39,7 +39,7 @@ html {
 // apply styles to HTML elements
 // to make views framework-neutral
 main {
-  // @extend .container;
+  // @extend .container-fluid;
   flex: auto;
   height: 100%;
 }

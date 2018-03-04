@@ -2,6 +2,7 @@ Taskscape.Views.Tasks ||= {}
 
 class Taskscape.Views.Tasks.ShowView extends Backbone.View
   template: JST["backbone/templates/tasks/show"]
+  details_template: JST["backbone/templates/tasks/details"]
 
   initialize: ->
     # radius of the shape
@@ -17,6 +18,15 @@ class Taskscape.Views.Tasks.ShowView extends Backbone.View
 
     @x = @model.get('x')
     @y = @model.get('y')
+
+    @details = new Taskscape.Views.Tasks.DetailsView
+      model: @model
+      className: 'task-details'
+
+    @listenTo @model, 'change:title', (model, response, options) ->
+      @$('.title').html model.get('title')
+
+    @
 
   render: ->
     @$el.html @template _.extend @model.toJSON(), R: @R
@@ -69,6 +79,8 @@ class Taskscape.Views.Tasks.ShowView extends Backbone.View
       # show this object on top of other objects
       @$el.appendTo @$el.parent()
 
+      @details.$el.show()
+
       window.focused_view = @
 
     else if !focused
@@ -76,6 +88,8 @@ class Taskscape.Views.Tasks.ShowView extends Backbone.View
       @$('.shadow').attr opacity: .3
       @$('.plate').attr
         stroke: tinycolor(@model.get('color')).darken().toHexString()
+
+      @details.$el.hide()
 
   post_render: ->
     @autofit_title()
