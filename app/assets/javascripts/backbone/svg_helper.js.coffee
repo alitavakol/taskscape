@@ -9,7 +9,8 @@ window.SVG =
 
     svg.setAttribute('viewBox', "#{-m/2} #{-n/2} #{m} #{n}")
 
-  # updates svg viewbox according to dimensions of svg element on screen
+  # updates svg viewbox to make its aspect ratio equal to that of the svg element on screen
+  # and find ratio of display pixels to svg pixels
   update_viewbox: (svg, reset) ->
     # svg viewbox dimensions
     v = svg.getAttribute('viewBox').split(' ')
@@ -95,6 +96,7 @@ window.SVG =
         # SVG.update_viewbox svg, true
     @
 
+  # zoom the svg by changing its viewbox, depending on mousewheel event e
   zoom: (svg, e) ->
     SVG.update_viewbox svg, false
 
@@ -113,6 +115,7 @@ window.SVG =
     e.stopPropagation()
     false
 
+  # zoom svg by changing its viewbox to the specified object
   zoom_to: (object) ->
     svg = object.$el.closest('svg')[0]
 
@@ -139,7 +142,21 @@ window.SVG =
       vbw = vbh / u
       vbx = left + (bb.width - vbw) / 2
 
-    @change_viewbox svg, vbx, vby, vbw, vbh
+    if $('#details-sidebar')
+      # dimensions of the svg node in display pixels
+      r = svg.getBoundingClientRect()
+      m = r.right - r.left
+      n = r.bottom - r.top
+
+      # ratio of svg pixels to display pixels
+      window.drag_scale = if m > n then (vbh / n) else (vbw / m)
+
+      margin = $('#details-sidebar').width() * window.drag_scale 
+
+    else
+      margin = 0
+
+    @change_viewbox svg, vbx + margin /2, vby, vbw, vbh
 
   # update viewbox of svg to ensure the specified object is inside
   # returns true if viewbox changed
@@ -150,7 +167,8 @@ window.SVG =
     bb = object.el.getBBox()
     left = bb.x + object.x
     top = bb.y + object.y
-    right = left + bb.width
+    margin = if $('#details-sidebar') then $('#details-sidebar').width() * window.drag_scale else 0
+    right = left + bb.width + margin
     bottom = top + bb.height
 
     vbx = @vbx
@@ -160,12 +178,12 @@ window.SVG =
 
     u = vbh / vbw
 
-    if @vbh < bb.height
+    if vbh < bb.height
       vbh = bb.height
       vbw = vbh / u
       changed = true
 
-    if @vbw < bb.width
+    if vbw < bb.width
       vbw = bb.width
       vbh = vbw * u
       changed = true

@@ -4,9 +4,20 @@
 
 #projects {
 	user-select: none;
-	overflow: hidden;
 }
 
 #projects, #projects > div, #projects > div > .row {
 	height: 100%;
+}
+
+#details-sidebar {
+	position: absolute;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	width: 85mm;
+}
+
+#project-members {
+	border-right: solid 1px lightgrey;
 }

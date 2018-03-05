@@ -9,8 +9,6 @@ class Taskscape.Views.Tasks.DetailsView extends Backbone.View
     "keyup .title input"      : "accept_edit_title"
     "click i.clickable"       : "change_attribute"
 
-  tagName: "tr"
-
   initialize: ->
     @listenTo @model, 'change', (model, response, options) -> @render()
 

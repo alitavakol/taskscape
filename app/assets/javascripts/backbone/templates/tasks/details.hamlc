@@ -7,9 +7,9 @@
       %input{type: 'text', style: 'display: none;'}
 
   .row.detail
-    .col.col-md-4
+    .col-sm-7
       %b Status
-    .col.col-md-6
+    .col-sm-10
       .table.status{"data-attribute": "status"}
         %i{class: "clickable fa fa-pause-circle-o #{if @status == 'on_hold' then 'selected' else ''}", "data-value": "on_hold"}
         %i{class: "clickable fa fa-stop-circle-o #{if @status == 'not_started' then 'selected' else ''}", "data-value": "not_started"}
@@ -17,9 +17,9 @@
         %i{class: "clickable fa fa-check-circle-o #{if @status == 'completed' then 'selected' else ''}", "data-value": "completed"}
 
   .row.detail
-    .col.col-md-4
+    .col-sm-7
       %b Importance
-    .col.col-md-6
+    .col-sm-10
       .table.importance{"data-attribute": "importance"}
         %i{class: "clickable #{if @importance == 'low_importance' then 'selected' else ''}", "data-value": "low_importance"} ♟
         %i{class: "clickable #{if @importance == 'normal_importance' then 'selected' else ''}", "data-value": "normal_importance"} ♞
@@ -27,9 +27,9 @@
         %i{class: "clickable #{if @importance == 'very_high_importance' then 'selected' else ''}", "data-value": "very_high_importance"} ♛
 
   .row.detail
-    .col.col-md-4
+    .col-sm-7
       %b Effort
-    .col.col-md-6
+    .col-sm-10
       .table.effort{"data-attribute": "effort"}
         %i{class: "clickable fa fa-circle-thin #{if @effort == 'small_effort' then 'selected' else ''}", "data-value": "small_effort"}
         %i{class: "clickable fa fa-circle-thin #{if @effort == 'medium_effort' then 'selected' else ''}", "data-value": "medium_effort"}
@@ -37,9 +37,9 @@
         %i{class: "clickable fa fa-circle-thin #{if @effort == 'very_large_effort' then 'selected' else ''}", "data-value": "very_large_effort"}
 
   .row.detail
-    .col.col-md-4
+    .col-sm-7
       %b Urgency
-    .col.col-md-6
+    .col-sm-10
       .table.urgency{"data-attribute": "urgency"}
         %i{class: "clickable fa fa-arrow-circle-o-down #{if @urgency == 'low_urgency' then 'selected' else ''}", "data-value": "low_urgency"}
         %i{class: "clickable fa fa-circle-thin #{if @urgency == 'normal_urgency' then 'selected' else ''}", "data-value": "normal_urgency"}

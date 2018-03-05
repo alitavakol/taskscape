@@ -89,7 +89,7 @@ class Taskscape.Views.Tasks.ShowView extends Backbone.View
           "stroke-width": 180 / R
         @
 
-      complete: ->
+      complete: =>
         SVG.ensure_visible @ if window.focused_view == @
         @
 
@@ -163,7 +163,7 @@ class Taskscape.Views.Tasks.ShowView extends Backbone.View
     @$el.appendTo @$el.parent()
 
   # this function reflects set/kill focus into view
-  focus: (focused) ->
+  focus: (focused, keep) ->
     if focused
       old_focused_view = window.focused_view ? null
 
@@ -193,7 +193,7 @@ class Taskscape.Views.Tasks.ShowView extends Backbone.View
         stroke: tinycolor(@model.get('color')).darken().toHexString()
 
       # hide task details side bar
-      @details.$el.hide()
+      @details.$el.hide() unless keep
 
     @
 

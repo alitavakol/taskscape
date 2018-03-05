@@ -27,7 +27,7 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
           transform: "translate(#{t.get('x')} #{t.get('y')})"
 
       @$('svg').append(view.render().el)
-      @$el.append(view.details.render().el)
+      @$('#details-sidebar').append(view.details.render().el)
 
       @objects.push view
       @listenTo t, 'change:effort', (model, response, options) -> @remove_overlaps() # ensure no overlap if task size changes (as a consequence of changing effort)
@@ -48,12 +48,20 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
   # reflect focus state in view
   focus: (focused) ->
     if focused
-      if window.focused_view != @
-        window.focused_view.focus false if window.focused_view # remove focus from previously focused object
+      old_focused_view = window.focused_view ? null
+
+      if old_focused_view != @
+        old_focused_view.focus(false, true) if window.focused_view # remove focus from previously focused object
         window.focused_view = @
- 
+
+        @$('#details-sidebar').fadeOut
+          complete: -> old_focused_view.details.$el.hide() if old_focused_view # hide task details side bar
+
       else
         SVG.autofit @svg
+
+    else
+      @$('#details-sidebar').fadeIn()
 
   # this function re-arranges objects (shapes) so to ensure they do not overlap any other
   # returns true if arrangements changed
@@ -182,11 +190,11 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
       inertia: true
 
       onstart: (e) =>
+        SVG.update_viewbox @svg, true
+
         window.dragging_view = $(e.currentTarget).data('view_object')
         window.dragging_view.bring_to_front()
         window.dragging_view.on_drag_start()
-
-        SVG.update_viewbox @svg, true
 
       # call this function on every dragmove e
       onmove: (e) ->
