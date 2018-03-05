@@ -33,7 +33,7 @@ class Taskscape.Views.Tasks.ShowView extends Backbone.View
     # render skeleton
     @$el.html @template @model.toJSON()
 
-    @render_effort() # render effort of the task (change shape size)
+    @render_effort(true) # render effort of the task (change shape size)
     @render_status() # render status of the task
     @render_importance_and_urgency() # render importance and urgency of the task
     @render_avatars() # attach avatar of assignees to task's shape
@@ -61,15 +61,39 @@ class Taskscape.Views.Tasks.ShowView extends Backbone.View
     @
 
   # this function scales task's skeleton shape to reflect effort attribute
-  render_effort: ->
+  render_effort: (immediately) ->
+    R0 = @R
     @update_shape_size()
+    R0 ?= @R
 
-    @$('.task-container').attr
-      transform: "scale(#{@R / 72})"
-      "stroke-width": 180 / @R
+    # render immediately, if we are rendering for the first time, without animation
+    if immediately
+      @$('.task-container').attr
+        transform: "scale(#{@R / 72})"
+        "stroke-width": 180 / @R
 
     # re-draw title when task's shape size changes
     @render_title()
+
+    return if immediately
+
+    # compute animation delta
+    delta = (@R - R0) / 5
+
+    # animate
+    $(t: 1).animate t: 5, 
+      step: (t) => 
+        R = R0 + delta * t
+        @$('.task-container').attr
+          transform: "scale(#{R / 72})"
+          "stroke-width": 180 / R
+        @
+
+      complete: ->
+        SVG.ensure_visible @ if window.focused_view == @
+        @
+
+    @
 
   # this function renders title of the task
   render_title: ->
@@ -111,7 +135,7 @@ class Taskscape.Views.Tasks.ShowView extends Backbone.View
 
   # called while task's shape is dragging
   on_drag: (dx, dy) ->
-    @move dx, dy
+    @move(@x + dx, @y + dy)
     false
 
   # called when dragging of task's shape is finished
@@ -124,34 +148,45 @@ class Taskscape.Views.Tasks.ShowView extends Backbone.View
     ,
       pick: ['x', 'y', 'effort'] # save effort too, because changing it may result in change of position if the task with new size, was overlapping other objects
 
+    SVG.ensure_visible @ if window.focused_view == @
+
     false # do not remove this!
 
   # moves task's shape on screen
-  move: (dx, dy) ->
-    @x += dx
-    @y += dy
+  move: (x, y) ->
+    @x = x
+    @y = y
     @$el.attr transform: "translate(#{@x} #{@y})"
+
+  bring_to_front: ->
+    # show this object on top of other objects
+    @$el.appendTo @$el.parent()
 
   # this function reflects set/kill focus into view
   focus: (focused) ->
-    if focused && window.focused_view != @
-      # remove focus from previously focused object
-      window.focused_view.focus false if window.focused_view
+    if focused
+      old_focused_view = window.focused_view ? null
 
-      # update view
-      @$('.shadow').attr opacity: 1
-      @$('.plate').attr
-        stroke: tinycolor(@model.get('color')).darken().darken().darken().toHexString()
+      if old_focused_view != @
+        window.focused_view = @
 
-      # show this object on top of other objects
-      @$el.appendTo @$el.parent()
+        # remove focus from previously focused object
+        old_focused_view.focus false if old_focused_view
 
-      # show task details side bar
-      @details.$el.show()
+        # update view
+        @$('.shadow').attr opacity: 1
+        @$('.plate').attr
+          stroke: tinycolor(@model.get('color')).darken().darken().darken().toHexString()
 
-      window.focused_view = @
+        @bring_to_front()
 
-    else if !focused
+        # show task details side bar
+        @details.$el.show()
+
+      changed = SVG.ensure_visible @
+      SVG.zoom_to(this) if old_focused_view == @ && !changed
+
+    else
       # update view
       @$('.shadow').attr opacity: .3
       @$('.plate').attr

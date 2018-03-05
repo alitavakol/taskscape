@@ -42,20 +42,30 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
 
     return this
 
+  bring_to_front: ->
+    # do nothing
+
   # reflect focus state in view
   focus: (focused) ->
     if focused
       if window.focused_view != @
         window.focused_view.focus false if window.focused_view # remove focus from previously focused object
         window.focused_view = @
-
-      SVG.autofit @svg
+ 
+      else
+        SVG.autofit @svg
 
   # this function re-arranges objects (shapes) so to ensure they do not overlap any other
   # returns true if arrangements changed
   remove_overlaps: ->
     moved_objects = [] # moved objects after re-arrangement
 
+    # make a backup of initial position of objects
+    @objects.forEach (m) ->
+      m.x0 = m.x
+      m.y0 = m.y
+
+    # compute new positions to have no overlaps
     loop
       moved = false
       for m in @objects
@@ -64,9 +74,23 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
           moved_objects.push(m)
       break unless moved
 
-    # save new position of moved objects
-    _.uniq(moved_objects).forEach (o) ->
-      o.on_drag_end()
+    # compute animation delta for each object
+    @objects.forEach (m) ->
+      m.delta_x = (m.x - m.x0) / 5
+      m.delta_y = (m.y - m.y0) / 5
+      m.move(m.x0, m.y0) # restore original position
+
+    # animate objects to their new position
+    $(t: 1).animate t: 5, 
+      step: (t) => 
+        for m in @objects
+          m.move(m.x0 + m.delta_x * t, m.y0 + m.delta_y * t)
+        @
+
+      complete: ->
+        # save new position of moved objects
+        _.uniq(moved_objects).forEach (o) -> o.on_drag_end()
+        @
 
     return moved_objects.length > 0
 
@@ -95,7 +119,7 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
         vy += 100/a.R * 20*dy/d
 
     if vx || vy
-      a.move(vx, vy)
+      a.move(a.x + vx, a.y + vy)
       return true
 
     return false
@@ -116,7 +140,10 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
     @remove_overlaps()
 
     # autofit content
-    SVG.autofit @svg
+    SVG.autofit @svg, true
+
+    @focus true
+    @focus true
 
   # enable panning the canvas svg
   enable_pan: ->
@@ -156,7 +183,7 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
 
       onstart: (e) =>
         window.dragging_view = $(e.currentTarget).data('view_object')
-        window.dragging_view.focus true
+        window.dragging_view.bring_to_front()
         window.dragging_view.on_drag_start()
 
         SVG.update_viewbox @svg, true
