@@ -49,19 +49,19 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
   focus: (focused) ->
     if focused
       old_focused_view = window.focused_view ? null
+      return if old_focused_view && SVG.autofit @svg
 
       if old_focused_view != @
         old_focused_view.focus(false, true) if window.focused_view # remove focus from previously focused object
         window.focused_view = @
 
-        @$('#details-sidebar').fadeOut
-          complete: -> old_focused_view.details.$el.hide() if old_focused_view # hide task details side bar
-
-      else
-        SVG.autofit @svg
+        @$('#details-sidebar').data('visible', false).fadeOut
+          complete: => 
+            old_focused_view.details.$el.hide() if old_focused_view # hide task details side bar
+        # SVG.autofit @svg
 
     else
-      @$('#details-sidebar').fadeIn()
+      @$('#details-sidebar').data('visible', true).fadeIn()
 
   # this function re-arranges objects (shapes) so to ensure they do not overlap any other
   # returns true if arrangements changed
@@ -150,7 +150,6 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
     # autofit content
     SVG.autofit @svg, true
 
-    @focus true
     @focus true
 
   # enable panning the canvas svg

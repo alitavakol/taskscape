@@ -48,6 +48,8 @@ window.SVG =
     # get smallest bounding box of the svg node
     bb = svg.getBBox()
     return if bb.width == 0 || bb.height == 0
+    if $('#details-sidebar') && $('#details-sidebar').data('visible')
+      bb.width += $('#details-sidebar').width() * window.drag_scale
 
     vbx = bb.x
     vby = bb.y
@@ -69,6 +71,8 @@ window.SVG =
 
     @change_viewbox svg, vbx, vby, vbw, vbh, immediately
 
+  # changes svg viewbox by animation, of immediately
+  # returns true if changed
   change_viewbox: (svg, vbx, vby, vbw, vbh, immediately) ->
     # no animation if immediately
     if immediately
@@ -94,7 +98,8 @@ window.SVG =
         SVG.update_viewbox svg, false
       complete: ->
         # SVG.update_viewbox svg, true
-    @
+
+    return old_vbw != vbw || old_vbh != vbh || old_vbx != vbx || old_vby != vby
 
   # zoom the svg by changing its viewbox, depending on mousewheel event e
   zoom: (svg, e) ->
@@ -142,7 +147,7 @@ window.SVG =
       vbw = vbh / u
       vbx = left + (bb.width - vbw) / 2
 
-    if $('#details-sidebar')
+    if $('#details-sidebar') && $('#details-sidebar').data('visible')
       # dimensions of the svg node in display pixels
       r = svg.getBoundingClientRect()
       m = r.right - r.left
@@ -167,7 +172,7 @@ window.SVG =
     bb = object.el.getBBox()
     left = bb.x + object.x
     top = bb.y + object.y
-    margin = if $('#details-sidebar') then $('#details-sidebar').width() * window.drag_scale else 0
+    margin = if $('#details-sidebar') && $('#details-sidebar').data('visible') then $('#details-sidebar').width() * window.drag_scale else 0
     right = left + bb.width + margin
     bottom = top + bb.height
 
@@ -181,29 +186,25 @@ window.SVG =
     if vbh < bb.height
       vbh = bb.height
       vbw = vbh / u
-      changed = true
 
     if vbw < bb.width
       vbw = bb.width
       vbh = vbw * u
-      changed = true
 
     if left < vbx
       vbx = left
-      changed = true
     else if right > vbx + vbw
       vbx = right - vbw
-      changed = true
 
     if top < vby
       vby = top
-      changed = true
     else if bottom > vby + vbh
       vby = bottom - vbh
-      changed = true
 
+    changed = Math.abs(@vbw-vbw) > .01*Math.abs(vbw) || Math.abs(@vbh-vbh) > .01*Math.abs(vbh) || Math.abs(@vbx-vbx) > .01*Math.abs(vbx) || Math.abs(@vby-vby) > .01*Math.abs(vby)
     @change_viewbox svg, vbx, vby, vbw, vbh
-    return changed ? false
+
+    return changed
 
   move: (svg, dx, dy) ->
     @vbx -= dx * window.drag_scale
