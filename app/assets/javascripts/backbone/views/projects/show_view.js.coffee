@@ -33,6 +33,7 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
       @listenTo t, 'change:effort', (model, response, options) -> @remove_overlaps() # ensure no overlap if task size changes (as a consequence of changing effort)
 
     @enable_drag() # enable dragging tasks
+    @enable_drop() # enable dropping an object into another
     @enable_pan() # enable panning the canvas svg
     @enable_tap() # enable focus object on tap or click
 
@@ -155,8 +156,7 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
   # enable panning the canvas svg
   enable_pan: ->
     interact('.pannable').draggable
-      # allow dragging of multple elements at the same time
-      max: Infinity
+      max: Infinity # allow dragging of multple elements at the same time
       inertia: true
 
       onstart: (e) =>
@@ -184,8 +184,7 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
   # enable dragging tasks
   enable_drag: ->
     interact('.draggable').draggable
-      # allow dragging of multple elements at the same time
-      max: Infinity
+      max: Infinity # allow dragging of multple elements at the same time
       inertia: true
 
       onstart: (e) =>
@@ -203,3 +202,15 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
       onend: (e) =>
         # call object to save its new position only if remove_overlaps did not call it
         window.dragging_view.on_drag_end() unless @remove_overlaps()
+
+  # enable dropping something into objects
+  enable_drop: ->
+    interact('.dropzone').dropzone
+      # overlap: 'center' && 'pointer',
+      ondropactivate: (e) ->
+      ondragenter: (e) ->
+        console.log "#{$(e.relatedTarget).data('view_object').model.get('name')} enters into #{$(e.target).data('view_object').model.get('title')}"
+      ondragleave: (e) ->
+        console.log "#{$(e.relatedTarget).data('view_object').model.get('name')} leaves #{$(e.target).data('view_object').model.get('title')}"
+      ondrop: (e) ->
+      ondropdeactivate: (e) ->

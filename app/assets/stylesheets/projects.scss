@@ -20,4 +20,20 @@
 
 #project-members {
 	border-right: solid 1px lightgrey;
+
+	ul {
+		padding-top: 2px;
+		padding-bottom: 2px;
+		
+		li {
+			padding-top: 2px;
+			padding-bottom: 2px;
+			padding-right: 4px;
+			padding-left: 4px;
+
+			img {
+				width: 100%;
+			}
+		}
+	}
 }

@@ -1,6 +1,0 @@
-%table#project_members
-  %thead
-    %tr
-      %th Name
-
-  %tbody

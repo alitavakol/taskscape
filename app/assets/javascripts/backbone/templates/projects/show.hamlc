@@ -1,4 +1,4 @@
-.row
+#project-container.row
   #project-members.col-md-1
 
   #canvas-container.col-md-17

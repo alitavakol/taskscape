@@ -2,4 +2,4 @@
 - c = @assignees.length
 - @assignees.forEach (assignee, idx) ->
   %image{xlink:href: "/images/thumb/default_user.png", preserveAspectRatio: "none", x: -14, y: -14, width: 28, height: 28, mask: "url('#round-conrners')", transform: "rotate(#{-45 + 24 * (idx - (c-1)/2)}) translate(-#{72+8} 0)"}
-  %title #{assignee.name}
+  %title #{assignee.get('name')}

@@ -99,7 +99,7 @@ window.SVG =
       complete: ->
         # SVG.update_viewbox svg, true
 
-    return old_vbw != vbw || old_vbh != vbh || old_vbx != vbx || old_vby != vby
+    return Math.abs(old_vbw-vbw) > .01 * Math.abs(vbw) || Math.abs(old_vbh - vbh) > .01 * Math.abs(vbh) || Math.abs(old_vbx - vbx) > .01 * Math.abs(vbx) || Math.abs(old_vby - vby) > .01 * Math.abs(vby)
 
   # zoom the svg by changing its viewbox, depending on mousewheel event e
   zoom: (svg, e) ->
@@ -201,7 +201,7 @@ window.SVG =
     else if bottom > vby + vbh
       vby = bottom - vbh
 
-    changed = Math.abs(@vbw-vbw) > .01*Math.abs(vbw) || Math.abs(@vbh-vbh) > .01*Math.abs(vbh) || Math.abs(@vbx-vbx) > .01*Math.abs(vbx) || Math.abs(@vby-vby) > .01*Math.abs(vby)
+    changed = Math.abs(@vbw-vbw) > .01 * Math.abs(vbw) || Math.abs(@vbh - vbh) > .01 * Math.abs(vbh) || Math.abs(@vbx - vbx) > .01 * Math.abs(vbx) || Math.abs(@vby - vby) > .01 * Math.abs(vby)
     @change_viewbox svg, vbx, vby, vbw, vbh
 
     return changed

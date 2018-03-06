@@ -1,1 +1,1 @@
-%td=@name
+%img.rounded{src: "/images/thumb/default_user.png"}

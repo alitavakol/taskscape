@@ -6,7 +6,8 @@ class Taskscape.Views.ProjectMembers.MemberView extends Backbone.View
   events:
     "click .destroy" : "destroy"
 
-  tagName: "tr"
+  tagName: "li"
+  className: 'member-avatar'
 
   destroy: () ->
     @model.destroy()
@@ -16,4 +17,5 @@ class Taskscape.Views.ProjectMembers.MemberView extends Backbone.View
 
   render: ->
     @$el.html @template(@model.toJSON())
-    return this
+    @$('img').data('view_object', @)
+    @
