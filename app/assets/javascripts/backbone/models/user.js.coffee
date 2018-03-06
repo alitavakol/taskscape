@@ -1,4 +1,4 @@
-class Taskscape.Models.User extends Backbone.Relational.Model
+class Taskscape.Models.User extends Backbone.RelationalModel
   paramRoot: 'user'
   urlRoot: 'users'
 

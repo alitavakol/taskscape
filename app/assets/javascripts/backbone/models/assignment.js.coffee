@@ -1,4 +1,4 @@
-class Taskscape.Models.Assignment extends Backbone.Relational.Model
+class Taskscape.Models.Assignment extends Backbone.RelationalModel
   paramRoot: 'assignment'
   urlRoot: 'assignments'
 

@@ -12,6 +12,7 @@ class MembershipsController < ApplicationController
   # POST /memberships.json
   def create
     @membership = Membership.new(membership_params)
+    @membership.creator = current_user
     authorize @membership
 
     respond_to do |format|

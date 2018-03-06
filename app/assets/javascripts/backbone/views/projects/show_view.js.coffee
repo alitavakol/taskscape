@@ -209,8 +209,23 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
       # overlap: 'center' && 'pointer',
       ondropactivate: (e) ->
       ondragenter: (e) ->
-        console.log "#{$(e.relatedTarget).data('view_object').model.get('name')} enters into #{$(e.target).data('view_object').model.get('title')}"
+        # dropped_object = $(e.relatedTarget).data('view_object')
+        # dropzone = $(e.target).data('view_object')
+        # console.log "#{dropped_object.model.get('name')} enters into #{dropzone.model.get('title')}"
+
       ondragleave: (e) ->
-        console.log "#{$(e.relatedTarget).data('view_object').model.get('name')} leaves #{$(e.target).data('view_object').model.get('title')}"
+        # console.log "#{$(e.relatedTarget).data('view_object').model.get('name')} leaves #{$(e.target).data('view_object').model.get('title')}"
+
       ondrop: (e) ->
+        dropped_object = $(e.relatedTarget).data('view_object')
+        dropzone = $(e.target).data('view_object')
+
+        if dropped_object instanceof Taskscape.Views.ProjectMembers.MemberView
+          if dropzone instanceof Taskscape.Views.Tasks.ShowView
+            dropzone.model.get('assignments').create
+              task_id: dropzone.model.id
+              assignee_id: dropped_object.model.id
+
+        @
+
       ondropdeactivate: (e) ->

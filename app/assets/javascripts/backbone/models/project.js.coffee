@@ -1,4 +1,4 @@
-class Taskscape.Models.Project extends Backbone.Relational.Model
+class Taskscape.Models.Project extends Backbone.RelationalModel
   paramRoot: 'project'
   urlRoot: 'projects'
 

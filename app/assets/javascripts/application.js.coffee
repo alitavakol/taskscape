@@ -16,7 +16,7 @@
 #= require bootstrap-sprockets
 #= require underscore-min
 #= require backbone
-#= require backbone-relational
+#= require backbone-relational-modified
 #= require backbone_rails_sync
 #= require backbone_datalink
 #= require backbone/taskscape

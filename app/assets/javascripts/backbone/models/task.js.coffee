@@ -1,4 +1,4 @@
-class Taskscape.Models.Task extends Backbone.Relational.Model
+class Taskscape.Models.Task extends Backbone.RelationalModel
   paramRoot: 'task'
   urlRoot: 'tasks'
 
@@ -22,6 +22,7 @@ class Taskscape.Models.Task extends Backbone.Relational.Model
     includeInJSON: true
     reverseRelation:
       key: 'task_id'
+      includeInJSON: 'id'
   ,
     type: 'HasMany',
     key: 'assignees'
@@ -30,6 +31,7 @@ class Taskscape.Models.Task extends Backbone.Relational.Model
     includeInJSON: true
     reverseRelation:
       key: 'task_id'
+      includeInJSON: 'id'
   ]
 
 Taskscape.Models.Task.setup()

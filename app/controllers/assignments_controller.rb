@@ -12,6 +12,7 @@ class AssignmentsController < ApplicationController
   # POST /assignments.json
   def create
     @assignment = Assignment.new(assignment_params)
+    @assignment.creator = current_user
     authorize @assignment
 
     respond_to do |format|

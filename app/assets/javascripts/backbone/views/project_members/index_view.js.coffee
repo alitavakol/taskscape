@@ -69,5 +69,7 @@ class Taskscape.Views.ProjectMembers.IndexView extends Backbone.View
 
       # call this function on every dragend e
       onend: (e) ->
-        @avatar.css opacity: 1
-        @clone.remove()
+        @avatar.fadeTo 200, 1
+        @clone.fadeOut 
+          duration: 200
+          complete: => @clone.remove()
