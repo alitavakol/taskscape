@@ -16,7 +16,7 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
     @svg = @$('svg')[0]
 
     # render members side bar
-    members_view = new Taskscape.Views.ProjectMembers.IndexView(collection: @model.get('members'))
+    members_view = new Taskscape.Views.ProjectMembers.IndexView(collection: @model.get('memberships'))
     @$("#project-members").html(members_view.render().el)
 
     # render tasks of this project (supertask)
@@ -31,6 +31,10 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
 
       @objects.push view
       @listenTo t, 'change:effort', (model, response, options) -> @remove_overlaps() # ensure no overlap if task size changes (as a consequence of changing effort)
+
+      view.model.set
+        x: @x - 1
+      view.model.trigger('change:x')
 
     @enable_drag() # enable dragging tasks
     @enable_drop() # enable dropping an object into another
@@ -222,10 +226,14 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
 
         if dropped_object instanceof Taskscape.Views.ProjectMembers.MemberView
           if dropzone instanceof Taskscape.Views.Tasks.ShowView
-            dropzone.model.get('assignments').create
+            assignment = new Taskscape.Models.Assignment()
+            assignment.save
               task_id: dropzone.model.id
-              assignee_id: dropped_object.model.id
-
+              assignee_id: dropped_object.model.get('member_id')
+            ,
+              wait: true # wait for the server before adding the new model to the collection
+              success: (model, response, options) ->
+                dropzone.model.get('assignments').add model
         @
 
       ondropdeactivate: (e) ->

@@ -24,7 +24,7 @@ class Taskscape.Views.Tasks.ShowView extends Backbone.View
     @listenTo @model, 'change:effort', (model, response, options) -> @render_effort()
     @listenTo @model, 'change:status', (model, response, options) -> @render_status()
     @listenTo @model, 'change:importance change:urgency', (model, response, options) -> @render_importance_and_urgency()
-    @listenTo @model, 'change:assignees', (model, response, options) -> @render_avatars()
+    @listenTo @model, 'add:assignments remove:assignments', (model, response, options) -> @render_avatars()
 
     @
 

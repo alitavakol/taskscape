@@ -51,9 +51,8 @@ class Project < ApplicationRecord
   # returns attributes as a project (i.e. supertask)
   def attrs_recursive
     attributes.slice('id', 'archived', 'title', 'supertask_id').merge(
-      tasks: tasks.map { |t| t.attrs_recursive },
-      memberships: memberships.map { |m| m.attrs },
-      members: members.map { |m| m.attrs.merge(project_id: id) }
+      memberships: memberships.map { |m| m.attrs.except('project_id').merge m.member.attrs.except('id') },
+      tasks: tasks.map { |t| t.attrs_recursive }
     )
   end
 
