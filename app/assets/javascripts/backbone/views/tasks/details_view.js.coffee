@@ -34,10 +34,18 @@ class Taskscape.Views.Tasks.DetailsView extends Backbone.View
       title: @$('.title input').val()
     ,
       pick: ['title']
+      previous_value: @model.get('title')
+      error: (model, response, options) ->
+        model.set title: options.previous_value
 
     @cancel_edit_title()
 
   change_attribute: (e) ->
     attribute = $(e.currentTarget).parent().data('attribute')
     value = $(e.currentTarget).data('value')
-    @model.save JSON.parse("{\"#{attribute}\": \"#{value}\"}"), pick: [attribute]
+
+    @model.save JSON.parse("{\"#{attribute}\": \"#{value}\"}"), 
+      pick: [attribute]
+      previous_value: @model.get(attribute)
+      error: (model, response, options) ->
+        model.set JSON.parse("{\"#{attribute}\": \"#{options.previous_value}\"}")
