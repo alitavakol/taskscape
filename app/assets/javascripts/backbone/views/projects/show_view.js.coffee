@@ -192,7 +192,7 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
   enable_drag: ->
     interact('.draggable').draggable
       max: 1
-      inertia: true
+      inertia: false
 
       onstart: (e) =>
         SVG.update_viewbox @svg, true

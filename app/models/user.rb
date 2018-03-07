@@ -39,6 +39,9 @@ class User < ApplicationRecord
     self.role ||= :user
   end
 
+  has_attached_file :avatar, styles: { medium: "300x300>", thumb: "100x100>" }, default_url: "/images/:style/missing.png"
+  validates_attachment_content_type :avatar, content_type: /\Aimage\/.*\z/
+
   before_save :defaults
   def defaults
     self.name ||= email[/[^@]+/]
@@ -59,7 +62,10 @@ class User < ApplicationRecord
   has_many :created_projects, class_name: "Task", foreign_key: "creator_id", dependent: :nullify # projects/tasks created by this user
 
   def attrs
-    attributes.slice('id', 'name', 'email').merge(confirmed: self.confirmed?)
+    attributes.slice('id', 'name', 'email').merge(
+      avatar: avatar.url,
+      confirmed: self.confirmed?
+    )
   end
 
   protected

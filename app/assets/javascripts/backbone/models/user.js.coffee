@@ -4,5 +4,6 @@ class Taskscape.Models.User extends Backbone.RelationalModel
 
   defaults:
     name: null
+    avatar: null
 
 Taskscape.Models.User.setup()

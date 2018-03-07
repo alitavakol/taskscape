@@ -65,3 +65,5 @@ end
 gem 'haml_coffee_assets'
 
 gem 'font-awesome-rails'
+
+gem "paperclip", "~> 5.2.1"

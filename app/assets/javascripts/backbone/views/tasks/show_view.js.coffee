@@ -172,7 +172,7 @@ class Taskscape.Views.Tasks.ShowView extends Backbone.View
         old_focused_view.focus false if old_focused_view
 
         # update view
-        @$('.shadow').attr opacity: 1
+        @$('.shadow').fadeTo 100, 1
         @$('.plate').attr
           stroke: tinycolor(@model.get('color')).darken().darken().darken().toHexString()
 
@@ -186,7 +186,7 @@ class Taskscape.Views.Tasks.ShowView extends Backbone.View
 
     else
       # update view
-      @$('.shadow').attr opacity: .3
+      @$('.shadow').fadeTo 100, .3
       @$('.plate').attr
         stroke: tinycolor(@model.get('color')).darken().toHexString()
 
@@ -218,10 +218,12 @@ class Taskscape.Views.Tasks.ShowView extends Backbone.View
     true
 
   handle_drag_enter: (dropped_object) ->
+    return if dropped_object instanceof Taskscape.Views.Projects.ShowView
     @$('.standout').fadeIn(100).attr
       "stroke-width": window.drag_scale * 76 / @R # make stroke width independent of zoom level and shape size
 
   handle_drag_leave: (dropped_object) ->
+    return if dropped_object instanceof Taskscape.Views.Projects.ShowView
     @$('.standout').fadeOut(100)
 
   # handle drop of objects (project members, other tasks, ...) into this task
@@ -234,6 +236,7 @@ class Taskscape.Views.Tasks.ShowView extends Backbone.View
     # then un-assign them from previous task, and assign them to undertake this task
     else if dropped_object instanceof Taskscape.Views.Tasks.Assignments.AvatarView
       @update_assignment dropped_object.model
+
     @
 
   # assign this task to the specified user
@@ -242,6 +245,7 @@ class Taskscape.Views.Tasks.ShowView extends Backbone.View
       task_id: @model.id
       assignee_id: user.get('member_id')
       name: user.get('name')
+      avatar: user.get('avatar')
 
     @model.get('assignments').add assignment
 
@@ -250,13 +254,16 @@ class Taskscape.Views.Tasks.ShowView extends Backbone.View
       error: (model, response, options) =>
         @model.get('assignments').remove model # remove assignment
 
+    @
+
   # update specified assignment: remove the assignee from another task, and add it to this task
   update_assignment: (assignment) ->
     # return if avatar is dropped into its own task
-    return if @model.id == assignment.get('task_id')
+    return if @model.id == assignment.get('task_id').id
 
     assignment.save task_id: @model.id,
       pick: ['task_id']
       previous_value: assignment.get('task_id')
       error: (model, response, options) ->
         assignment.set task_id: options.previous_value
+    @

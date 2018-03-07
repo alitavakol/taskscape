@@ -65,7 +65,7 @@ class Task < Project
     attrs_recursive_brief
       .merge(attributes.slice('description', 'visibility', 'importance', 'due_date')).merge(
         # assignees: assignees.map { |m| m.attrs.merge(task_id: id) },
-        assignments: assignments.map { |r| r.attrs.except('task_id').merge r.assignee.attrs.slice('name') }
+        assignments: assignments.map { |r| r.attrs.except('task_id').merge r.assignee.attrs.slice('name', :avatar) }
       )
   end
 

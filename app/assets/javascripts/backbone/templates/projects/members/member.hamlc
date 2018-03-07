@@ -1,1 +1,1 @@
-%img.rounded{src: "/images/thumb/default_user.png"}
+%img.rounded{src: "#{@avatar}"}
