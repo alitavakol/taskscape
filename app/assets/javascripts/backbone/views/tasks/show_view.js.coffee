@@ -4,7 +4,6 @@ class Taskscape.Views.Tasks.ShowView extends Backbone.View
   template: JST["backbone/templates/tasks/show"] # skeleton template
 
   details_template: JST["backbone/templates/tasks/details"]
-  avatars_template: JST["backbone/templates/tasks/avatars"]
   status_template: JST["backbone/templates/tasks/status"]
   title_template: JST["backbone/templates/tasks/title"]
   importance_and_urgency_template: JST["backbone/templates/tasks/importance_and_urgency"]
@@ -19,12 +18,15 @@ class Taskscape.Views.Tasks.ShowView extends Backbone.View
       model: @model
       className: 'task-details'
 
+    @avatars = new Taskscape.Views.Tasks.Assignments.IndexView
+      collection: @model.get('assignments')
+    @avatars.task = @
+
     # bind view to model, so if model changes, it will be reflected into view
     @listenTo @model, 'change:title', (model, response, options) -> @render_title()
     @listenTo @model, 'change:effort', (model, response, options) -> @render_effort()
     @listenTo @model, 'change:status', (model, response, options) -> @render_status()
     @listenTo @model, 'change:importance change:urgency', (model, response, options) -> @render_importance_and_urgency()
-    @listenTo @model, 'add:assignments remove:assignments', (model, response, options) -> @render_avatars()
 
     @
 
@@ -39,7 +41,7 @@ class Taskscape.Views.Tasks.ShowView extends Backbone.View
     @render_avatars() # attach avatar of assignees to task's shape
 
     # register some nodes so we can find this view from them
-    @$('.draggable,.tappable,.task-container').data('view_object', @)
+    @$('#circle.draggable,.tappable,.task-container,.dropzone').data('view_object', @)
     @$el.data('view_object', @)
 
     @focus false
@@ -47,7 +49,7 @@ class Taskscape.Views.Tasks.ShowView extends Backbone.View
 
   # this function renders avatar of assignees attached to task's shape
   render_avatars: ->
-    @$('.avatar-container').html @avatars_template(@model.toJSON())
+    @$('.avatar-container').html @avatars.render().el
     @
 
   # this function renders importance and urgency indicators
@@ -75,24 +77,20 @@ class Taskscape.Views.Tasks.ShowView extends Backbone.View
     # re-draw title when task's shape size changes
     @render_title()
 
-    return if immediately
+    return if immediately # skip animation
 
     # compute animation delta
     delta = (@R - R0) / 5
 
-    # animate
+    # change task size with animation
     $(t: 1).animate t: 5, 
       step: (t) => 
         R = R0 + delta * t
         @$('.task-container').attr
           transform: "scale(#{R / 72})"
           "stroke-width": 180 / R
-        @
-
       complete: =>
         SVG.ensure_visible @ if window.focused_view == @
-        @
-
     @
 
   # this function renders title of the task
@@ -126,29 +124,29 @@ class Taskscape.Views.Tasks.ShowView extends Backbone.View
 
   # called when dragging of task's shape is just started
   on_drag_start: ->
-    @$el.attr opacity: .85
+    @bring_to_front()
 
+    @$el.fadeTo 100, .85
     @x0 = @x
     @y0 = @y
 
     false
 
   # called while task's shape is dragging
-  on_drag: (dx, dy) ->
+  on_drag: (dx, dy) =>
     @move(@x + dx, @y + dy)
     false
 
   # called when dragging of task's shape is finished
-  on_drag_end: (e) ->
-    @$el.attr opacity: 1
+  on_drag_end: ->
+    @$el.fadeTo 100, 1
+    SVG.ensure_visible @ if window.focused_view == @
 
     @model.save
       x: @x
       y: @y
     ,
       pick: ['x', 'y', 'effort'] # save effort too, because changing it may result in change of position if the task with new size, was overlapping other objects
-
-    SVG.ensure_visible @ if window.focused_view == @
 
     false # do not remove this!
 
@@ -218,3 +216,47 @@ class Taskscape.Views.Tasks.ShowView extends Backbone.View
       title.html(str)
 
     true
+
+  handle_drag_enter: (dropped_object) ->
+    @$('.standout').fadeIn(100).attr
+      "stroke-width": window.drag_scale * 76 / @R # make stroke width independent of zoom level and shape size
+
+  handle_drag_leave: (dropped_object) ->
+    @$('.standout').fadeOut(100)
+
+  # handle drop of objects (project members, other tasks, ...) into this task
+  handle_drop: (dropped_object) ->
+    # if dropped object is a project member, assign them to undertake this task
+    if dropped_object instanceof Taskscape.Views.Projects.Members.MemberView
+      @add_assignment dropped_object.model
+
+    # if dropped object is avatar of an assignee (who was attached to another task), 
+    # then un-assign them from previous task, and assign them to undertake this task
+    else if dropped_object instanceof Taskscape.Views.Tasks.Assignments.AvatarView
+      @update_assignment dropped_object.model
+    @
+
+  # assign this task to the specified user
+  add_assignment: (user) ->
+    assignment = new Taskscape.Models.Assignment
+      task_id: @model.id
+      assignee_id: user.get('member_id')
+      name: user.get('name')
+
+    @model.get('assignments').add assignment
+
+    assignment.save {},
+      wait: true # wait for the server before adding the new model to the collection
+      error: (model, response, options) =>
+        @model.get('assignments').remove model # remove assignment
+
+  # update specified assignment: remove the assignee from another task, and add it to this task
+  update_assignment: (assignment) ->
+    # return if avatar is dropped into its own task
+    return if @model.id == assignment.get('task_id')
+
+    assignment.save task_id: @model.id,
+      pick: ['task_id']
+      previous_value: assignment.get('task_id')
+      error: (model, response, options) ->
+        assignment.set task_id: options.previous_value

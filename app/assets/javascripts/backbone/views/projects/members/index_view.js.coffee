@@ -1,7 +1,8 @@
-Taskscape.Views.ProjectMembers ||= {}
+Taskscape.Views.Projects ||= {}
+Taskscape.Views.Projects.Members ||= {}
 
-class Taskscape.Views.ProjectMembers.IndexView extends Backbone.View
-  template: JST["backbone/templates/project_members/index"]
+class Taskscape.Views.Projects.Members.IndexView extends Backbone.View
+  template: JST["backbone/templates/projects/members/index"]
 
   tagName: "ul"
   className: "container-fluid"
@@ -13,8 +14,8 @@ class Taskscape.Views.ProjectMembers.IndexView extends Backbone.View
     @collection.each(@addOne)
 
   addOne: (member) =>
-    view = new Taskscape.Views.ProjectMembers.MemberView
-      model : member
+    view = new Taskscape.Views.Projects.Members.MemberView
+      model: member
     @$el.append(view.render().el)
 
   render: =>
@@ -29,7 +30,7 @@ class Taskscape.Views.ProjectMembers.IndexView extends Backbone.View
   # enable dragging user avatars into tasks and other drop zones
   enable_drag: ->
     interact('.member-avatar img').draggable
-      max: Infinity # allow dragging of multple elements at the same time
+      max: 1 # allow dragging of multple elements at the same time
       inertia: false
 
       onstart: (e) ->
@@ -73,3 +74,4 @@ class Taskscape.Views.ProjectMembers.IndexView extends Backbone.View
         @clone.fadeOut 
           duration: 200
           complete: => @clone.remove()
+        @avatar = null

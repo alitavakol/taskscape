@@ -1,7 +1,8 @@
-Taskscape.Views.ProjectMembers ||= {}
+Taskscape.Views.Projects ||= {}
+Taskscape.Views.Projects.Members ||= {}
 
-class Taskscape.Views.ProjectMembers.MemberView extends Backbone.View
-  template: JST["backbone/templates/project_members/member"]
+class Taskscape.Views.Projects.Members.MemberView extends Backbone.View
+  template: JST["backbone/templates/projects/members/member"]
 
   events:
     "click .destroy" : "destroy"

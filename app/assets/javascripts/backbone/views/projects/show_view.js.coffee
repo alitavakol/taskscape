@@ -16,7 +16,7 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
     @svg = @$('svg')[0]
 
     # render members side bar
-    members_view = new Taskscape.Views.ProjectMembers.IndexView(collection: @model.get('memberships'))
+    members_view = new Taskscape.Views.Projects.Members.IndexView(collection: @model.get('memberships'))
     @$("#project-members").html(members_view.render().el)
 
     # render tasks of this project (supertask)
@@ -30,6 +30,7 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
       @$('#details-sidebar').append(view.details.render().el)
 
       @objects.push view
+      @stopListening t
       @listenTo t, 'change:effort', (model, response, options) -> @remove_overlaps() # ensure no overlap if task size changes (as a consequence of changing effort)
 
       view.model.set
@@ -61,12 +62,14 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
         window.focused_view = @
 
         @$('#details-sidebar').data('visible', false).fadeOut
-          complete: => 
+          duration: 100
+          complete: -> 
             old_focused_view.details.$el.hide() if old_focused_view # hide task details side bar
+
         # SVG.autofit @svg
 
     else
-      @$('#details-sidebar').data('visible', true).fadeIn()
+      @$('#details-sidebar').data('visible', true).fadeIn 100
 
   # this function re-arranges objects (shapes) so to ensure they do not overlap any other
   # returns true if arrangements changed
@@ -160,7 +163,7 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
   # enable panning the canvas svg
   enable_pan: ->
     interact('.pannable').draggable
-      max: Infinity # allow dragging of multple elements at the same time
+      max: 1
       inertia: true
 
       onstart: (e) =>
@@ -188,14 +191,13 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
   # enable dragging tasks
   enable_drag: ->
     interact('.draggable').draggable
-      max: Infinity # allow dragging of multple elements at the same time
+      max: 1
       inertia: true
 
       onstart: (e) =>
         SVG.update_viewbox @svg, true
 
         window.dragging_view = $(e.currentTarget).data('view_object')
-        window.dragging_view.bring_to_front()
         window.dragging_view.on_drag_start()
 
       # call this function on every dragmove e
@@ -212,28 +214,24 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
     interact('.dropzone').dropzone
       # overlap: 'center' && 'pointer',
       ondropactivate: (e) ->
+
       ondragenter: (e) ->
-        # dropped_object = $(e.relatedTarget).data('view_object')
-        # dropzone = $(e.target).data('view_object')
-        # console.log "#{dropped_object.model.get('name')} enters into #{dropzone.model.get('title')}"
+        dropped_object = $(e.relatedTarget).data('view_object')
+        dropzone = $(e.target).data('view_object')
+        dropzone.handle_drag_enter dropped_object
+        window.hot_dropzone = dropped_object
 
       ondragleave: (e) ->
-        # console.log "#{$(e.relatedTarget).data('view_object').model.get('name')} leaves #{$(e.target).data('view_object').model.get('title')}"
+        dropped_object = $(e.relatedTarget).data('view_object')
+        dropzone = $(e.target).data('view_object')
+        dropzone.handle_drag_leave dropped_object
+        window.hot_dropzone = null
 
       ondrop: (e) ->
         dropped_object = $(e.relatedTarget).data('view_object')
         dropzone = $(e.target).data('view_object')
-
-        if dropped_object instanceof Taskscape.Views.ProjectMembers.MemberView
-          if dropzone instanceof Taskscape.Views.Tasks.ShowView
-            assignment = new Taskscape.Models.Assignment()
-            assignment.save
-              task_id: dropzone.model.id
-              assignee_id: dropped_object.model.get('member_id')
-            ,
-              wait: true # wait for the server before adding the new model to the collection
-              success: (model, response, options) ->
-                dropzone.model.get('assignments').add model
+        dropzone.handle_drag_leave dropped_object
+        dropzone.handle_drop dropped_object
         @
 
       ondropdeactivate: (e) ->

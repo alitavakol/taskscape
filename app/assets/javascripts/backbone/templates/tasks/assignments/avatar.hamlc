@@ -1,0 +1,2 @@
+%image{xlink:href: "/images/thumb/default_user.png", preserveAspectRatio: "none", x: -14, y: -14, width: 28, height: 28, mask: "url('#round-conrners')", transform: "rotate(#{-45 + 24 * @rotation_coefficient}) translate(-#{72+8} 0)"}
+  %title #{@name}

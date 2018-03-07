@@ -6,6 +6,9 @@
   / shadow, shown when task is selected
   %image.shadow{"xlink:href" => "/images/shadow.png", preserveAspectRatio: "none", width: 168, height: 168, x: -84, y: -84}
 
+  / a circle that becomes visible on hover of a dragging object
+  %circle.standout{r: 84, stroke: 'rgba(100,100,100,100)', fill: 'rgba(0,0,0,0)', style: 'display: none;'}
+
   / tooltip text
   / %title Double click to go inside task.
 

@@ -18,6 +18,10 @@ class AssignmentPolicy
     self.create?
   end
 
+  def update?
+    self.create? && self.destroy?
+  end
+
   def create?
     # user can assign someone to do the referenced task only if she can view the supertask (project) that this task is in
     ProjectPolicy.new(@current_user, Task.find(@assignment.task_id).supertask).show?

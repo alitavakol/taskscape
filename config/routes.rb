@@ -3,7 +3,7 @@ Rails.application.routes.draw do
   root to: 'visitors#index'
   resources :projects, only: [:index, :show, :create, :update, :destroy]
   resources :tasks, only: [:index, :show, :create, :update, :destroy]
-  resources :assignments, only: [:show, :create, :destroy]
+  resources :assignments, only: [:show, :create, :update, :destroy]
   resources :memberships, only: [:show, :create, :destroy]
   devise_for :users
   resources :users

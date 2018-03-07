@@ -1,5 +1,5 @@
 class AssignmentsController < ApplicationController
-  before_action :set_assignment, only: [:show, :destroy]
+  before_action :set_assignment, only: [:show, :update, :destroy]
 
   # GET /assignments/1
   # GET /assignments/1.json
@@ -18,6 +18,20 @@ class AssignmentsController < ApplicationController
     respond_to do |format|
       if @assignment.save
         format.json { render :show, status: :created, location: @assignment }
+      else
+        format.json { render json: @assignment.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  # PATCH/PUT /assignments/1
+  # PATCH/PUT /assignments/1.json
+  def update
+    authorize @assignment
+
+    respond_to do |format|
+      if @assignment.update(assignment_params)
+        format.json { render :show, status: :ok, location: @assignment }
       else
         format.json { render json: @assignment.errors, status: :unprocessable_entity }
       end
