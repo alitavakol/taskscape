@@ -8,16 +8,17 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
 
   initialize: ->
     @objects = []
+    x = y = 0
 
   render: ->
     @$el.html(@template(@model.toJSON()))
 
     @$('.tappable').data('view_object', @)
-    @svg = @$('svg')[0]
+    @svg = @$('svg')
 
     # render members side bar
     members_view = new Taskscape.Views.Projects.Members.IndexView(collection: @model.get('memberships'))
-    @$("#project-members").html(members_view.render().el)
+    @$("#project-members-sidebar").html(members_view.render().el)
 
     # render tasks of this project (supertask)
     @model.get('tasks').forEach (t) =>
@@ -27,7 +28,7 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
           transform: "translate(#{t.get('x')} #{t.get('y')})"
 
       @$('svg').append(view.render().el)
-      @$('#details-sidebar').append(view.details.render().el)
+      @$('#task-details-sidebar').append(view.details.render().el)
 
       @objects.push view
       @stopListening t
@@ -44,7 +45,10 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
 
     # update svg viewbox on resize
     $(window).resize =>
-      SVG.update_viewbox @svg, true
+      @svg.data('padding-left', 1.1 * @$('#project-members-sidebar').width())
+      @svg.data('padding-right', if window.focused_view == @ then 0 else @$('#task-details-sidebar').width())
+      SVG.update_viewbox_variables @svg
+      SVG.ensure_visible(window.focused_view.$el, window.focused_view.x, window.focused_view.y) if window.focused_view != @
 
     return this
 
@@ -61,15 +65,17 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
         old_focused_view.focus(false, true) if window.focused_view # remove focus from previously focused object
         window.focused_view = @
 
-        @$('#details-sidebar').data('visible', false).fadeOut
+        @svg.data('padding-right', 0)
+        @$('#task-details-sidebar').fadeOut
           duration: 100
           complete: -> 
             old_focused_view.details.$el.hide() if old_focused_view # hide task details side bar
 
-        # SVG.autofit @svg
+        SVG.autofit @svg
 
     else
-      @$('#details-sidebar').data('visible', true).fadeIn 100
+      @svg.data('padding-right', @$('#task-details-sidebar').width())
+      @$('#task-details-sidebar').fadeIn 100
 
   # this function re-arranges objects (shapes) so to ensure they do not overlap any other
   # returns true if arrangements changed
@@ -146,6 +152,7 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
 
   post_render: ->
     # initialize svg viewbox
+    @svg.data('padding-left', 1.1 * @$('#project-members-sidebar').width())
     SVG.init_viewbox @svg
 
     # call post_render on all included views
@@ -166,8 +173,7 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
       max: 1
       inertia: true
 
-      onstart: (e) =>
-        SVG.update_viewbox @svg, true
+      onstart: (e) ->
 
       # call this function on every dragmove e
       onmove: (e) =>
@@ -194,9 +200,7 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
       max: 1
       inertia: false
 
-      onstart: (e) =>
-        SVG.update_viewbox @svg, true
-
+      onstart: (e) ->
         window.dragging_view = $(e.currentTarget).data('view_object')
         window.dragging_view.on_drag_start()
 

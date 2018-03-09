@@ -79,18 +79,18 @@ class Taskscape.Views.Tasks.ShowView extends Backbone.View
 
     return if immediately # skip animation
 
-    # compute animation delta
-    delta = (@R - R0) / 5
-
     # change task size with animation
+    delta = (@R - R0) / 5 # animation delta
     $(t: 1).animate t: 5, 
       step: (t) => 
         R = R0 + delta * t
         @$('.task-container').attr
           transform: "scale(#{R / 72})"
           "stroke-width": 180 / R
+
       complete: =>
-        SVG.ensure_visible @ if window.focused_view == @
+        SVG.ensure_visible(@$el, @x, @y) if window.focused_view == @
+
     @
 
   # this function renders title of the task
@@ -103,8 +103,8 @@ class Taskscape.Views.Tasks.ShowView extends Backbone.View
   # and size of elements are calculated
   post_render: ->
     if @tagName == 'svg'
-      SVG.init_viewbox @el # initialize svg viewbox
-      SVG.autofit @el # autofit content
+      SVG.init_viewbox @$el # initialize svg viewbox
+      SVG.autofit @$el # autofit content
 
     @autofit_title()
 
@@ -140,7 +140,7 @@ class Taskscape.Views.Tasks.ShowView extends Backbone.View
   # called when dragging of task's shape is finished
   on_drag_end: ->
     @$el.fadeTo 100, 1
-    SVG.ensure_visible @ if window.focused_view == @
+    SVG.ensure_visible(@$el, @x, @y) if window.focused_view == @
 
     @model.save
       x: @x
@@ -181,8 +181,8 @@ class Taskscape.Views.Tasks.ShowView extends Backbone.View
         # show task details side bar
         @details.$el.show()
 
-      changed = SVG.ensure_visible @
-      SVG.zoom_to(this) if old_focused_view == @ && !changed
+      changed = SVG.ensure_visible(@$el, @x, @y)
+      SVG.zoom_to(@$el, @x, @y) if old_focused_view == @ && !changed
 
     else
       # update view

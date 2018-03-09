@@ -36,11 +36,11 @@ class Taskscape.Views.Projects.Members.IndexView extends Backbone.View
       onstart: (e) ->
         @avatar = $(e.currentTarget) # the about-to-be-dragged element
 
-        # find position of the dragged avatar relative to #project-container element
+        # find position of the dragged avatar relative to #projects element
         top = 0
         left = 0
         el = @avatar.parent()
-        while el.attr('id') != 'project-container'
+        while el.attr('id') != 'projects'
           p = el.position()
           top += p.top
           left += p.left
@@ -54,8 +54,8 @@ class Taskscape.Views.Projects.Members.IndexView extends Backbone.View
           width: @avatar.width()
           height: @avatar.height()
 
-        # insert the clone into #project-container element
-        @avatar.closest('#project-container').append @clone
+        # insert the clone into #projects element
+        @avatar.closest('#projects').append @clone
 
         # make original user avatar image transparent
         @avatar.css opacity: .5
@@ -70,8 +70,8 @@ class Taskscape.Views.Projects.Members.IndexView extends Backbone.View
 
       # call this function on every dragend e
       onend: (e) ->
-        @avatar.fadeTo 200, 1
+        @avatar.fadeTo 100, 1
         @clone.fadeOut 
-          duration: 200
+          duration: 100
           complete: => @clone.remove()
         @avatar = null

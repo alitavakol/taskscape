@@ -6,25 +6,26 @@
 	user-select: none;
 }
 
-#projects, #projects > div, #projects > div > .row {
+#projects, #projects > div, #project-members-sidebar, #task-details-sidebar {
 	height: 100%;
 }
 
-#details-sidebar {
+#project-members-sidebar {
+	border-right: solid 1px lightgrey;
+	background-color: white;
+
 	position: absolute;
-	right: 0;
 	top: 0;
 	bottom: 0;
-	width: 85mm;
-}
-
-#project-members {
-	border-right: solid 1px lightgrey;
+	left: 0;
+	width: 6%;
+	max-width: 24mm;
+	min-width: 10mm;
 
 	ul {
 		padding-top: 2px;
 		padding-bottom: 2px;
-		
+
 		li {
 			padding-top: 2px;
 			padding-bottom: 2px;
@@ -33,7 +34,18 @@
 
 			img {
 				width: 100%;
+				border: solid 1px black;
 			}
 		}
 	}
+}
+
+#task-details-sidebar {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	right: 0;
+	width: 24%;
+	max-width: 96mm;
+	min-width: 60mm;
 }
