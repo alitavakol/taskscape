@@ -3,113 +3,113 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
 #tasks {
-	user-select: none;
+  user-select: none;
 }
 
 #tasks, #tasks > div, #tasks > div svg {
-	height: 100%;
+  height: 100%;
 }
 
 foreignObject {
-	pointer-events: none;
+  pointer-events: none;
 }
 
 foreignObject .title-container {
-	text-align: center;
-	display: table;
-	width: 120px;
-	height: 70px;
+  text-align: center;
+  display: table;
+  width: 120px;
+  height: 70px;
 
-	.title {
-		display: table-cell;
-		vertical-align: middle;
-		font-size: 20px;
-		text-overflow:ellipsis;
-		max-width: 120px;
-		max-height: 70px;
-		overflow: hidden;
-		line-height: 1.5em;
-	}
+  .title {
+    display: table-cell;
+    vertical-align: middle;
+    font-size: 20px;
+    text-overflow:ellipsis;
+    max-width: 120px;
+    max-height: 70px;
+    overflow: hidden;
+    line-height: 1.5em;
+  }
 }
 
 
 .task-details {
-	width: 100%;
-	height: 100%;
-	border-left: solid 1px lightgrey;
-	background-color: white;
-	overflow: auto;
+  width: 100%;
+  height: 100%;
+  border-left: solid 1px lightgrey;
+  background-color: white;
+  overflow: auto;
 
-	h4 {
-		color: white;
-		padding: 12px;
-		width: 100%;
-		margin-bottom: 0;
-		margin-top: 0;
+  h4 {
+    color: white;
+    padding: 12px;
+    width: 100%;
+    margin-bottom: 0;
+    margin-top: 0;
 
-		input {
-			margin: -3px;
-			width: 100%;
-		}
-	}
+    input {
+      margin: -3px;
+      width: 100%;
+    }
+  }
 
-	.detail {
-		padding-top: 16px;
-		padding-bottom: 16px;
-		padding-left: 12px;
-		padding-right: 12px;
+  .detail {
+    padding-top: 16px;
+    padding-bottom: 16px;
+    padding-left: 12px;
+    padding-right: 12px;
 
-		* {
-			vertical-align: middle;
-			line-height: inherit;
-		}
+    * {
+      vertical-align: middle;
+      line-height: inherit;
+    }
 
-		.table {
-			display: table;
-			margin-bottom: 0;
-			text-align: center;
-		}
-	}
-	.detail:not(:last-child) {
-		border-bottom: solid 1px lightgrey;
-	}
+    .table {
+      display: table;
+      margin-bottom: 0;
+      text-align: center;
+    }
+  }
+  .detail:not(:last-child) {
+    border-bottom: solid 1px lightgrey;
+  }
 
-	.importance i, .urgency i, .effort i, .status i {
-		font-size: xx-large;
-		display: table-cell;
-		width: 25%;
-	}
+  .importance i, .urgency i, .effort i, .status i {
+    font-size: xx-large;
+    display: table-cell;
+    width: 25%;
+  }
 
-	.importance i {
-		font-family: 'Arial Unicode MS';
-		font-style: normal;
-	}
+  .importance i {
+    font-family: 'Arial Unicode MS';
+    font-style: normal;
+  }
 
-	.effort i:nth-child(1) {
-		font-size: medium;
-	}
-	.effort i:nth-child(2) {
-		font-size: large;
-	}
-	.effort i:nth-child(3) {
-		font-size: x-large;
-	}
-	.effort i:nth-child(4) {
-		font-size: xx-large;
-	}
+  .effort i:nth-child(1) {
+    font-size: medium;
+  }
+  .effort i:nth-child(2) {
+    font-size: large;
+  }
+  .effort i:nth-child(3) {
+    font-size: x-large;
+  }
+  .effort i:nth-child(4) {
+    font-size: xx-large;
+  }
 
-	.clickable {
-		opacity: .4;
-		filter: alpha(opacity=50);
-		cursor: pointer;
-	}
-	.clickable:hover {
-		opacity: .9;
-		filter: alpha(opacity=90);
-	}
-	.clickable.selected {
-		opacity: 1;
-		filter: alpha(opacity=100);
-	}
+  .clickable {
+    opacity: .4;
+    filter: alpha(opacity=50);
+    cursor: pointer;
+  }
+  .clickable:hover {
+    opacity: .9;
+    filter: alpha(opacity=90);
+  }
+  .clickable.selected {
+    opacity: 1;
+    filter: alpha(opacity=100);
+  }
 
 }

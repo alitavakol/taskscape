@@ -41,7 +41,7 @@ class Taskscape.Views.Tasks.ShowView extends Backbone.View
     @render_avatars() # attach avatar of assignees to task's shape
 
     # register some nodes so we can find this view from them
-    @$('#circle.draggable,.tappable,.task-container,.dropzone').data('view_object', @)
+    @$('circle.draggable,.tappable,.task-container').data('view_object', @)
     @$el.data('view_object', @)
 
     @focus false
@@ -218,12 +218,12 @@ class Taskscape.Views.Tasks.ShowView extends Backbone.View
     true
 
   handle_drag_enter: (dropped_object) ->
-    return if dropped_object instanceof Taskscape.Views.Projects.ShowView
+    return if dropped_object instanceof Taskscape.Views.Projects.ShowView or dropped_object.target
     @$('.standout').fadeIn(100).attr
       "stroke-width": window.drag_scale * 76 / @R # make stroke width independent of zoom level and shape size
 
   handle_drag_leave: (dropped_object) ->
-    return if dropped_object instanceof Taskscape.Views.Projects.ShowView
+    return if dropped_object instanceof Taskscape.Views.Projects.ShowView or dropped_object.target
     @$('.standout').fadeOut(100)
 
   # handle drop of objects (project members, other tasks, ...) into this task

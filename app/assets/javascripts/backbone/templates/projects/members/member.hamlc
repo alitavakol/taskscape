@@ -1,1 +1,1 @@
-%img.rounded{src: "#{@avatar}"}
+%img.member-avatar.card{src: "#{@avatar}"}

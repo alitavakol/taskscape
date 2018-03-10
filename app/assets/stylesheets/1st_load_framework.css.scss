@@ -13,7 +13,7 @@ img {
 // override for the 'Home' navigation link
 .navbar-brand {
   font-size: inherit;
-  }
+}
 
 // THESE ARE EXAMPLES YOU CAN MODIFY
 // create your own classes
@@ -45,6 +45,15 @@ main {
   @extend .container-fluid;
   flex: auto;
   height: 100%;
+}
+
+.member-avatar {
+  margin: 0;
+  width: 100%;
+}
+
+table {
+  border-collapse: inherit;
 }
 
 section {

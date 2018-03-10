@@ -3,49 +3,47 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
 #projects {
-	user-select: none;
+  user-select: none;
 }
 
-#projects, #projects > div, #project-members-sidebar, #task-details-sidebar {
-	height: 100%;
+#projects, #projects > div, #task-details-sidebar {
+  height: 100%;
+}
+
+#projetc-equipment-sidebar {
+
 }
 
 #project-members-sidebar {
-	border-right: solid 1px lightgrey;
-	background-color: white;
+  position: absolute;
+  top: 16px;
+  bottom: 0;
+  left: 16px;
+  width: 5%;
+  max-width: 20mm;
+  min-width: 10mm;
 
-	position: absolute;
-	top: 0;
-	bottom: 0;
-	left: 0;
-	width: 6%;
-	max-width: 24mm;
-	min-width: 10mm;
+  ul {
+    list-style-type: none;
+    padding-top: 2px;
+    padding-bottom: 2px;
 
-	ul {
-		padding-top: 2px;
-		padding-bottom: 2px;
-
-		li {
-			padding-top: 2px;
-			padding-bottom: 2px;
-			padding-right: 4px;
-			padding-left: 4px;
-
-			img {
-				width: 100%;
-				border: solid 1px black;
-			}
-		}
-	}
+    li {
+      padding-top: 2px;
+      padding-bottom: 2px;
+      padding-right: 4px;
+      padding-left: 4px;
+    }
+  }
 }
 
 #task-details-sidebar {
-	position: absolute;
-	top: 0;
-	bottom: 0;
-	right: 0;
-	width: 24%;
-	max-width: 96mm;
-	min-width: 60mm;
+  float: right;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 24%;
+  max-width: 96mm;
+  min-width: 60mm;
 }

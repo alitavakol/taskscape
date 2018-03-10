@@ -14,11 +14,11 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
     @$el.html(@template(@model.toJSON()))
 
     @$('.tappable').data('view_object', @)
-    @svg = @$('svg')
+    @svg = @$('svg#canvas')
 
     # render members side bar
     members_view = new Taskscape.Views.Projects.Members.IndexView(collection: @model.get('memberships'))
-    @$("#project-members-sidebar").html(members_view.render().el)
+    @$("#project-members-sidebar").append members_view.render().el
 
     # render tasks of this project (supertask)
     @model.get('tasks').forEach (t) =>
@@ -27,7 +27,7 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
         attributes: 
           transform: "translate(#{t.get('x')} #{t.get('y')})"
 
-      @$('svg').append(view.render().el)
+      @svg.append(view.render().el)
       @$('#task-details-sidebar').append(view.details.render().el)
 
       @objects.push view
@@ -45,7 +45,7 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
 
     # update svg viewbox on resize
     $(window).resize =>
-      @svg.data('padding-left', 1.1 * @$('#project-members-sidebar').width())
+      @svg.data('padding-left', 1.2 * @$('#project-members-sidebar').width())
       @svg.data('padding-right', if window.focused_view == @ then 0 else @$('#task-details-sidebar').width())
       SVG.update_viewbox_variables @svg
       SVG.ensure_visible(window.focused_view.$el, window.focused_view.x, window.focused_view.y) if window.focused_view != @
@@ -152,7 +152,7 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
 
   post_render: ->
     # initialize svg viewbox
-    @svg.data('padding-left', 1.1 * @$('#project-members-sidebar').width())
+    @svg.data('padding-left', 1.2 * @$('#project-members-sidebar').width())
     SVG.init_viewbox @svg
 
     # call post_render on all included views
@@ -222,20 +222,30 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
       ondragenter: (e) ->
         dropped_object = $(e.relatedTarget).data('view_object')
         dropzone = $(e.target).data('view_object')
-        dropzone.handle_drag_enter dropped_object
+        dropzone.handle_drag_enter dropped_object ? e
         window.hot_dropzone = dropped_object
 
       ondragleave: (e) ->
         dropped_object = $(e.relatedTarget).data('view_object')
         dropzone = $(e.target).data('view_object')
-        dropzone.handle_drag_leave dropped_object
+        dropzone.handle_drag_leave dropped_object ? e
         window.hot_dropzone = null
 
       ondrop: (e) ->
         dropped_object = $(e.relatedTarget).data('view_object')
         dropzone = $(e.target).data('view_object')
-        dropzone.handle_drag_leave dropped_object
-        dropzone.handle_drop dropped_object
+        dropzone.handle_drag_leave dropped_object ? e
+        dropzone.handle_drop dropped_object ? e
         @
 
       ondropdeactivate: (e) ->
+
+  handle_drag_enter: (e) ->
+    @
+
+  handle_drag_leave: (e) ->
+    @
+
+  handle_drop: (e) ->
+    console.log e
+    @

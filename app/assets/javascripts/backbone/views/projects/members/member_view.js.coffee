@@ -8,7 +8,6 @@ class Taskscape.Views.Projects.Members.MemberView extends Backbone.View
     "click .destroy" : "destroy"
 
   tagName: "li"
-  className: 'member-avatar'
 
   destroy: () ->
     @model.destroy()

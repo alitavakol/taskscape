@@ -29,15 +29,17 @@ class Taskscape.Views.Projects.Members.IndexView extends Backbone.View
 
   # enable dragging user avatars into tasks and other drop zones
   enable_drag: ->
-    interact('.member-avatar img').draggable
+    interact('img.member-avatar, #drop-task').draggable
       max: 1 # allow dragging of multple elements at the same time
       inertia: false
 
       onstart: (e) ->
         @avatar = $(e.currentTarget) # the about-to-be-dragged element
+        if @avatar.attr('id') == 'drop-task'
+          drop_task = true
 
         # find position of the dragged avatar relative to #projects element
-        top = 0
+        top = if drop_task then 0 else -$('#munition-sidebar').height()
         left = 0
         el = @avatar.parent()
         while el.attr('id') != 'projects'
