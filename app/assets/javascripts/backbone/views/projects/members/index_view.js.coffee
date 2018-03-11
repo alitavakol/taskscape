@@ -34,6 +34,8 @@ class Taskscape.Views.Projects.Members.IndexView extends Backbone.View
       inertia: false
 
       onstart: (e) ->
+        $('#popover').popover('hide')
+
         @avatar = $(e.currentTarget) # the about-to-be-dragged element
         if @avatar.attr('id') == 'drop-task'
           drop_task = true

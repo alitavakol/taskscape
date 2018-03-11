@@ -37,7 +37,7 @@ class Taskscape.Views.Tasks.Assignments.AvatarView extends Backbone.View
   on_drag_end: ->
     @$el.removeAttr 'transform'
 
-    unless window.hot_dropzone
+    if !window.hot_dropzone || window.hot_dropzone instanceof Taskscape.Views.Projects.ShowView
       # avatar is dropped into nowhere; so, delete it
       @model.destroy 
         backup: _.extend @model.toJSON(), task_id: @task.model.id

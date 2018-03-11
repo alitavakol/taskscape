@@ -57,3 +57,6 @@ Backbone.sync = (method, model, options) ->
 # https://github.com/jashkenas/backbone/issues/630
 $.ajaxSetup
   cache: false
+
+$(document).keyup (e) ->
+  $('#popover').popover('hide') if e.keyCode == 27 # hide any open popover dialog

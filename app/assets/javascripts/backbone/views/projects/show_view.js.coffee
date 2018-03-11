@@ -2,9 +2,11 @@ Taskscape.Views.Projects ||= {}
 
 class Taskscape.Views.Projects.ShowView extends Backbone.View
   template: JST["backbone/templates/projects/show"]
+  new_task_dialog_template: JST["backbone/templates/projects/dialogs/new_task"]
 
   events:
     "wheel svg" : "on_mousewheel"
+    "click"     : "on_click"
 
   initialize: ->
     @objects = []
@@ -174,6 +176,7 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
       inertia: true
 
       onstart: (e) ->
+        $('#popover').popover('hide')
 
       # call this function on every dragmove e
       onmove: (e) =>
@@ -192,6 +195,7 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
         $(e.currentTarget).data('view_object').focus true
         window.focused_view.$el.appendTo window.focused_view.$el.parent()
 
+      $('#popover').popover('hide')
       e.stopPropagation()
 
   # enable dragging tasks
@@ -201,6 +205,7 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
       inertia: false
 
       onstart: (e) ->
+        $('#popover').popover('hide')
         window.dragging_view = $(e.currentTarget).data('view_object')
         window.dragging_view.on_drag_start()
 
@@ -223,7 +228,7 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
         dropped_object = $(e.relatedTarget).data('view_object')
         dropzone = $(e.target).data('view_object')
         dropzone.handle_drag_enter dropped_object ? e
-        window.hot_dropzone = dropped_object
+        window.hot_dropzone = dropzone
 
       ondragleave: (e) ->
         dropped_object = $(e.relatedTarget).data('view_object')
@@ -247,5 +252,29 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
     @
 
   handle_drop: (e) ->
-    console.log e
+    return unless e.relatedTarget.id == 'drop-task' # allow only #drop-task element to be dropped into canvas
+
+    $('#popover').popover
+      title: 'Create a new task'
+      content: @new_task_dialog_template(@model.toJSON())
+      html: true
+      placement: 'auto'
+      trigger: 'focus'
+    .css
+      top: e.dragEvent.clientY
+      left: e.dragEvent.clientX
+    .on 'shown.bs.popover', -> console.log 'shown.bs.popover'
+    .on 'hidden.bs.popover', -> $('#popover').popover('dispose')
+    .popover('show')
+
+    $('#new-task-title').focus()
+
+    $('.color-tool div').click (e) ->
+      $('.color-tool div').removeClass('fa fa-check')
+      $(e.target).addClass('fa fa-check')
+
     @
+
+  on_click: (e) ->
+    # hide any open popover dialog if clicked outside
+    $('#popover').popover('hide') unless $(e.target).closest('.popover').length

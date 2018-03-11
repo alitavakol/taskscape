@@ -239,6 +239,12 @@ class Taskscape.Views.Tasks.ShowView extends Backbone.View
 
     @
 
+  handle_drop_enter: (dropzone) ->
+    @
+
+  handle_drop_leave: (dropzone) ->
+    @
+
   # assign this task to the specified user
   add_assignment: (user) ->
     assignment = new Taskscape.Models.Assignment
