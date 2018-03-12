@@ -23,10 +23,14 @@ class Taskscape.Views.Tasks.ShowView extends Backbone.View
     @avatars.task = @
 
     # bind view to model, so if model changes, it will be reflected into view
+    @listenTo @model, 'destroy', -> @remove()
     @listenTo @model, 'change:title', (model, response, options) -> @render_title()
     @listenTo @model, 'change:effort', (model, response, options) -> @render_effort()
     @listenTo @model, 'change:status', (model, response, options) -> @render_status()
     @listenTo @model, 'change:importance change:urgency', (model, response, options) -> @render_importance_and_urgency()
+    @listenTo @model, 'change:color', (model, response, options) -> 
+      @update_plate()
+      @render_title()
 
     @
 
@@ -35,6 +39,7 @@ class Taskscape.Views.Tasks.ShowView extends Backbone.View
     # render skeleton
     @$el.html @template @model.toJSON()
 
+    @update_plate()
     @render_effort(true) # render effort of the task (change shape size)
     @render_status() # render status of the task
     @render_importance_and_urgency() # render importance and urgency of the task
@@ -45,6 +50,13 @@ class Taskscape.Views.Tasks.ShowView extends Backbone.View
     @$el.data('view_object', @)
 
     @focus false
+    @
+
+  update_plate: ->
+    color = tinycolor(@model.get('color'))
+    @$('.plate').attr
+      fill: color.lighten().toHexString()
+      stroke: color.darken().toHexString()
     @
 
   # this function renders avatar of assignees attached to task's shape
@@ -125,36 +137,68 @@ class Taskscape.Views.Tasks.ShowView extends Backbone.View
   # called when dragging of task's shape is just started
   on_drag_start: ->
     @bring_to_front()
-
     @$el.fadeTo 100, .85
-    @x0 = @x
-    @y0 = @y
-
     false
 
   # called while task's shape is dragging
   on_drag: (dx, dy) =>
-    @move(@x + dx, @y + dy)
+    @move
+      x: @x + dx
+      y: @y + dy
     false
 
   # called when dragging of task's shape is finished
   on_drag_end: ->
     @$el.fadeTo 100, 1
     SVG.ensure_visible(@$el, @x, @y) if window.focused_view == @
-
-    @model.save
-      x: @x
-      y: @y
-    ,
-      pick: ['x', 'y', 'effort'] # save effort too, because changing it may result in change of position if the task with new size, was overlapping other objects
-
     false # do not remove this!
 
   # moves task's shape on screen
-  move: (x, y) ->
-    @x = x
-    @y = y
-    @$el.attr transform: "translate(#{@x} #{@y})"
+  # if x new position is not given, moves it to last stable position @x0, @y0
+  move: (options) ->
+    options ||= {}
+
+    # use last stable position if new position is not provided in the arguments
+    options.x = @x0 unless options.x
+    options.y = @y0 unless options.y
+
+    if options.animation
+      # current position
+      x = @x
+      y = @y
+
+      # animation delta
+      delta_x = (options.x - x) / 5
+      delta_y = (options.y - y) / 5
+
+      # animate to new position
+      $(t: 1).animate t: 5, 
+        step: (t) => @move 
+          x: x + delta_x * t
+          y: y + delta_y * t
+
+    else # move without animation
+      @$el.attr transform: "translate(#{options.x} #{options.y})"
+
+    # new position
+    @x = options.x
+    @y = options.y
+
+    @save_position() if options.save
+    @
+
+  stable_position: ->
+    @x0 = @x
+    @y0 = @y
+    @
+
+  save_position: ->
+    if @model.id
+      @model.save
+        x: @x
+        y: @y
+      ,
+        pick: ['x', 'y', 'effort'] # save effort too, because changing it may result in change of position if the task with new size, was overlapping other objects
 
   bring_to_front: ->
     # show this object on top of other objects
@@ -173,8 +217,7 @@ class Taskscape.Views.Tasks.ShowView extends Backbone.View
 
         # update view
         @$('.shadow').fadeTo 100, 1
-        @$('.plate').attr
-          stroke: tinycolor(@model.get('color')).darken().darken().darken().toHexString()
+        @$('.focus-border').attr opacity: .5
 
         @bring_to_front()
 
@@ -187,8 +230,7 @@ class Taskscape.Views.Tasks.ShowView extends Backbone.View
     else
       # update view
       @$('.shadow').fadeTo 100, .3
-      @$('.plate').attr
-        stroke: tinycolor(@model.get('color')).darken().toHexString()
+      @$('.focus-border').attr opacity: 0
 
       # hide task details side bar
       @details.$el.hide() unless keep
@@ -218,13 +260,17 @@ class Taskscape.Views.Tasks.ShowView extends Backbone.View
     true
 
   handle_drag_enter: (dropped_object) ->
-    return if dropped_object instanceof Taskscape.Views.Projects.ShowView or dropped_object.target
-    @$('.standout').fadeIn(100).attr
-      "stroke-width": window.drag_scale * 76 / @R # make stroke width independent of zoom level and shape size
+    if dropped_object.relatedTarget && dropped_object.relatedTarget.id == 'drop-task' # a #drop-task element dropped into canvas
+      $('#drop-task.dragging .drop-emblem').hide()
+      $('#drop-task.dragging .prohibited-emblem').show()
+
+    else unless dropped_object instanceof Taskscape.Views.Projects.ShowView or dropped_object.target
+      @$('.standout').fadeIn(100).attr
+        "stroke-width": window.SVG.drag_scale * 76 / @R # make stroke width independent of zoom level and shape size
 
   handle_drag_leave: (dropped_object) ->
-    return if dropped_object instanceof Taskscape.Views.Projects.ShowView or dropped_object.target
-    @$('.standout').fadeOut(100)
+    unless dropped_object instanceof Taskscape.Views.Projects.ShowView or dropped_object.target
+      @$('.standout').fadeOut(100)
 
   # handle drop of objects (project members, other tasks, ...) into this task
   handle_drop: (dropped_object) ->
@@ -273,3 +319,8 @@ class Taskscape.Views.Tasks.ShowView extends Backbone.View
       error: (model, response, options) ->
         assignment.set task_id: options.previous_value
     @
+
+  remove: ->
+    @avatars.remove()
+    @details.remove()
+    Backbone.View.prototype.remove.call @

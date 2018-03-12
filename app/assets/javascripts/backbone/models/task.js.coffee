@@ -3,16 +3,16 @@ class Taskscape.Models.Task extends Backbone.RelationalModel
   urlRoot: 'tasks'
 
   defaults:
-    title: null
+    title: ''
     description: null
-    status: null
-    urgency: null
-    importance: null
-    effort: null
+    status: 'not_started'
+    urgency: 'normal_urgency'
+    importance: 'normal_importance'
+    effort: 'medium_effort'
     due_date: null
-    x: null
-    y: null
-    color: null
+    x: 0
+    y: 0
+    color: '#fb6964'
 
   relations: [
     type: 'HasMany',

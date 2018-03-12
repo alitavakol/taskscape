@@ -37,10 +37,12 @@ window.SVG =
       @vbw = vbw
       @vbh = vbw / u
 
-    window.drag_scale = @vbw / svg.width() # normalization factor for conversion of mouse location change to svg space
+    @drag_scale = @vbw / svg.width() # normalization factor for conversion of mouse location change to svg space
 
     if apply
       svg.attr viewBox: "#{@vbx} #{@vby} #{@vbw} #{@vbh}"
+      svg.trigger 'viewbox_changed'
+
 
   # changes svg viewbox by animation (optional), 
   # returns true if changed
@@ -65,6 +67,7 @@ window.SVG =
     $(t: 1).animate t: frames, 
       step: (t) -> 
         svg.attr viewBox: "#{old_vbx + t * delta_x} #{old_vby + t * delta_y} #{old_vbw + t * delta_w} #{old_vbh + t * delta_h}"
+        svg.trigger 'viewbox_changed'
 
     return Math.abs(old_vbw - @vbw) > .01 * @vbw || Math.abs(old_vbh - @vbh) > .01 * @vbh || Math.abs(old_vbx - @vbx) > .01 * Math.abs(@vbx) || Math.abs(old_vby - @vby) > .01 * Math.abs(@vby)
 
@@ -76,8 +79,8 @@ window.SVG =
 
     vbw = @vbw * s
     vbh = @vbh * s
-    vbx = @vbx + offsetX * window.drag_scale * (1-s)
-    vby = @vby + offsetY * window.drag_scale * (1-s)
+    vbx = @vbx + offsetX * @drag_scale * (1-s)
+    vby = @vby + offsetY * @drag_scale * (1-s)
 
     SVG.update_viewbox_variables svg, vbx, vby, vbw, vbh, true
 
@@ -176,6 +179,7 @@ window.SVG =
 
   # pan the specified svg element
   move: (svg, dx, dy) ->
-    @vbx -= dx * window.drag_scale
-    @vby -= dy * window.drag_scale
+    @vbx -= dx * @drag_scale
+    @vby -= dy * @drag_scale
     svg.attr viewBox: "#{@vbx} #{@vby} #{@vbw} #{@vbh}"
+    svg.trigger 'viewbox_changed'

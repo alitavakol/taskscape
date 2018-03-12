@@ -51,7 +51,9 @@ class Taskscape.Views.Projects.Members.IndexView extends Backbone.View
           el = el.parent()
 
         # clone the avatar and position it absolutely
-        @clone = @avatar.clone().css
+        @clone = @avatar.clone()
+        .addClass('dragging')
+        .css
           position: 'absolute'
           top: top
           left: left

@@ -16,7 +16,8 @@
   %g.avatar-container
 
   / main circle
-  %circle.plate{r: 72, fill: "#{tinycolor(@color).lighten().toHexString()}"}
+  %circle.plate{r: 72}
+  %circle.focus-border{r: 72, opacity: 0, stroke: '#000', fill: 'transparent'}
 
   / status, as a centered big sign
   %g.status

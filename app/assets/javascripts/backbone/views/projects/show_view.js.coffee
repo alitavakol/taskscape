@@ -5,12 +5,24 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
   new_task_dialog_template: JST["backbone/templates/projects/dialogs/new_task"]
 
   events:
-    "wheel svg" : "on_mousewheel"
-    "click"     : "on_click"
+    "wheel svg"           : "on_mousewheel"
+    "click"               : "on_click"
 
   initialize: ->
     @objects = []
     x = y = 0
+
+    @listenTo @model.get('tasks'), 'add', (model, response, options) -> 
+      @add_task(model)
+      @remove_overlaps()
+
+    @listenTo @model.get('tasks'), 'remove', (model, response, options) ->
+      # remove view of removed task
+      @objects = @objects.filter (o) -> o.model.id != model.id
+
+      # restore other tasks to their original position (their position may have been changed to remove overlaps)
+      @objects.forEach (o) -> 
+        o.move animation: true
 
   render: ->
     @$el.html(@template(@model.toJSON()))
@@ -23,22 +35,7 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
     @$("#project-members-sidebar").append members_view.render().el
 
     # render tasks of this project (supertask)
-    @model.get('tasks').forEach (t) =>
-      view = new Taskscape.Views.Tasks.ShowView
-        model: t
-        attributes: 
-          transform: "translate(#{t.get('x')} #{t.get('y')})"
-
-      @svg.append(view.render().el)
-      @$('#task-details-sidebar').append(view.details.render().el)
-
-      @objects.push view
-      @stopListening t
-      @listenTo t, 'change:effort', (model, response, options) -> @remove_overlaps() # ensure no overlap if task size changes (as a consequence of changing effort)
-
-      view.model.set
-        x: @x - 1
-      view.model.trigger('change:x')
+    @model.get('tasks').forEach (t) => @add_task t
 
     @enable_drag() # enable dragging tasks
     @enable_drop() # enable dropping an object into another
@@ -46,13 +43,26 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
     @enable_tap() # enable focus object on tap or click
 
     # update svg viewbox on resize
-    $(window).resize =>
+    $(window).off('resize').on 'resize', =>
       @svg.data('padding-left', 1.2 * @$('#project-members-sidebar').width())
       @svg.data('padding-right', if window.focused_view == @ then 0 else @$('#task-details-sidebar').width())
       SVG.update_viewbox_variables @svg
       SVG.ensure_visible(window.focused_view.$el, window.focused_view.x, window.focused_view.y) if window.focused_view != @
 
     return this
+
+  add_task: (t) ->
+    view = new Taskscape.Views.Tasks.ShowView
+      model: t
+      attributes: 
+        transform: "translate(#{t.get('x')} #{t.get('y')})"
+
+    @svg.append(view.render().el)
+    @$('#task-details-sidebar').append(view.details.render().el)
+
+    @objects.push view
+    @stopListening t
+    @listenTo t, 'change:effort', (model, response, options) -> @remove_overlaps() # ensure no overlap if task size changes (as a consequence of changing effort)
 
   bring_to_front: ->
     # do nothing
@@ -83,38 +93,29 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
   # returns true if arrangements changed
   remove_overlaps: ->
     moved_objects = [] # moved objects after re-arrangement
+    new_object_added = false
 
-    # make a backup of initial position of objects
-    @objects.forEach (m) ->
-      m.x0 = m.x
-      m.y0 = m.y
+    @objects.forEach (o) -> o.stable_position()
 
     # compute new positions to have no overlaps
     loop
       moved = false
       for m in @objects
+        new_object_added = true unless m.model.id
+
         if @draw_away_slightly(m)
           moved = true
           moved_objects.push(m)
-      break unless moved
 
-    # compute animation delta for each object
-    @objects.forEach (m) ->
-      m.delta_x = (m.x - m.x0) / 5
-      m.delta_y = (m.y - m.y0) / 5
-      m.move(m.x0, m.y0) # restore original position
+      # repeat again unless no change made in this round
+      break unless moved # finish the process if no change happened in this round
 
-    # animate objects to their new position
-    $(t: 1).animate t: 5, 
-      step: (t) => 
-        for m in @objects
-          m.move(m.x0 + m.delta_x * t, m.y0 + m.delta_y * t)
-        @
+    _.uniq(moved_objects).forEach (m) -> 
+      x = m.x
+      y = m.y
 
-      complete: ->
-        # save new position of moved objects
-        _.uniq(moved_objects).forEach (o) -> o.on_drag_end()
-        @
+      # restore original position of objects, then move them to their new position by animation
+      m.move().move x: x, y: y, animation: true, save: !new_object_added
 
     return moved_objects.length > 0
 
@@ -143,13 +144,17 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
         vy += 100/a.R * 20*dy/d
 
     if vx || vy
-      a.move(a.x + vx, a.y + vy)
+      a.move
+        x: a.x + vx
+        y: a.y + vy
       return true
 
     return false
 
   # handle zoom-in/zoom-out on mouse wheel
   on_mousewheel: (e) ->
+    # inactivate zoom if popover dialog is visible
+    return if $('.popover') && $('.popover').css('display')
     SVG.zoom @svg, e
 
   post_render: ->
@@ -211,12 +216,14 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
 
       # call this function on every dragmove e
       onmove: (e) ->
-        window.dragging_view.on_drag(e.dx * window.drag_scale, e.dy * window.drag_scale)
+        window.dragging_view.on_drag(e.dx * window.SVG.drag_scale, e.dy * window.SVG.drag_scale)
 
       # call this function on every dragend e
       onend: (e) =>
         # call object to save its new position only if remove_overlaps did not call it
-        window.dragging_view.on_drag_end() unless @remove_overlaps()
+        window.dragging_view.on_drag_end()
+        if window.dragging_view.save_position
+          window.dragging_view.save_position() unless @remove_overlaps()
 
   # enable dropping something into objects
   enable_drop: ->
@@ -246,35 +253,84 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
       ondropdeactivate: (e) ->
 
   handle_drag_enter: (e) ->
+    if e.relatedTarget && e.relatedTarget.id == 'drop-task' # a #drop-task element dropped into canvas
+      $('#drop-task.dragging .drop-emblem').show()
+      $('#drop-task.dragging .prohibited-emblem').hide()
     @
 
   handle_drag_leave: (e) ->
+    if e.relatedTarget && e.relatedTarget.id == 'drop-task' # a #drop-task element dropped into canvas
+      $('#drop-task.dragging .drop-emblem').hide()
     @
 
   handle_drop: (e) ->
-    return unless e.relatedTarget.id == 'drop-task' # allow only #drop-task element to be dropped into canvas
+    if e.relatedTarget && e.relatedTarget.id == 'drop-task' # a #drop-task element dropped into canvas
+      # create a new task
+      task = new Taskscape.Models.Task
+        x: e.dragEvent.clientX * window.SVG.drag_scale + window.SVG.vbx
+        y: e.dragEvent.clientY * window.SVG.drag_scale + window.SVG.vby
 
-    $('#popover').popover
-      title: 'Create a new task'
-      content: @new_task_dialog_template(@model.toJSON())
-      html: true
-      placement: 'auto'
-      trigger: 'focus'
-    .css
-      top: e.dragEvent.clientY
-      left: e.dragEvent.clientX
-    .on 'shown.bs.popover', -> console.log 'shown.bs.popover'
-    .on 'hidden.bs.popover', -> $('#popover').popover('dispose')
-    .popover('show')
+      # add to collection
+      @model.get('tasks').add task
 
-    $('#new-task-title').focus()
-
-    $('.color-tool div').click (e) ->
-      $('.color-tool div').removeClass('fa fa-check')
-      $(e.target).addClass('fa fa-check')
+      @show_task_dialog_for task, 
+        x: e.dragEvent.clientX # + (if e.dragEvent.clientX > e.target.clientWidth / 2 then -50 else 50)
+        y: e.dragEvent.clientY + (if e.dragEvent.clientY > e.target.clientHeight / 2 then -20 else 20)
 
     @
 
   on_click: (e) ->
-    # hide any open popover dialog if clicked outside
+    # hide any open popover dialog if clicked an element that is not a child of the popover dialog element
     $('#popover').popover('hide') unless $(e.target).closest('.popover').length
+
+  # present a dialog to user to enter title and color of the new task
+  show_task_dialog_for: (task, options) ->
+    $('#popover').popover
+      title: 'Create a new task'
+      content: @new_task_dialog_template(task.toJSON())
+      html: true
+      placement: 'auto'
+      trigger: 'focus'
+
+    .css # place the dialog on drop location
+      top: options.y
+      left: options.x
+
+    .popover('show')
+
+    # .on 'shown.bs.popover', -> console.log 'shown.bs.popover'
+
+    .on 'hidden.bs.popover', => # triggered when dialog disappeared
+      $('#popover').popover('dispose')
+
+      unless task.id # popover dialog was cancelled and so task did not save
+        task.destroy() # destroy the new task
+
+    .on 'save.bs.popover', => # triggered when save button of the dialog is pushed
+      # save task with provided title and color
+      task.save {}, 
+        pick: ['title', 'x', 'y', 'color', 'supertask_id']
+        # success: =>
+        #   @objects.forEach (o) -> o.stable_position()
+        error: (model, response, options) ->
+          model.destroy() # remove task if sync failed
+
+      # close the popover dialog
+      $('#popover').popover('dispose')
+
+    $('#new-task-title').focus()
+
+    # respond to color pick
+    $('#color-tool div').click (e) ->
+      $('#color-tool div').removeClass('fa fa-check')
+      $(e.target).addClass('fa fa-check')
+      task.set color: "##{e.target.id.substr(6)}"
+
+    # respond to title change
+    $('#new-task-title').on 'keyup', (e) ->
+      task.set title: e.target.value
+      $('.popover .btn-success').prop('disabled', e.target.value.length == 0)
+      if e.keyCode == 13 && e.target.value.length > 0
+        $('#popover').trigger('save.bs.popover')
+        return
+  @

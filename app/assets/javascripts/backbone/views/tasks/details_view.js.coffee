@@ -31,7 +31,7 @@ class Taskscape.Views.Tasks.DetailsView extends Backbone.View
     return unless e.keyCode == 13
 
     @model.save
-      title: @$('.title input').val()
+      title: e.target.value
     ,
       pick: ['title']
       previous_value: @model.get('title')
