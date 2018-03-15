@@ -8,6 +8,8 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
     "wheel svg"           : "on_mousewheel"
     "click"               : "on_click"
 
+  className: 'remove-gutters'
+
   initialize: ->
     @objects = []
     x = y = 0
@@ -21,8 +23,7 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
       @objects = @objects.filter (o) -> o.model.id != model.id
 
       # restore other tasks to their original position (their position may have been changed to remove overlaps)
-      @objects.forEach (o) -> 
-        o.move animation: true
+      @objects.forEach (o) -> o.move animation: true
 
   render: ->
     @$el.html(@template(@model.toJSON()))
@@ -81,7 +82,7 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
         @$('#task-details-sidebar').fadeOut
           duration: 100
           complete: -> 
-            old_focused_view.details.$el.hide() if old_focused_view # hide task details side bar
+            old_focused_view && old_focused_view.details && old_focused_view.details.$el.hide() # hide task details side bar
 
         SVG.autofit @svg
 

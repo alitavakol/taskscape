@@ -1,1 +1,1 @@
-%img.member-avatar.card{src: "#{@avatar}"}
+%img.member-avatar.card.img-responsive{src: "#{@avatar}", title: "#{@name}"}

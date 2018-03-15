@@ -98,6 +98,7 @@ window.SVG =
 
     # object position
     bb = svg[0].getBBox()
+    return if bb.width == 0 || bb.height == 0
 
     vbw = bb.width / (1 - l - r)
     vbh = bb.height

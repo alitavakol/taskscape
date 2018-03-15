@@ -1,9 +1,14 @@
 %h3 User
 
-%p 
+%div 
   Name: 
-  = @user.name if @user.name
+  %b= @user.name if @user.name
 
-%p
+%div
   Email: 
-  = @user.email if @user.email
+  %b= @user.email if @user.email
+
+- if user_signed_in? && @user == current_user
+  %br
+  %div
+    =link_to('Sign out', destroy_user_session_path, method: :delete)

@@ -4,15 +4,9 @@ class Taskscape.Routers.ProjectsRouter extends Backbone.Router
     @projects.reset options.projects if options?
 
   routes:
-    "new"      : "newProject"
     "index"    : "index"
-    ":id/edit" : "edit"
     ":id"      : "show"
     ".*"       : "index"
-
-  newProject: ->
-    @view = new Taskscape.Views.Projects.NewView(collection: @projects)
-    $("#projects").html(@view.render().el)
 
   index: ->
     Backbone.Relational.store.reset()
@@ -29,10 +23,3 @@ class Taskscape.Routers.ProjectsRouter extends Backbone.Router
         view = new Taskscape.Views.Projects.ShowView(model: m)
         $("#projects").html(view.render().el)
         view.post_render()
-
-  edit: (id) ->
-    project = Taskscape.Models.Project.find(id) ? new Taskscape.Models.Project(id: id)
-    project.fetch
-      success: (m) ->
-        view = new Taskscape.Views.Projects.EditView(model: m)
-        $("#projects").html(view.render().el)

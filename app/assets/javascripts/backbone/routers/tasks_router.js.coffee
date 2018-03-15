@@ -4,15 +4,9 @@ class Taskscape.Routers.TasksRouter extends Backbone.Router
     @tasks.reset options.tasks if options?
 
   routes:
-    "new"      : "newTask"
     "index"    : "index"
-    ":id/edit" : "edit"
     ":id"      : "show"
     ".*"       : "index"
-
-  newTask: ->
-    @view = new Taskscape.Views.Tasks.NewView(collection: @tasks)
-    $("#tasks").html(@view.render().el)
 
   index: ->
     Backbone.Relational.store.reset()
@@ -42,10 +36,3 @@ class Taskscape.Routers.TasksRouter extends Backbone.Router
       error: (e, f) =>
         console.log f.responseJSON
         @navigate 'index'
-
-  edit: (id) ->
-    task = Taskscape.Models.Task.find(id) ? new Taskscape.Models.Task(id: id)
-    task.fetch
-      success: (m) ->
-        view = new Taskscape.Views.Tasks.EditView(model: m)
-        $("#tasks").html(view.render().el)

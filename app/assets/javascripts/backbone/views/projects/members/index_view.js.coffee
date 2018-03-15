@@ -5,7 +5,6 @@ class Taskscape.Views.Projects.Members.IndexView extends Backbone.View
   template: JST["backbone/templates/projects/members/index"]
 
   tagName: "ul"
-  className: "container-fluid"
 
   initialize: () ->
     @collection.bind('reset', @addAll)

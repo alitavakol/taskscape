@@ -1,4 +1,4 @@
-%h1 Listing tasks
+%h1 Listing Tasks
 
 %table#tasks-table
   %tr
@@ -15,7 +15,3 @@
     %th
     %th
     %th
-
-%br
-
-%a{href: "#/new"} New Task

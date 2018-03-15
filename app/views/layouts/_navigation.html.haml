@@ -1,11 +1,25 @@
--# navigation styled for Bootstrap 3.0
-%div
-  %nav.navbar.navbar-dark.bg-inverse{style: "background-color: darkcyan;"}
-    %ul.nav.navbar-nav.clearfix
-      %li.nav-item
-        %button.navbar-toggler.hidden-sm-up.nav-link{"aria-controls" => "exCollapsingNavbar2", "aria-expanded" => "false", "aria-label" => "Toggle navigation", "data-target" => "#exCollapsingNavbar2", "data-toggle" => "collapse", :type => "button"}
-          \ &#9776;
-    #exCollapsingNavbar2.collapse.navbar-toggleable-xs
-      = link_to "Rails bootstrap", root_path, class: 'navbar-brand'
-      %ul.nav.navbar-nav= render 'layouts/navigation_links'
-      %ul.nav.navbar-nav= render 'layouts/nav_links_for_auth'
+%nav.navbar.navbar-expand-md.navbar-dark.static-top.bg-dark
+  %a.navbar-brand{href: "#{root_path}"}
+    / =image_tag "public/images/original/missing.png", alt: "Systematic", style: "height: 100%;"
+    Taskscape
+
+  %button.navbar-toggler{type: "button", "data-toggle": "collapse", "data-target": "#navbarCollapse", "aria-controls": "navbarCollapse", "aria-expanded": "false", "aria-label": "Toggle navigation"}
+    %span.navbar-toggler-icon
+
+  %div.collapse.navbar-collapse#navbarCollapse
+    %ul.navbar-nav.mr-auto
+      %li.nav-item.dropdown
+        %a.nav-link.dropdown-toggle#navbarDropdownMenuLink{href: "#", "data-toggle": "dropdown", "aria-haspopup": "true", "aria-expanded": "false"} Browse
+
+        .dropdown-menu{"aria-labelledby": "navbarDropdownMenuLink"}
+          %a.dropdown-item{href: "#{projects_path}"} Projects
+          %a.dropdown-item{href: "#{users_path}"} Users
+
+      / %li.nav-item.active
+      /   =link_to 'Home', root_path, class: 'nav-link'
+
+      / %li.nav-item
+      /   %a.nav-link.disabled{href: "#"} Disabled
+
+    %ul.nav.navbar-nav.navbar-right
+      =render 'layouts/nav_links_for_auth'

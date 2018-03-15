@@ -4,7 +4,6 @@
       %rect{x: -14, y: -14, width: 28, height: 28, rx: 5, ry: 5, fill: "#ffffff"}
 
 #task-details-sidebar
-#project-equipment-sidebar
 #project-members-sidebar
   #munition-sidebar
     %svg#drop-task{viewBox: "-1200 -1200 2400 2400"}
