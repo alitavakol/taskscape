@@ -23,3 +23,8 @@ class Taskscape.Routers.ProjectsRouter extends Backbone.Router
         view = new Taskscape.Views.Projects.ShowView(model: m)
         $("#projects").html(view.render().el)
         view.post_render()
+
+      error: (model, response, options) ->
+        router.navigate 'index',
+          trigger: true
+          replace: true

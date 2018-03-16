@@ -13,6 +13,24 @@ window.Taskscape =
 
   initialize: ->
 
+    # http://codeseven.github.io/toastr/demo.html
+    toastr.options =
+      closeButton: false
+      debug: false
+      newestOnTop: false
+      progressBar: false
+      positionClass: "toast-bottom-right"
+      preventDuplicates: false
+      onclick: null
+      showDuration: "100"
+      hideDuration: "200"
+      timeOut: "3000"
+      extendedTimeOut: "1000"
+      showEasing: "swing"
+      hideEasing: "linear"
+      showMethod: "fadeIn"
+      hideMethod: "fadeOut"
+
 # https://www.npmjs.com/package/coffeescript-mixins
 # Function::include = (mixin) ->
 #   if not mixin
@@ -60,3 +78,14 @@ $.ajaxSetup
 
 $(document).keyup (e) ->
   $('#popover').popover('hide') if e.keyCode == 27 # hide any open popover dialog
+
+# global ajax error handler
+# shows a toast notification
+$(document).ajaxError (e, jqxhr, settings, thrownError) ->
+  # console.log e
+  # console.log jqxhr
+  # console.log settings
+  # console.log thrownError
+  if jqxhr && jqxhr.responseText
+    # http://codeseven.github.io/toastr/
+    toastr["error"](jqxhr.responseJSON.error || jqxhr.responseText, "#{thrownError} (#{jqxhr.status})")

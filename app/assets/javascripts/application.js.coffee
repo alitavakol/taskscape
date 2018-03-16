@@ -23,4 +23,5 @@
 #= require tinycolor-min
 #= require interact
 #= require jquery.overlayScrollbars.min.js
+#= require toastr
 #= require_tree .

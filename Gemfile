@@ -66,4 +66,9 @@ gem 'haml_coffee_assets'
 
 gem 'font-awesome-rails'
 
+# file and avatar attachments
 gem "paperclip", "~> 5.2.1"
+
+# toast notifications
+# https://github.com/CodeSeven/toastr
+gem 'toastr-rails'
