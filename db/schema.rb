@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180307134336) do
+ActiveRecord::Schema.define(version: 20180316042916) do
 
   create_table "assignments", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.bigint "task_id", null: false
@@ -46,7 +46,7 @@ ActiveRecord::Schema.define(version: 20180307134336) do
     t.integer "effort"
     t.datetime "due_date"
     t.bigint "supertask_id"
-    t.bigint "creator_id", null: false
+    t.bigint "creator_id"
     t.integer "x"
     t.integer "y"
     t.string "color"

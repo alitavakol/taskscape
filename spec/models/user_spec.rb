@@ -29,6 +29,10 @@
 #  invited_by_type        :string(255)
 #  invited_by_id          :integer
 #  invitations_count      :integer          default(0)
+#  avatar_file_name       :string(255)
+#  avatar_content_type    :string(255)
+#  avatar_file_size       :integer
+#  avatar_updated_at      :datetime
 #
 
 describe User do

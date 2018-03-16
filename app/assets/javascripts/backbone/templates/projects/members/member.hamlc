@@ -1,1 +1,1 @@
-%img.member-avatar.card.img-responsive{src: "#{@avatar}", title: "#{@name}"}
+%img.member-avatar.card.img-responsive{src: "#{@avatar}", title: "#{@name}\nDrag and drop into a task, and create assignment."}

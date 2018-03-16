@@ -12,7 +12,7 @@
 #  effort       :integer
 #  due_date     :datetime
 #  supertask_id :integer
-#  creator_id   :integer          not null
+#  creator_id   :integer
 #  x            :integer
 #  y            :integer
 #  color        :string(255)

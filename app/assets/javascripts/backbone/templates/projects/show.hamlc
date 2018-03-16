@@ -13,6 +13,6 @@
       %g.prohibited-emblem{transform: "translate(190 190) scale(15)", style: "display: none;"}
         %circle{r: 25, cx: 25, cy: 25, fill: 'white'}
         %path{d: "M 25 2 C 12.316406 2 2 12.316406 2 25 C 2 37.683594 12.316406 48 25 48 C 37.683594 48 48 37.683594 48 25 C 48 12.316406 37.683594 2 25 2 Z M 37 28 C 37 28.601563 36.601563 29 36 29 L 14 29 C 13.398438 29 13 28.601563 13 28 L 13 22 C 13 21.398438 13.398438 21 14 21 L 36 21 C 36.601563 21 37 21.398438 37 22 Z ", fill: 'darkred'}
-      %title Drop into canvas to create a new task.
+      %title Drag and drop into canvas to create a new task.
 
 %a#popover{rel: "popover", style: 'position: absolute;', "data-placement" => "right"}
