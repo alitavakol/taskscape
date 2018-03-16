@@ -13,6 +13,7 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
   initialize: ->
     @objects = []
     x = y = 0
+    window.focused_view = null
 
     @listenTo @model.get('tasks'), 'add', (model, response, options) -> 
       @add_task(model)
@@ -193,7 +194,7 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
 
   # enable focus object on tap or click
   enable_tap: ->
-    interact('.tappable').on 'tap', (e) =>
+    interact('.tappable').off('tap').on 'tap', (e) =>
       if e.target.classList.contains('shadow')
         @focus true # treat shadow image as if it is not part of clicked object
 

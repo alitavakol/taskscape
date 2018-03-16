@@ -43,7 +43,6 @@ window.SVG =
       svg.attr viewBox: "#{@vbx} #{@vby} #{@vbw} #{@vbh}"
       svg.trigger 'viewbox_changed'
 
-
   # changes svg viewbox by animation (optional), 
   # returns true if changed
   change_viewbox: (svg, vbx, vby, vbw, vbh, no_animation) ->

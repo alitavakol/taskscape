@@ -22,4 +22,5 @@
 #= require backbone/taskscape
 #= require tinycolor-min
 #= require interact
+#= require jquery.overlayScrollbars.min.js
 #= require_tree .

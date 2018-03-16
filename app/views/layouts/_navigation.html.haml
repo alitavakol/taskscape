@@ -9,11 +9,17 @@
   %div.collapse.navbar-collapse#navbarCollapse
     %ul.navbar-nav.mr-auto
       %li.nav-item.dropdown
-        %a.nav-link.dropdown-toggle#navbarDropdownMenuLink{href: "#", "data-toggle": "dropdown", "aria-haspopup": "true", "aria-expanded": "false"} Browse
+        %a.nav-link.dropdown-toggle#navbarDropdownMenuLink{href: "#", "data-toggle": "dropdown", "aria-haspopup": "true", "aria-expanded": "false"}
+          %i.fa.fa-bars
+          Browse
 
         .dropdown-menu{"aria-labelledby": "navbarDropdownMenuLink"}
-          %a.dropdown-item{href: "#{projects_path}"} Projects
-          %a.dropdown-item{href: "#{users_path}"} Users
+          %a.dropdown-item{href: "#{projects_path}"}
+            %i.fa.fa-sticky-note
+            Projects
+          %a.dropdown-item{href: "#{users_path}"}
+            %i.fa.fa-users
+            Users
 
       / %li.nav-item.active
       /   =link_to 'Home', root_path, class: 'nav-link'

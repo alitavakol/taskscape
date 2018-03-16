@@ -24,6 +24,11 @@ class Taskscape.Views.Projects.Members.IndexView extends Backbone.View
     # enable dragging user avatars into tasks and other drop zones
     @enable_drag()
 
+    # hide the native scrollbars and provide custom styleable overlay scrollbars
+    # https://kingsora.github.io/OverlayScrollbars
+    @$el.overlayScrollbars
+      scrollbars: {autoHide: 'move'}
+
     return this
 
   # enable dragging user avatars into tasks and other drop zones
@@ -40,7 +45,7 @@ class Taskscape.Views.Projects.Members.IndexView extends Backbone.View
           drop_task = true
 
         # find position of the dragged avatar relative to #projects element
-        top = if drop_task then 0 else -$('#munition-sidebar').height()
+        top = 0 # if drop_task then 0 else -$('#munition-sidebar').height()
         left = 0
         el = @avatar.parent()
         while el.attr('id') != 'projects'
