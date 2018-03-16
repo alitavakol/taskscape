@@ -67,7 +67,7 @@ class User < ApplicationRecord
 
   def attrs
     attributes.slice('id', 'name', 'email').merge(
-      avatar: avatar.url,
+      avatar: avatar.url(:thumb),
       confirmed: self.confirmed?
     )
   end

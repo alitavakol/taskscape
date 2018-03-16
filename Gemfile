@@ -72,3 +72,5 @@ gem "paperclip", "~> 5.2.1"
 # toast notifications
 # https://github.com/CodeSeven/toastr
 gem 'toastr-rails'
+
+gem 'nprogress-rails'

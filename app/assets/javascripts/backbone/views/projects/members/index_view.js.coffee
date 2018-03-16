@@ -63,6 +63,7 @@ class Taskscape.Views.Projects.Members.IndexView extends Backbone.View
           left: left
           width: @avatar.width()
           height: @avatar.height()
+          "z-index": 1
 
         # insert the clone into #projects element
         @avatar.closest('#projects').append @clone

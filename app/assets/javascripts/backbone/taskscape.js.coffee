@@ -13,23 +13,6 @@ window.Taskscape =
 
   initialize: ->
 
-    # http://codeseven.github.io/toastr/demo.html
-    toastr.options =
-      closeButton: false
-      debug: false
-      newestOnTop: false
-      progressBar: false
-      positionClass: "toast-bottom-right"
-      preventDuplicates: false
-      onclick: null
-      showDuration: "100"
-      hideDuration: "200"
-      timeOut: "3000"
-      extendedTimeOut: "1000"
-      showEasing: "swing"
-      hideEasing: "linear"
-      showMethod: "fadeIn"
-      hideMethod: "fadeOut"
 
 # https://www.npmjs.com/package/coffeescript-mixins
 # Function::include = (mixin) ->
@@ -86,6 +69,16 @@ $(document).ajaxError (e, jqxhr, settings, thrownError) ->
   # console.log jqxhr
   # console.log settings
   # console.log thrownError
-  if jqxhr && jqxhr.responseText
-    # http://codeseven.github.io/toastr/
-    toastr["error"](jqxhr.responseJSON.error || jqxhr.responseText, "#{thrownError} (#{jqxhr.status})")
+  if jqxhr
+    if jqxhr.responseText
+      if jqxhr.status == 422
+        for attribute, messages of jqxhr.responseJSON
+          toastr["error"]("#{attribute} #{message}", "#{thrownError} (#{jqxhr.status})") for message in messages
+
+      else # some response error other than 422
+        toastr["error"](jqxhr.responseJSON.error || jqxhr.responseText, "#{thrownError} (#{jqxhr.status})")
+
+    else # network error
+      toastr["error"]("Could not connect to server", "Network Error")
+
+  @

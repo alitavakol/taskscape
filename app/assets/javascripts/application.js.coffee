@@ -24,4 +24,27 @@
 #= require interact
 #= require jquery.overlayScrollbars.min.js
 #= require toastr
+#= require nprogress
+#= require nprogress-ajax
 #= require_tree .
+
+# NProgress.configure
+#   showSpinner: false
+
+# http://codeseven.github.io/toastr/demo.html
+toastr.options =
+  closeButton: false
+  debug: false
+  newestOnTop: false
+  progressBar: false
+  positionClass: "toast-bottom-right"
+  preventDuplicates: false
+  onclick: null
+  showDuration: "100"
+  hideDuration: "200"
+  timeOut: "3000"
+  extendedTimeOut: "1000"
+  showEasing: "swing"
+  hideEasing: "linear"
+  showMethod: "fadeIn"
+  hideMethod: "fadeOut"
