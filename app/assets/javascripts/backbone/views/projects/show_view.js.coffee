@@ -2,11 +2,9 @@ Taskscape.Views.Projects ||= {}
 
 class Taskscape.Views.Projects.ShowView extends Backbone.View
   template: JST["backbone/templates/projects/show"]
-  new_task_dialog_template: JST["backbone/templates/projects/dialogs/new_task"]
 
   events:
-    "wheel svg"           : "on_mousewheel"
-    "click"               : "on_click"
+    "wheel svg" : "on_mousewheel"
 
   className: 'remove-gutters'
 
@@ -275,64 +273,11 @@ class Taskscape.Views.Projects.ShowView extends Backbone.View
       # add to collection
       @model.get('tasks').add task
 
-      @show_task_dialog_for task, 
+      @edit_task_view ||= new Taskscape.Views.Tasks.EditView()
+      @edit_task_view.render task, 
         x: e.dragEvent.clientX # + (if e.dragEvent.clientX > e.target.clientWidth / 2 then -50 else 50)
         y: e.dragEvent.clientY + (if e.dragEvent.clientY > e.target.clientHeight / 2 then -20 else 20)
+        error: (model) -> model.destroy() # remove task if sync failed
+        cancel: -> task.destroy() unless task.id # if task.id is null, popover dialog was cancelled, so destroy the task
 
     @
-
-  on_click: (e) ->
-    # hide any open popover dialog if clicked an element that is not a child of the popover dialog element
-    $('#popover').popover('hide') unless $(e.target).closest('.popover').length
-
-  # present a dialog to user to enter title and color of the new task
-  show_task_dialog_for: (task, options) ->
-    $('#popover').popover
-      title: 'Create a new task'
-      content: @new_task_dialog_template(task.toJSON())
-      html: true
-      placement: 'auto'
-      trigger: 'focus'
-
-    .css # place the dialog on drop location
-      top: options.y
-      left: options.x
-
-    .popover('show')
-
-    # .on 'shown.bs.popover', -> console.log 'shown.bs.popover'
-
-    .on 'hidden.bs.popover', => # triggered when dialog disappeared
-      $('#popover').popover('dispose')
-
-      unless task.id # popover dialog was cancelled and so task did not save
-        task.destroy() # destroy the new task
-
-    .on 'save.bs.popover', => # triggered when save button of the dialog is pushed
-      # save task with provided title and color
-      task.save {}, 
-        pick: ['title', 'x', 'y', 'color', 'supertask_id']
-        # success: =>
-        #   @objects.forEach (o) -> o.stable_position()
-        error: (model, response, options) ->
-          model.destroy() # remove task if sync failed
-
-      # close the popover dialog
-      $('#popover').popover('dispose')
-
-    $('#new-task-title').focus()
-
-    # respond to color pick
-    $('#color-tool div').click (e) ->
-      $('#color-tool div').removeClass('fa fa-check')
-      $(e.target).addClass('fa fa-check')
-      task.set color: "##{e.target.id.substr(6)}"
-
-    # respond to title change
-    $('#new-task-title').on 'keyup', (e) ->
-      task.set title: e.target.value
-      $('.popover .btn-success').prop('disabled', e.target.value.length == 0)
-      if e.keyCode == 13 && e.target.value.length > 0
-        $('#popover').trigger('save.bs.popover')
-        return
-  @

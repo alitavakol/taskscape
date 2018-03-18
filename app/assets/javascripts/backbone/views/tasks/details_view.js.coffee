@@ -5,8 +5,6 @@ class Taskscape.Views.Tasks.DetailsView extends Backbone.View
 
   events:
     "click .title .fa-pencil" : "edit_title"
-    "blur .title input"       : "cancel_edit_title"
-    "keyup .title input"      : "accept_edit_title"
     "click i.clickable"       : "change_attribute"
 
   initialize: ->
@@ -16,29 +14,13 @@ class Taskscape.Views.Tasks.DetailsView extends Backbone.View
     @$el.html @template(@model.toJSON())
     @
 
-  edit_title: ->
-    @$('.title .label-container').hide()
-    @$('.title input').show().focus().val @$('.title .label').html()
+  edit_title: (e) ->
+    @edit_task_view ||= new Taskscape.Views.Tasks.EditView()
+    @edit_task_view.render @model, 
+      x: e.clientX
+      y: e.clientY + 20 - $('main').position().top
+      popover_placement: 'bottom'
     @
-
-  cancel_edit_title: ->
-    @$('.title .label-container').show()
-    @$('.title input').hide()
-    @
-
-  accept_edit_title: (e) ->
-    return @cancel_edit_title() if e.keyCode == 27
-    return unless e.keyCode == 13
-
-    @model.save
-      title: e.target.value
-    ,
-      pick: ['title']
-      previous_value: @model.get('title')
-      error: (model, response, options) ->
-        model.set title: options.previous_value
-
-    @cancel_edit_title()
 
   change_attribute: (e) ->
     attribute = $(e.currentTarget).parent().data('attribute')

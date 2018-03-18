@@ -12,7 +12,7 @@ class Taskscape.Models.Task extends Backbone.RelationalModel
     due_date: null
     x: 0
     y: 0
-    color: '#fb6964'
+    color: '#5fa1e0'
 
   relations: [
     type: 'HasMany',

@@ -1,10 +1,8 @@
 .col
   .row
     %h4.title{style: "background-color: #{tinycolor(@color).darken().darken().toHexString()}; border-bottom: solid 1px #{tinycolor(@color).darken().darken().darken().toHexString()}"}
-      .label-container
-        %span.label #{@title}
-        %span.clickable.fa.fa-pencil
-      %input{type: 'text', style: 'display: none;'}
+      %span.label #{@title}
+      %span.clickable.fa.fa-pencil
 
   .row.detail
     .col.col-xs-7

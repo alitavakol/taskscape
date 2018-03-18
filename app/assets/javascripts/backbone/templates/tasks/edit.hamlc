@@ -1,0 +1,17 @@
+.form-group
+  %input#new-task-title.form-control{type: "text", placeholder: "Task title", value: "#{@title}"}
+
+#color-tool.form-group
+  #color-d0bc1f{class: "#{if @color == '#d0bc1f' then 'fa fa-check' else ''}", style: "background-color: #d0bc1f;"}
+  #color-f98250{class: "#{if @color == '#f98250' then 'fa fa-check' else ''}", style: "background-color: #f98250;"}
+  #color-5fa1e0{class: "#{if @color == '#5fa1e0' then 'fa fa-check' else ''}", style: "background-color: #5fa1e0;"}
+  #color-6ad4d0{class: "#{if @color == '#6ad4d0' then 'fa fa-check' else ''}", style: "background-color: #6ad4d0;"}
+  #color-d63abf{class: "#{if @color == '#d63abf' then 'fa fa-check' else ''}", style: "background-color: #d63abf;"}
+  #color-3aca3f{class: "#{if @color == '#3aca3f' then 'fa fa-check' else ''}", style: "background-color: #3aca3f;"}
+  #color-2196f3{class: "#{if @color == '#2196f3' then 'fa fa-check' else ''}", style: "background-color: #2196f3;"}
+  #color-009688{class: "#{if @color == '#009688' then 'fa fa-check' else ''}", style: "background-color: #009688;"}
+  #color-9e9e9e{class: "#{if @color == '#9e9e9e' then 'fa fa-check' else ''}", style: "background-color: #9e9e9e;"}
+
+%div{style: "text-align: right; padding-top: 0px;"}
+  %button.btn.btn-default.btn-sm{type: "button", "data-dismiss" => "modal", onclick: "$('#popover').popover('hide');"} Cancel
+  %button.btn.btn-success.btn-sm{type: "button", "data-dismiss" => "modal", onclick: "$('#popover').trigger('save.bs.popover');", disabled: "#{@title.length == 0}"} Save

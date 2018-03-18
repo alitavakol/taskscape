@@ -82,3 +82,7 @@ $(document).ajaxError (e, jqxhr, settings, thrownError) ->
       toastr["error"]("Could not connect to server", "Network Error")
 
   @
+
+$('main').click (e) ->
+  # hide any open popover dialog if clicked an element that is not a child of the popover dialog element
+  $('#popover').popover('hide') unless $(e.target).closest('.popover').length
