@@ -11,7 +11,7 @@ class ProjectPolicy
   end
 
   def show?
-    @project.members.include?(@current_user) || @current_user.admin?
+    @project.members.include?(@current_user) || @project.public_project? || @current_user.admin? || @current_user.vip?
   end
 
   def create?

@@ -1,6 +1,23 @@
-%td=@title
+.card.project-snapshot{onclick: "router.navigate('#/#{@id}');"}
+  %div
+    %div.canvas-container
+      %svg.canvas{width: '90%', height: '85%'}
+        %defs
+          %mask#round-conrners
+            %rect{x: -14, y: -14, width: 28, height: 28, rx: 5, ry: 5, fill: "#ffffff"}
 
-%td
-  %a{href:"#/#{@id}"} Show
-%td
-  %a.destroy{href:"#/#{@id}/destroy"} Destroy
+    .card-body
+      %h5.card-title
+        = @title
+        - if @visibility == 'public_project'
+          %i.fa.fa-volume-up{title: 'This is a public project.'}
+      .card-text
+        %p= @description
+
+      - if @editable
+        %button.btn.btn-outline-primary.btn-sm{type: 'button', title: 'Edit project'}
+          %i.fa.fa-pencil
+        %button.btn.btn-outline-danger.btn-sm{type: 'button', title: 'Delete project'}
+          %i.fa.fa-trash
+
+/ %a.destroy{href:"#/#{@id}/destroy"} Destroy

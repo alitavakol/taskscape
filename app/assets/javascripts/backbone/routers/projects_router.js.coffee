@@ -15,12 +15,15 @@ class Taskscape.Routers.ProjectsRouter extends Backbone.Router
       success: (c) ->
         view = new Taskscape.Views.Projects.IndexView(collection: c)
         $("#projects").html(view.render().el)
+        view.post_render()
 
   show: (id) ->
     project = Taskscape.Models.Project.find(id) ? new Taskscape.Models.Project(id: id)
     project.fetch
       success: (m) ->
-        view = new Taskscape.Views.Projects.ShowView(model: m)
+        view = new Taskscape.Views.Projects.ShowView
+          model: m
+          className: 'remove-gutters'
         $("#projects").html(view.render().el)
         view.post_render()
 

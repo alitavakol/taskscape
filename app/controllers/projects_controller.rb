@@ -10,7 +10,7 @@ class ProjectsController < ApplicationController
     case current_user.role
     when 'user'
       # select publicly visible projects
-      public_projects = Project.where(visibility: Project.visibilities[:public_project])
+      public_projects = Project.where(visibility: Project.visibilities[:public_project], supertask_id: nil)
 
       # select projects that this user is a member of, 
       # and are top-level (having no parent project),

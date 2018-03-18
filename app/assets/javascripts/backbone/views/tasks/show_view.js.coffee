@@ -16,7 +16,7 @@ class Taskscape.Views.Tasks.ShowView extends Backbone.View
 
     @details = new Taskscape.Views.Tasks.DetailsView
       model: @model
-      className: 'task-details'
+      className: 'task-details border-left'
 
     @avatars = new Taskscape.Views.Tasks.Assignments.IndexView
       collection: @model.get('assignments')
@@ -193,12 +193,12 @@ class Taskscape.Views.Tasks.ShowView extends Backbone.View
     @
 
   save_position: ->
-    if @model.id
-      @model.save
-        x: @x
-        y: @y
-      ,
-        pick: ['x', 'y', 'effort'] # save effort too, because changing it may result in change of position if the task with new size, was overlapping other objects
+    return unless @model.id
+    @model.save
+      x: @x
+      y: @y
+    ,
+      pick: ['x', 'y', 'effort'] # save effort too, because changing it may result in change of position if the task with new size, was overlapping other objects
 
   bring_to_front: ->
     # show this object on top of other objects

@@ -1,3 +1,2 @@
 json.merge! project.attrs_recursive
-# json.extract! project, :id, :title, :description, :visibility, :status, :due_date, :creator_id, :archived, :created_at, :updated_at
-# json.url project_url(project, format: :json)
+	.merge(editable: policy(project).update?) # inform client-side code whether project attributes can be edited by current user or not

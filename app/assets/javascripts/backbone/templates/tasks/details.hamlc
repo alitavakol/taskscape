@@ -2,12 +2,12 @@
   .row
     %h4.title{style: "background-color: #{tinycolor(@color).darken().darken().toHexString()}; border-bottom: solid 1px #{tinycolor(@color).darken().darken().darken().toHexString()}"}
       %span.label #{@title}
-      %span.clickable.fa.fa-pencil
+      %span.clickable.fa.fa-pencil{title: 'Edit task title and color'}
 
   .row.detail
-    .col.col-xs-7
+    .col.col-xs-5
       %b Status
-    .col.col-xs-10
+    .col.col-xs-7
       .table.status{"data-attribute": "status"}
         %i{class: "clickable fa fa-pause-circle-o #{if @status == 'on_hold' then 'selected' else ''}", "data-value": "on_hold"}
         %i{class: "clickable fa fa-stop-circle-o #{if @status == 'not_started' then 'selected' else ''}", "data-value": "not_started"}
@@ -15,9 +15,9 @@
         %i{class: "clickable fa fa-check-circle-o #{if @status == 'completed' then 'selected' else ''}", "data-value": "completed"}
 
   .row.detail
-    .col.col-xs-7
+    .col.col-xs-5
       %b Importance
-    .col.col-xs-10
+    .col.col-xs-7
       .table.importance{"data-attribute": "importance"}
         %i{class: "clickable #{if @importance == 'low_importance' then 'selected' else ''}", "data-value": "low_importance"} ♟
         %i{class: "clickable #{if @importance == 'normal_importance' then 'selected' else ''}", "data-value": "normal_importance"} ♞
@@ -25,9 +25,9 @@
         %i{class: "clickable #{if @importance == 'very_high_importance' then 'selected' else ''}", "data-value": "very_high_importance"} ♛
 
   .row.detail
-    .col.col-xs-7
+    .col.col-xs-5
       %b Effort
-    .col.col-xs-10
+    .col.col-xs-7
       .table.effort{"data-attribute": "effort"}
         %i{class: "clickable fa fa-circle-thin #{if @effort == 'small_effort' then 'selected' else ''}", "data-value": "small_effort"}
         %i{class: "clickable fa fa-circle-thin #{if @effort == 'medium_effort' then 'selected' else ''}", "data-value": "medium_effort"}
@@ -35,9 +35,9 @@
         %i{class: "clickable fa fa-circle-thin #{if @effort == 'very_large_effort' then 'selected' else ''}", "data-value": "very_large_effort"}
 
   .row.detail
-    .col.col-xs-7
+    .col.col-xs-5
       %b Urgency
-    .col.col-xs-10
+    .col.col-xs-7
       .table.urgency{"data-attribute": "urgency"}
         %i{class: "clickable fa fa-arrow-circle-o-down #{if @urgency == 'low_urgency' then 'selected' else ''}", "data-value": "low_urgency"}
         %i{class: "clickable fa fa-circle-thin #{if @urgency == 'normal_urgency' then 'selected' else ''}", "data-value": "normal_urgency"}

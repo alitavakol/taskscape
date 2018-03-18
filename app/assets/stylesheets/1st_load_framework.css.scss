@@ -107,3 +107,8 @@ section {
   @extend .btn-primary;
   @extend .btn-sm;
 }
+
+.project-snapshot {
+  margin-top: $grid-gutter-width / 2;
+  margin-bottom: $grid-gutter-width / 2;
+}

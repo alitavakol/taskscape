@@ -2,10 +2,6 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
-#tasks {
-  user-select: none;
-}
-
 #tasks, #tasks > div, #tasks > div svg {
   height: 100%;
 }
@@ -36,7 +32,6 @@ foreignObject .title-container {
 .task-details {
   width: 100%;
   height: 100%;
-  border-left: solid 1px lightgrey;
   background-color: white;
   overflow: auto;
 

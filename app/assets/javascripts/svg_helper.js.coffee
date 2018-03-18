@@ -104,11 +104,11 @@ window.SVG =
     vbx = bb.x - l * vbw
     vby = bb.y
 
-    @change_viewbox svg, vbx, vby, vbw, vbh
+    @change_viewbox svg, vbx, vby, vbw, vbh, no_animation
 
   # zoom svg by changing its viewbox to the specified svg group
   zoom_to: (g, translate_x, translate_y) ->
-    svg = g.closest('svg#canvas')
+    svg = g.closest('svg')
 
     margin_right = svg.data('padding-right') ? 0
     margin_left = svg.data('padding-left') ? 0
@@ -130,7 +130,7 @@ window.SVG =
   # update viewbox of the specified svg group to ensure inside viewbox
   # returns true if viewbox changed
   ensure_visible: (g, translate_x, translate_y, no_animation) ->
-    svg = g.closest('svg#canvas')
+    svg = g.closest('svg')
 
     margin_right = svg.data('padding-right') ? 0
     margin_left = svg.data('padding-left') ? 0

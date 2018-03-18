@@ -4,17 +4,23 @@ class Taskscape.Views.Projects.IndexView extends Backbone.View
   template: JST["backbone/templates/projects/index"]
 
   initialize: () ->
-    @collection.bind('reset', @addAll)
+    @objects = []
 
-  addAll: () =>
-    @collection.each(@addOne)
+  addAll: () ->
+    @collection.each @addOne
 
   addOne: (project) =>
-    view = new Taskscape.Views.Projects.ProjectView({model : project})
-    @$("tbody").append(view.render().el)
+    view = new Taskscape.Views.Projects.ProjectView
+      model: project
+      className: 'col-xs-12 col-md-6 col-lg-4 col-xl-3'
 
-  render: =>
-    @$el.html(@template(projects: @collection.toJSON() ))
+    @objects.push view
+    @$("#projects-table").append(view.render().el)
+
+  render: ->
+    @$el.html @template(projects: @collection.toJSON())
     @addAll()
+    @
 
-    return this
+  post_render: ->
+    @objects.forEach (o) -> o.post_render()
