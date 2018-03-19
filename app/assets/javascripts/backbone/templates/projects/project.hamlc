@@ -11,13 +11,14 @@
         = @title
         - if @visibility == 'public_project'
           %i.fa.fa-volume-up{title: 'This is a public project.'}
+
       .card-text
         %p= @description
 
-      - if @editable
-        %button.btn.btn-outline-primary.btn-sm{type: 'button', title: 'Edit project'}
-          %i.fa.fa-pencil
-        %button.btn.btn-outline-danger.btn-sm{type: 'button', title: 'Delete project'}
-          %i.fa.fa-trash
+        - if @editable
+          %button.btn.btn-outline-primary.btn-sm{type: 'button', title: 'Edit project'}
+            %i.fa.fa-pencil
+          %button.btn.btn-outline-danger.btn-sm{type: 'button', title: 'Delete project'}
+            %i.fa.fa-trash
 
 / %a.destroy{href:"#/#{@id}/destroy"} Destroy

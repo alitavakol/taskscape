@@ -11,7 +11,7 @@
     %li.nav-item
       =link_to 'Users', users_path, class: 'nav-link'
 
-  %li.nav-item.dropdown
+  %li.nav-item.dropdown#navbarDropdownUserMenu
     %a.nav-link.dropdown-toggle#navbarDropdownUserMenuLink{"data-toggle" => "dropdown", "aria-expanded" => false, "aria-haspopup": "true", title: "#{current_user.name}#{' (VIP)'if current_user.vip?}#{' (Administrator)'if current_user.admin?}"}
       =image_tag current_user.avatar.url(:thumb, timestamp: false), style: "width: 32px; height: 32px; margin-top: -12px; margin-bottom: -10px;"
 
