@@ -66,7 +66,7 @@ class Taskscape.Views.Tasks.EditView extends Backbone.View
     # respond to keyboard enter
     $('#new-task-title').keyup (e) ->
       if e.keyCode == 13 && e.target.value.length > 0
-        $('#popover').trigger('save.bs.popover')
+        $('.popover .btn-success').trigger 'click'
         return
 
   @

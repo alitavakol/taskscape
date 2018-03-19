@@ -1,3 +1,7 @@
 .h1 Listing Projects
 
+%button#new-project-button.btn.btn-primary.btn-sm{type: 'button'} New Project
+
 #projects-table.row
+
+#modal-container

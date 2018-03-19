@@ -28,10 +28,4 @@
       /   %a.nav-link.disabled{href: "#"} Disabled
 
     %ul.nav.navbar-nav.navbar-right
-      -if current_user.try(:vip?)
-        %li.nav-item
-          %a.nav-link{href: rails_admin.dashboard_path}
-            %i.fa.fa-cogs
-            Database Administration
-
       =render 'layouts/nav_links_for_auth'

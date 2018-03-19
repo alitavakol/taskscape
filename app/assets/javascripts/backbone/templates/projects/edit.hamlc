@@ -1,34 +1,31 @@
-.modal.fade#new_project_dlg{tabindex: -1, role: "dialog", "area-hidden" => "true"}
+#edit-project-dialog.modal.fade{tabindex: -1, role: "dialog", "area-hidden" => "true"}
   .modal-dialog{role: 'document'}
     .modal-content
       .modal-header
-        %h4.modal-title Create Project
+        %h4.modal-title 
+          = if @id then 'Edit' else 'New'
+          Project
         %button.close{type: "button", "data-dismiss" => "modal", "area-hidden" => "true", "aria-label" => 'close'}
           %span{"aria-hidden" => "true"} &times;
 
       .modal-body
-        .te
-          %form{"accept-charset" => "UTF-8", action: "#{window.path_prefix}/projects", "data-remote" => "true", method: "post", novalidate: "novalidate"}
-            %div{style: "display:none"}
-              %input{name: "utf8", type: "hidden", value: "✓"}
-              %input{name: "_method", type: "hidden", value: "post"}
-              %input#csrf{name: "authenticity_token", value: $('#csrf_template').val()}
-              %input#submit{type: "submit"}
-              %input{name: "uid", type: "hidden", value: window.uid}
+        .form-group
+          %label.control-label{for: "new-project-title"} Project Title
+          %input#new-project-title.form-control{type: "text",  placeholder: "Entere title here", value: "#{@title}"}
 
-            .form-group
-              %label.control-label{for: "title"} 1. Name your project
-              %input#title.form-control{name: "project[title]", type: "text", placeholder: "Project title"}
+        .form-group
+          %label{for: "new-project-description"} Description
+          %textarea#new-project-description.form-control{placeholder: 'Explain more about the project…'}= @description
 
-            .form-group
-              %label.control-label{for: "member_tokens"} 2. Share your project with friends or colleagues (optional)
-              %input#member_tokens.form-control{name: "project[member_tokens]", type: "text", placeholder: "Enter email addresses here..."}
+        / .form-group
+        /   %label.control-label{for: "project-member-tokens"} Project members (optional)
+        /   %input#project-member-tokens.form-control{type: "text", placeholder: "Enter email addresses here..."}
 
-            .form-group
-              .checkbox
-                %label
-                  %input#visibility{type: 'checkbox', name: "project[visibility]", value: 'visible'} Anyone can participate in this project
+        .form-group
+          .form-check
+            %input.form-check-input#new-project-visibility{type: 'checkbox', checked: "#{@visibility == 'public_project'}"}
+            %label.form-check-label{for: 'new-project-visibility'} Make it visible to any logged-in user.
 
       .modal-footer
-        %button#cancel.btn.btn-danger{type: "button", "data-dismiss" => "modal"} Cancel
-        %button#create.btn.btn-success{type: "button"} Create Project
+        %button.btn.btn-default.btn-sm{type: "button", "data-dismiss" => "modal"} Cancel
+        %button.btn.btn-success.btn-sm{type: "button", onclick: "$('#edit-project-dialog').trigger('save.bs.modal');", disabled: "#{@title.length == 0}"} Apply

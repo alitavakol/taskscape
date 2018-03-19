@@ -3,7 +3,7 @@ class Taskscape.Models.Project extends Backbone.RelationalModel
   urlRoot: 'projects'
 
   defaults:
-    title: null
+    title: ''
 
   relations: [
     type: 'HasMany',

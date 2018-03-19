@@ -7,9 +7,9 @@
 -else
   -if current_user.try(:admin?)
     %li.nav-item
-      =link_to 'Admin', '/admin', class: 'nav-link'
-    %li.nav-item
-      =link_to 'Users', users_path, class: 'nav-link'
+      %a.nav-link{href: rails_admin.dashboard_path}
+        %i.fa.fa-cogs
+        Database Administration
 
   %li.nav-item.dropdown#navbarDropdownUserMenu
     %a.nav-link.dropdown-toggle#navbarDropdownUserMenuLink{"data-toggle" => "dropdown", "aria-expanded" => false, "aria-haspopup": "true", title: "#{current_user.name}#{' (VIP)'if current_user.vip?}#{' (Administrator)'if current_user.admin?}"}

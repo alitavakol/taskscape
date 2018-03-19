@@ -13,5 +13,5 @@
   #color-9e9e9e{class: "#{if @color == '#9e9e9e' then 'fa fa-check' else ''}", style: "background-color: #9e9e9e;"}
 
 %div{style: "text-align: right; padding-top: 0px;"}
-  %button.btn.btn-default.btn-sm{type: "button", "data-dismiss" => "modal", onclick: "$('#popover').popover('hide');"} Cancel
-  %button.btn.btn-success.btn-sm{type: "button", "data-dismiss" => "modal", onclick: "$('#popover').trigger('save.bs.popover');", disabled: "#{@title.length == 0}"} Save
+  %button.btn.btn-default.btn-sm{type: "button", onclick: "$('#popover').popover('hide');"} Cancel
+  %button.btn.btn-success.btn-sm{type: "button", onclick: "$('#popover').trigger('save.bs.popover');", disabled: "#{@title.length == 0}"} Save

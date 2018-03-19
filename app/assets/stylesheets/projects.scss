@@ -77,14 +77,9 @@
 
 .project-snapshot {
   width: 100%;
-  padding-bottom: 110%;
+  padding-bottom: 100%;
   position: relative;
   box-shadow: 0 0 4px 1px #00000014;
-  cursor: pointer;
-
-  &:hover {
-    box-shadow: 0 0 8px 2px #00000020;
-  }
 
   .canvas-container {
     width: 100%;
@@ -114,6 +109,11 @@
 
     p:last-child {
       margin-bottom: 0;
+    }
+
+    .btn-open {
+      padding-left: 16px;
+      padding-right: 16px;
     }
   }
 }

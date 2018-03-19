@@ -3,9 +3,12 @@ Taskscape.Views.Projects ||= {}
 class Taskscape.Views.Projects.ProjectView extends Backbone.View
   template: JST["backbone/templates/projects/project"]
 
-  initialize: ->
-    @objects = []
+  events:
+    "click .btn-edit"   : "edit_project"
+    "click .btn-open"   : "open_project"
+    "click .btn-delete" : "delete_project"
 
+  initialize: ->
     @listenTo @model.get('tasks'), 'add', (model, response, options) -> 
       @add_task(model)
       @remove_overlaps()
@@ -17,8 +20,16 @@ class Taskscape.Views.Projects.ProjectView extends Backbone.View
       # restore other tasks to their original position (their position may have been changed to remove overlaps)
       @objects.forEach (o) -> o.move animation: true
 
+    @listenTo @model, 'change', ->
+      @render()
+      @post_render()
+
+    @listenTo @model, 'destroy', ->
+      @remove()
+
   render: ->
     @$el.html @template(@model.toJSON()) if this instanceof Taskscape.Views.Projects.ProjectView
+    @objects = []
 
     @$('.tappable').data('view_object', @)
     @svg = @$('svg.canvas')
@@ -128,3 +139,15 @@ class Taskscape.Views.Projects.ProjectView extends Backbone.View
     interact('img.member-avatar').unset()
     interact('#drop-task').unset()
     interact('.tappable').off('tap')
+
+  open_project: ->
+    router.navigate("#/#{@model.id}")
+
+  edit_project: ->
+    view = new Taskscape.Views.Projects.EditView(model: @model)
+    $('#modal-container').html view.render().el
+    view.show {}
+    false # do not remove this
+
+  delete_project: ->
+    @model.destroy wait: true

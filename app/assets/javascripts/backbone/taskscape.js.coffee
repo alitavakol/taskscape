@@ -12,7 +12,10 @@ window.Taskscape =
   Views: {}
 
   initialize: ->
-
+    router.on 'route', (route, params) ->
+      # destroy any open dialog on route change
+      $('#edit-project-dialog').modal('dispose')
+      $('body > .modal-backdrop').remove() # workaround
 
 # https://www.npmjs.com/package/coffeescript-mixins
 # Function::include = (mixin) ->

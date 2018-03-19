@@ -1,4 +1,4 @@
-.card.project-snapshot{onclick: "router.navigate('#/#{@id}');"}
+.card.project-snapshot
   %div
     %div.canvas-container
       %svg.canvas{width: '90%', height: '85%'}
@@ -15,10 +15,13 @@
       .card-text
         %p= @description
 
-        - if @editable
-          %button.btn.btn-outline-primary.btn-sm{type: 'button', title: 'Edit project'}
-            %i.fa.fa-pencil
-          %button.btn.btn-outline-danger.btn-sm{type: 'button', title: 'Delete project'}
-            %i.fa.fa-trash
+        %button.btn.btn-primary.btn-sm.btn-open{type: 'button', title: 'Open project'}
+          %i.fa.fa-folder-open
+          Open
 
-/ %a.destroy{href:"#/#{@id}/destroy"} Destroy
+        - if @editable
+          %div.float-right
+            %button.btn.btn-outline-primary.btn-sm.btn-edit{type: 'button', title: 'Edit project'}
+              %i.fa.fa-pencil
+            %button.btn.btn-outline-danger.btn-sm.btn-delete{type: 'button', title: 'Delete project'}
+              %i.fa.fa-trash
