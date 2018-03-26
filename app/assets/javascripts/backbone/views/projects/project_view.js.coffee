@@ -15,7 +15,18 @@ class Taskscape.Views.Projects.ProjectView extends Backbone.View
 
     @listenTo @model.get('tasks'), 'remove', (model, response, options) ->
       # remove view of removed task
-      @objects = @objects.filter (o) -> o.model.id != model.id
+      @objects = @objects.filter (o) =>
+        return true if o.model.cid != model.cid
+
+        # remove focus from deleted object
+        if window.focused_view == o
+          window.focused_view = null
+          @focus true
+
+        false
+
+      # show canvas hint text if no object is on it
+      @$('#canvas-hint').show() unless @objects.length > 0
 
       # restore other tasks to their original position (their position may have been changed to remove overlaps)
       @objects.forEach (o) -> o.move animation: true
@@ -28,7 +39,7 @@ class Taskscape.Views.Projects.ProjectView extends Backbone.View
       @remove()
 
   render: ->
-    @$el.html @template(@model.toJSON()) if this instanceof Taskscape.Views.Projects.ProjectView
+    @$el.html @template(@model.toJSON())
     @objects = []
 
     @$('.tappable').data('view_object', @)
@@ -41,6 +52,9 @@ class Taskscape.Views.Projects.ProjectView extends Backbone.View
     return @
 
   add_task: (t) ->
+    # hide canvas hint text if some object is on it
+    @$('#canvas-hint').hide()
+
     view = new Taskscape.Views.Tasks.ShowView
       model: t
       attributes: 

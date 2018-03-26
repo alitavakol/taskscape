@@ -16,7 +16,7 @@ class Taskscape.Views.Tasks.ShowView extends Backbone.View
 
     @details = new Taskscape.Views.Tasks.DetailsView
       model: @model
-      className: 'task-details border-left'
+      className: 'task-details'
 
     @avatars = new Taskscape.Views.Tasks.Assignments.IndexView
       collection: @model.get('assignments')
@@ -319,8 +319,3 @@ class Taskscape.Views.Tasks.ShowView extends Backbone.View
       error: (model, response, options) ->
         assignment.set task_id: options.previous_value
     @
-
-  remove: ->
-    @avatars.remove()
-    @details.remove()
-    Backbone.View.prototype.remove.call @

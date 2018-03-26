@@ -9,7 +9,7 @@ class Taskscape.Views.Tasks.EditView extends Backbone.View
     attributes = _.clone task.attributes
 
     $('#popover').popover
-      title: 'Create a new task'
+      title: if task.id then 'Edit task' else 'Create a new task'
       content: @template(task.toJSON())
       html: true
       placement: options.popover_placement || 'auto'
@@ -30,6 +30,7 @@ class Taskscape.Views.Tasks.EditView extends Backbone.View
       task.set
         title: attributes.title
         color: attributes.color
+        description: attributes.description
 
       # call optional handler
       options.cancel() if options.cancel
@@ -37,12 +38,13 @@ class Taskscape.Views.Tasks.EditView extends Backbone.View
     .on 'save.bs.popover', => # triggered when save button of the dialog is pushed
       # save task with provided title and color
       task.save {}, 
-        pick: ['title', 'x', 'y', 'color', 'supertask_id']
+        pick: ['title', 'x', 'y', 'color', 'supertask_id', 'description']
         error: (model, response) -> 
           # restore original model attributes
           model.set
             title: attributes.title
             color: attributes.color
+            description: attributes.description
 
           # call optional handler
           options.error(model, response) if options.error
@@ -62,6 +64,10 @@ class Taskscape.Views.Tasks.EditView extends Backbone.View
     $('#new-task-title').on "input propertychange", (e) ->
       task.set title: e.target.value
       $('.popover .btn-success').prop('disabled', e.target.value.length == 0)
+
+    # respond to description change
+    $('#new-task-description').on "input propertychange", (e) ->
+      task.set description: e.target.value
 
     # respond to keyboard enter
     $('#new-task-title').keyup (e) ->

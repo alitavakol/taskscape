@@ -26,7 +26,7 @@ class Project < ApplicationRecord
 
   enum visibility: [:public_project, :private_project]
 
-  belongs_to :creator, class_name: "User"
+  belongs_to :creator, class_name: "User", optional: true
 
   # project members, who work in collaboration to complete subtasks of this supertask/project
   has_many :memberships, dependent: :destroy
@@ -34,6 +34,7 @@ class Project < ApplicationRecord
 
   # self joining to identify tasks of this supertask/project (like a manager/subordinates relationship)
   has_many :tasks, foreign_key: "supertask_id", dependent: :destroy
+  belongs_to :superproject, class_name: "Project", foreign_key: 'supertask_id', optional: true
 
   validates_presence_of :creator, :title
 
@@ -50,7 +51,7 @@ class Project < ApplicationRecord
 
   # returns attributes as a project (i.e. supertask)
   def attrs_recursive
-    attributes.slice('id', 'archived', 'title', 'description', 'supertask_id', 'visibility').merge(
+    attributes.slice('id', 'archived', 'title', 'description', 'visibility').merge(
       memberships: memberships.map { |m| m.attrs.except('project_id').merge m.member.attrs.except('id') },
       tasks: tasks.map { |t| t.attrs_recursive }
     )
@@ -58,7 +59,7 @@ class Project < ApplicationRecord
 
   # returns minimal list of attributes (for index view)
   def attrs_recursive_brief
-    attributes.slice('id', 'visibility', 'archived', 'title', 'visibility', 'supertask_id').merge(
+    attributes.slice('id', 'visibility', 'archived', 'title', 'visibility').merge(
       tasks: tasks.map { |t| t.attrs_recursive_brief },
       members_count: members.count
     )

@@ -6,18 +6,21 @@ class Taskscape.Views.Projects.Members.IndexView extends Backbone.View
 
   tagName: "ul"
 
-  initialize: () ->
+  events:
+    "click #btn-add" : "add_member"
+
+  initialize: ->
     @collection.bind('reset', @addAll)
 
-  addAll: () =>
+  addAll: ->
     @collection.each(@addOne)
 
   addOne: (member) =>
     view = new Taskscape.Views.Projects.Members.MemberView
       model: member
-    @$el.append(view.render().el)
+    @$el.prepend(view.render().el)
 
-  render: =>
+  render: ->
     @$el.html @template(members: @collection.toJSON())
     @addAll()
 
@@ -86,3 +89,6 @@ class Taskscape.Views.Projects.Members.IndexView extends Backbone.View
           duration: 100
           complete: => @clone.remove()
         @avatar = null
+
+  add_member: ->
+    console.log 'add new member'

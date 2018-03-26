@@ -4,14 +4,14 @@
       .modal-header
         %h4.modal-title 
           = if @id then 'Edit' else 'New'
-          Project
+          project
         %button.close{type: "button", "data-dismiss" => "modal", "area-hidden" => "true", "aria-label" => 'close'}
           %span{"aria-hidden" => "true"} &times;
 
       .modal-body
         .form-group
           %label.control-label{for: "new-project-title"} Project Title
-          %input#new-project-title.form-control{type: "text",  placeholder: "Entere title here", value: "#{@title}"}
+          %input#new-project-title.form-control{type: "text",  placeholder: "Enter title here", value: "#{@title}"}
 
         .form-group
           %label{for: "new-project-description"} Description

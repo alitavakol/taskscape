@@ -9,12 +9,12 @@
 
 #project-members-sidebar {
   position: absolute;
-  top: 16px;
+  top: 56px;
   bottom: 16px;
   left: 16px;
   width: 5%;
-  max-width: 20mm;
-  min-width: 10mm;
+  max-width: 22mm;
+  min-width: 15mm;
   display: flex;
   flex-direction: column;
 
@@ -26,6 +26,8 @@
     padding-right: 0;
     flex: 1 auto;
     height: 100%;
+    margin-top: 0;
+    margin-bottom: 0;
 
     li {
       padding-top: 2px;
@@ -43,8 +45,14 @@
   bottom: 0;
   right: 0;
   width: 24%;
-  max-width: 96mm;
+  max-width: 85mm;
   min-width: 60mm;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  // padding-left: 16px;
+  // padding-right: 16px;
+  border-left: dashed 1px gray;
+  background-color: white;
 }
 
 // color picker
@@ -127,3 +135,5 @@
   display: flex;
   flex-direction: column;
 }
+
+.projects-list {}

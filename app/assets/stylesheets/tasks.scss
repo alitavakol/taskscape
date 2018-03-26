@@ -28,83 +28,30 @@ foreignObject .title-container {
   }
 }
 
-
 .task-details {
   width: 100%;
   height: 100%;
   background-color: white;
   overflow: auto;
 
-  h4 {
-    color: white;
-    padding: 12px;
-    width: 100%;
-    margin-bottom: 0;
-    margin-top: 0;
-
-    input {
-      margin: -3px;
-      width: 100%;
-    }
-  }
-
   .detail {
-    padding-top: 16px;
-    padding-bottom: 16px;
-    padding-left: 12px;
-    padding-right: 12px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    display: flex;
+    align-items: center;
 
-    * {
-      vertical-align: middle;
-      line-height: inherit;
+    .label {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
-    .table {
-      display: table;
-      margin-bottom: 0;
-      text-align: center;
+    .btn-group button i.fa {
+      min-width: 1.1em;
+    }
+
+    &:not(:last-child) {
+      border-bottom: dashed 1px gray;
     }
   }
-  .detail:not(:last-child) {
-    border-bottom: solid 1px lightgrey;
-  }
-
-  .importance i, .urgency i, .effort i, .status i {
-    font-size: xx-large;
-    display: table-cell;
-    width: 25%;
-  }
-
-  .importance i {
-    font-family: 'Arial Unicode MS';
-    font-style: normal;
-  }
-
-  .effort i:nth-child(1) {
-    font-size: medium;
-  }
-  .effort i:nth-child(2) {
-    font-size: large;
-  }
-  .effort i:nth-child(3) {
-    font-size: x-large;
-  }
-  .effort i:nth-child(4) {
-    font-size: xx-large;
-  }
-
-  .clickable {
-    opacity: .4;
-    filter: alpha(opacity=50);
-    cursor: pointer;
-  }
-  .clickable:hover {
-    opacity: .9;
-    filter: alpha(opacity=90);
-  }
-  .clickable.selected {
-    opacity: 1;
-    filter: alpha(opacity=100);
-  }
-
 }

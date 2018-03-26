@@ -2,7 +2,7 @@
   %mask#round-conrners
     %rect{x: "-14", y: "-14", width: "28", height: "28", rx: "5", ry: "5", fill: "#ffffff"}
 
-%g.tappable.task-container
+%g.tappable.double-tappable.task-container
   / shadow, shown when task is selected
   %image.shadow{"xlink:href" => "/images/shadow.png", preserveAspectRatio: "none", width: 168, height: 168, x: -84, y: -84, style: 'display: none;'}
 

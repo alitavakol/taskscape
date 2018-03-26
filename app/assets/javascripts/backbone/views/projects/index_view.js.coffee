@@ -4,11 +4,11 @@ class Taskscape.Views.Projects.IndexView extends Backbone.View
   template: JST["backbone/templates/projects/index"]
 
   events:
-    "click #new-project-button" : "new_project"
+    "click .btn-new" : "new_project"
 
   initialize: () ->
     @listenTo @collection, 'add', (model, response, options) -> @add(model)
-    @listenTo @collection, 'remove', (model, response, options) -> @objects = @objects.filter (o) -> o.model.id != model.id
+    @listenTo @collection, 'remove', (model, response, options) -> @objects = @objects.filter (o) -> o.model.cid != model.cid
 
   addAll: () ->
     @collection.each @add
@@ -19,7 +19,7 @@ class Taskscape.Views.Projects.IndexView extends Backbone.View
       className: 'col-xs-12 col-md-6 col-lg-4 col-xl-3'
 
     @objects.push view
-    @$("#projects-table").append(view.render().el)
+    @$("#projects-list").append(view.render().el)
 
   render: ->
     @$el.html @template(projects: @collection.toJSON())
@@ -35,7 +35,7 @@ class Taskscape.Views.Projects.IndexView extends Backbone.View
     project = new Taskscape.Models.Project()
 
     view = new Taskscape.Views.Projects.EditView(model: project)
-    @$('#modal-container').html view.render().el
+    $('#modal-container').html view.render().el
 
     view.show
       success: (model) =>

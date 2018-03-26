@@ -4,12 +4,11 @@ class Taskscape.Models.Task extends Backbone.RelationalModel
 
   defaults:
     title: ''
-    description: null
+    description: ''
     status: 'not_started'
     urgency: 'normal_urgency'
     importance: 'normal_importance'
     effort: 'medium_effort'
-    due_date: null
     x: 0
     y: 0
     color: '#5fa1e0'

@@ -1,3 +1,7 @@
+header {
+  border-bottom: dashed 1px gray;
+}
+
 body {
   background-color: #fff;
   color: #333;
@@ -46,4 +50,10 @@ body {
 
 svg {
   user-select: none;
+}
+
+.ellipsize {
+  // white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

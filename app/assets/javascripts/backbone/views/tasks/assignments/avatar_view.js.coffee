@@ -9,6 +9,7 @@ class Taskscape.Views.Tasks.Assignments.AvatarView extends Backbone.View
 
   initialize: ->
     @listenTo @model, 'change', (model, response, options) -> @render()
+    @listenTo @model, 'destroy', -> @remove()
 
   destroy: () ->
     @model.destroy()

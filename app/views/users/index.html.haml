@@ -1,5 +1,13 @@
-%h3 Users
-%table
-  %tbody
-    - @users.each do |user|
-      %tr= render user
+/ %h3 Users
+
+%table.table.table-condensed.table-hover
+  %thead
+    %tr
+      %th
+      %th Name
+      %th Email
+      %th Role
+      %th
+      %th
+
+  %tbody= render @users

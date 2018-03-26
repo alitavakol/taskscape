@@ -1,10 +1,20 @@
-%td
-  =link_to user.email, user
+%tr
+  =form_for user, html: {class: 'form-horizontal'} do |f|
+    %td{style: "vertical-align:middle;"}
+      =image_tag user.avatar.url(:thumb), :class => 'rounded', title: "#{user.name}"
 
-%td
-  =form_for(user) do |f|
-    =f.select(:role, User.roles.keys.map {|role| [role.titleize,role]})
-    %button.btn.btn-primary.btn-sm{type: "submit"} Change Role
+    %th{style: "vertical-align:middle;"}
+      =link_to user.name, user
 
-%td
-  =link_to("Delete user", user_path(user), :data => { :confirm => "Are you sure?" }, :method => :delete, :class => 'btn btn-danger btn-sm') unless user == current_user
+    %td{style: "vertical-align:middle;"}
+      =mail_to user.email
+
+    %td{style: "vertical-align:middle;"}
+      =f.select :role, User.roles.keys.map {|role| [role.titleize,role]}, {}, class: 'form-control input-sm'
+
+    %td{style: "vertical-align:middle;"}
+      =button_tag(type: 'submit', class: "btn btn-primary", title: 'Save') do
+        %i.fa.fa-check
+
+    %td{style: "vertical-align:middle;"}
+      =link_to(raw("<i class ='fa fa-trash'></i>"), user_path(user), :data => { :confirm => "Are you sure?" }, :method => :delete, :class => 'btn btn-danger', title: 'Delete user') unless user == current_user

@@ -13,7 +13,7 @@
 class Assignment < ApplicationRecord
   belongs_to :task
   belongs_to :assignee, class_name: "User"
-  belongs_to :creator, class_name: "User"
+  belongs_to :creator, class_name: "User", optional: true
 
   validates_presence_of :creator, :assignee, :task
   validates_uniqueness_of :task_id, scope: :assignee_id

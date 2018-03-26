@@ -10,9 +10,10 @@ img {
   @extend .img-fluid;
   margin: 0 auto;
 }
+
 // override for the 'Home' navigation link
 .navbar-brand {
-  font-size: inherit;
+  // font-size: inherit;
 }
 
 // THESE ARE EXAMPLES YOU CAN MODIFY
@@ -111,4 +112,18 @@ section {
 .project-snapshot {
   margin-top: $grid-gutter-width / 2;
   margin-bottom: $grid-gutter-width / 2;
+}
+
+.section-name {
+  @extend .btn;
+  @extend .btn-dark;
+  @extend .btn-sm;
+  cursor: inherit !important;
+  padding-left: 16px;
+  padding-right: 16px;
+  font-style: italic;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  // font-weight: bold;
 }

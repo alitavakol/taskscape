@@ -13,7 +13,7 @@
 class Membership < ApplicationRecord
   belongs_to :project, class_name: "Task"
   belongs_to :member, class_name: "User"
-  belongs_to :creator, class_name: "User"
+  belongs_to :creator, class_name: "User", optional: true
 
   validates_presence_of :creator, :member, :project
   validates_uniqueness_of :project_id, scope: :member_id

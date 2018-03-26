@@ -38,3 +38,11 @@
 #navbarDropdownUserMenu {
   margin-left: 24px;
 }
+
+.sub-header-left {
+  margin-top: 8px;
+
+  & > *:not(:first-child) {
+    margin-left: 12px;
+  }
+}

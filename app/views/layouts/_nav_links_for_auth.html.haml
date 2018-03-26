@@ -1,6 +1,6 @@
 -unless user_signed_in?
   %li.nav-item
-    =link_to 'Sign in', new_user_session_path, class: 'nav-link'
+    =link_to raw("<i class='fa fa-sign-in'></i> Sign in"), new_user_session_path, class: 'nav-link'
   %li.nav-item
     =link_to 'Sign up', new_user_registration_path, class: 'nav-link'
 
@@ -13,7 +13,7 @@
 
   %li.nav-item.dropdown#navbarDropdownUserMenu
     %a.nav-link.dropdown-toggle#navbarDropdownUserMenuLink{"data-toggle" => "dropdown", "aria-expanded" => false, "aria-haspopup": "true", title: "#{current_user.name}#{' (VIP)'if current_user.vip?}#{' (Administrator)'if current_user.admin?}"}
-      =image_tag current_user.avatar.url(:thumb, timestamp: false), style: "width: 32px; height: 32px; margin-top: -12px; margin-bottom: -10px;"
+      =image_tag current_user.avatar.url(:thumb, timestamp: false), :class => "rounded", style: "width: 32px; height: 32px; margin-top: -12px; margin-bottom: -10px;"
 
     .dropdown-menu.dropdown-menu-right{"aria-labelledby": "navbarDropdownUserMenuLink"}
       / =link_to user_path(current_user), class: "dropdown-item" do

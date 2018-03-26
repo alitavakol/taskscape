@@ -1,45 +1,90 @@
 .col
   .row
-    %h4.title{style: "background-color: #{tinycolor(@color).darken().darken().toHexString()}; border-bottom: solid 1px #{tinycolor(@color).darken().darken().darken().toHexString()}"}
-      %span.label #{@title}
-      %span.clickable.fa.fa-pencil{title: 'Edit task title and color'}
+    .col.col-12{style: "display: flex; flex-direction: row;"}
+      .section-name.ellipsize{style: "flex: auto; margin-right: 5px; background-color: #{tinycolor(@color).darken().darken().toHexString()}; border-color: #{tinycolor(@color).darken().darken().toHexString()};", title: "#{@description}"} #{@title}
+      %button.btn.btn-sm.btn-primary.btn-edit{type: 'button', title: "Edit task title and color", style: "margin-right: 5px; margin-left: 0;"}
+        %i.fa.fa-pencil
+      %a.btn.btn-sm.btn-primary{href: "#/#{@id}", role: 'button', title: "Navigate down to task as project", style: "margin-right: 5px;"}
+        %i.fa.fa-arrow-down
+      %button.btn.btn-danger.btn-sm.btn-delete.float-right{type: 'button', title: 'Delete task', style: "margin-left: 16px; "}
+        %i.fa.fa-trash
+
+  .row
+    %br
+
+  .row.detail.btn-edit{style: "cursor: pointer;"}
+    - if @description && @description.length
+      .col-12.text-center.lead.ellipsize
+        #{@description}
+        %br
+        %br
+    - else
+      %em.col-12.text-center.text-muted
+        %i.fa.fa-pencil
+        Edit to add task description
+        %br
+        %br
 
   .row.detail
-    .col.col-xs-5
-      %b Status
-    .col.col-xs-7
-      .table.status{"data-attribute": "status"}
-        %i{class: "clickable fa fa-pause-circle-o #{if @status == 'on_hold' then 'selected' else ''}", "data-value": "on_hold"}
-        %i{class: "clickable fa fa-stop-circle-o #{if @status == 'not_started' then 'selected' else ''}", "data-value": "not_started"}
-        %i{class: "clickable fa fa-play-circle-o #{if @status == 'in_progress' then 'selected' else ''}", "data-value": "in_progress"}
-        %i{class: "clickable fa fa-check-circle-o #{if @status == 'completed' then 'selected' else ''}", "data-value": "completed"}
+    .col.col-1
+      %i.fa.fa-check-circle-o{style: "font-size: large;"}
+    .col.col-4.label
+      Status
+    .col.col-6
+      .btn-group.btn-group-sm{role: "group", "aria-label": "Status", "data-attribute": "status"}
+        %button{type: "button", class: "btn btn-outline-secondary #{if @status == 'on_hold' then 'active' else ''}", title: "On hold", "data-value": "on_hold"}
+          %i.fa.fa-pause
+        %button{type: "button", class: "btn btn-outline-secondary #{if @status == 'not_started' then 'active' else ''}", title: "Not started", "data-value": "not_started"}
+          %i.fa.fa-stop
+        %button{type: "button", class: "btn btn-outline-secondary #{if @status == 'in_progress' then 'active' else ''}", title: "In progress", "data-value": "in_progress"}
+          %i.fa.fa-play
+        %button{type: "button", class: "btn btn-outline-secondary #{if @status == 'completed' then 'active' else ''}", title: "Completed", "data-value": "completed"}
+          %i.fa.fa-check
 
   .row.detail
-    .col.col-xs-5
-      %b Importance
-    .col.col-xs-7
-      .table.importance{"data-attribute": "importance"}
-        %i{class: "clickable #{if @importance == 'low_importance' then 'selected' else ''}", "data-value": "low_importance"} ♟
-        %i{class: "clickable #{if @importance == 'normal_importance' then 'selected' else ''}", "data-value": "normal_importance"} ♞
-        %i{class: "clickable #{if @importance == 'high_importance' then 'selected' else ''}", "data-value": "high_importance"} ♜
-        %i{class: "clickable #{if @importance == 'very_high_importance' then 'selected' else ''}", "data-value": "very_high_importance"} ♛
+    .col.col-1
+      %i.fa.fa-exclamation-circle{style: "font-size: large;"}
+    .col.col-4.label
+      Importance
+    .col.col-6
+      .btn-group.btn-group-sm{role: "group", "aria-label": "Importance", "data-attribute": "importance"}
+        %button{type: "button", class: "btn btn-outline-secondary #{if @importance == 'low_importance' then 'active' else ''}", title: "Low importance", "data-value": "low_importance"}
+          %i.fa.fa-angle-double-down
+        %button{type: "button", class: "btn btn-outline-secondary #{if @importance == 'normal_importance' then 'active' else ''}", title: "Normal importance", "data-value": "normal_importance"}
+          %i.fa.fa-angle-down
+        %button{type: "button", class: "btn btn-outline-secondary #{if @importance == 'high_importance' then 'active' else ''}", title: "High importance", "data-value": "high_importance"}
+          %i.fa.fa-angle-up
+        %button{type: "button", class: "btn btn-outline-secondary #{if @importance == 'very_high_importance' then 'active' else ''}", title: "Very high importance", "data-value": "very_high_importance"}
+          %i.fa.fa-angle-double-up
 
   .row.detail
-    .col.col-xs-5
-      %b Effort
-    .col.col-xs-7
-      .table.effort{"data-attribute": "effort"}
-        %i{class: "clickable fa fa-circle-thin #{if @effort == 'small_effort' then 'selected' else ''}", "data-value": "small_effort"}
-        %i{class: "clickable fa fa-circle-thin #{if @effort == 'medium_effort' then 'selected' else ''}", "data-value": "medium_effort"}
-        %i{class: "clickable fa fa-circle-thin #{if @effort == 'large_effort' then 'selected' else ''}", "data-value": "large_effort"}
-        %i{class: "clickable fa fa-circle-thin #{if @effort == 'very_large_effort' then 'selected' else ''}", "data-value": "very_large_effort"}
+    .col.col-1
+      %i.fa.fa-circle-o{style: "font-size: large;"}
+    .col.col-4.label
+      Effort
+    .col.col-6
+      .btn-group.btn-group-sm{role: "group", "aria-label": "Effort", "data-attribute": "effort"}
+        %button{type: "button", class: "btn btn-outline-secondary #{if @effort == 'small_effort' then 'active' else ''}", title: "Small effort", "data-value": "small_effort"}
+          %i.fa.fa-angle-double-down
+        %button{type: "button", class: "btn btn-outline-secondary #{if @effort == 'medium_effort' then 'active' else ''}", title: "Medium effort", "data-value": "medium_effort"}
+          %i.fa.fa-angle-down
+        %button{type: "button", class: "btn btn-outline-secondary #{if @effort == 'large_effort' then 'active' else ''}", title: "Large effort", "data-value": "large_effort"}
+          %i.fa.fa-angle-up
+        %button{type: "button", class: "btn btn-outline-secondary #{if @effort == 'very_large_effort' then 'active' else ''}", title: "Very large effort", "data-value": "very_large_effort"}
+          %i.fa.fa-angle-double-up
 
   .row.detail
-    .col.col-xs-5
-      %b Urgency
-    .col.col-xs-7
-      .table.urgency{"data-attribute": "urgency"}
-        %i{class: "clickable fa fa-arrow-circle-o-down #{if @urgency == 'low_urgency' then 'selected' else ''}", "data-value": "low_urgency"}
-        %i{class: "clickable fa fa-circle-thin #{if @urgency == 'normal_urgency' then 'selected' else ''}", "data-value": "normal_urgency"}
-        %i{class: "clickable fa fa-arrow-circle-o-up #{if @urgency == 'high_urgency' then 'selected' else ''}", "data-value": "high_urgency"}
-        %i{class: "clickable fa fa-arrow-circle-up #{if @urgency == 'very_high_urgency' then 'selected' else ''}", "data-value": "very_high_urgency"}
+    .col.col-1
+      %i.fa.fa-clock-o{style: "font-size: large;"}
+    .col.col-4.label
+      Urgency
+    .col.col-6
+      .btn-group.btn-group-sm{role: "group", "aria-label": "Urgency", "data-attribute": "urgency"}
+        %button{type: "button", class: "btn btn-outline-secondary #{if @urgency == 'low_urgency' then 'active' else ''}", title: "Low urgency", "data-value": "low_urgency"}
+          %i.fa.fa-angle-double-down
+        %button{type: "button", class: "btn btn-outline-secondary #{if @urgency == 'normal_urgency' then 'active' else ''}", title: "Normal urgency", "data-value": "normal_urgency"}
+          %i.fa.fa-angle-down
+        %button{type: "button", class: "btn btn-outline-secondary #{if @urgency == 'high_urgency' then 'active' else ''}", title: "High urgency", "data-value": "high_urgency"}
+          %i.fa.fa-angle-up
+        %button{type: "button", class: "btn btn-outline-secondary #{if @urgency == 'very_high_urgency' then 'active' else ''}", title: "Very high urgency", "data-value": "very_high_urgency"}
+          %i.fa.fa-angle-double-up

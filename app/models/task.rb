@@ -22,7 +22,7 @@
 #
 
 class Task < Project
-  belongs_to :supertask, class_name: "Task"
+  belongs_to :supertask, class_name: "Task", optional: true
 
   # task assignees
   has_many :assignments, dependent: :destroy

@@ -1,7 +1,9 @@
-.h1 Listing Projects
+.sub-header-left
+  .section-name
+    Listing Projects
 
-%button#new-project-button.btn.btn-primary.btn-sm{type: 'button'} New Project
+  %button.btn.btn-primary.btn-sm.btn-new{type: 'button'}
+    %i.fa.fa-plus
+    New Project
 
-#projects-table.row
-
-#modal-container
+#projects-list.row

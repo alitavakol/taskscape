@@ -17,6 +17,9 @@ window.Taskscape =
       $('#edit-project-dialog').modal('dispose')
       $('body > .modal-backdrop').remove() # workaround
 
+      # hide any open popover dialog
+      $('#popover').popover('dispose')
+
 # https://www.npmjs.com/package/coffeescript-mixins
 # Function::include = (mixin) ->
 #   if not mixin

@@ -1,9 +1,9 @@
-PROJECT_COUNT = 3
-USER_COUNT = 10
-MAX_MEMBER_COUNT = 6
-MAX_ROLE_COUNT = 6
-MAX_TASK_COUNT = 4
-MAX_PROJECT_DEPTH = 3
+PROJECT_COUNT = 15
+USER_COUNT = 50
+MAX_MEMBER_COUNT = 15
+MAX_ASSIGNMENT_COUNT = 6
+MAX_TASK_COUNT = 15
+MAX_PROJECT_DEPTH = 2
 
 namespace :db do
   desc "fill database with sample projects, members, tasks, users, assignments"
@@ -13,28 +13,11 @@ namespace :db do
     # User.destroy_all
     Project.destroy_all
 
-    avatars = [
-      File.open(Rails.root.join('lib/tasks/population_data', '1.jpg')), 
-      File.open(Rails.root.join('lib/tasks/population_data', '2.jpg')), 
-      File.open(Rails.root.join('lib/tasks/population_data', '3.png')), 
-      File.open(Rails.root.join('lib/tasks/population_data', '4.jpg')), 
-      File.open(Rails.root.join('lib/tasks/population_data', '5.jpg')), 
-      File.open(Rails.root.join('lib/tasks/population_data', '6.jpg')), 
-      File.open(Rails.root.join('lib/tasks/population_data', '7.jpg')), 
-      File.open(Rails.root.join('lib/tasks/population_data', '8.jpg')), 
-      File.open(Rails.root.join('lib/tasks/population_data', '9.jpg')), 
-      File.open(Rails.root.join('lib/tasks/population_data', '10.jpg')), 
-      File.open(Rails.root.join('lib/tasks/population_data', '11.jpg')), 
-      File.open(Rails.root.join('lib/tasks/population_data', '12.jpg')), 
-      File.open(Rails.root.join('lib/tasks/population_data', '13.jpg')), 
-      File.open(Rails.root.join('lib/tasks/population_data', 'hitler.png')), 
-      File.open(Rails.root.join('lib/tasks/population_data', 'ahmadinejad.png')), 
-      File.open(Rails.root.join('lib/tasks/population_data', 'obama.png')), 
-      File.open(Rails.root.join('lib/tasks/population_data', 'ostrich-head.jpg')), 
-      File.open(Rails.root.join('lib/tasks/population_data', '580606.png')), 
-      File.open(Rails.root.join('lib/tasks/population_data', 'big-smile-icon.png')), 
-      nil
-    ]
+    avatars = Array.new
+    ['1.jpg', '2.jpg', '3.png', '4.jpg', '5.jpg', '6.jpg', '7.jpg', '8.jpg', '9.jpg', '10.jpg', '11.jpg', '12.jpg', '13.jpg', '14.jpg', '15.jpg', '16.jpg', '17.jpg', '18.jpg', '20.png', '23.png', '24.png', '19.jpg', '21.png', '22.png', '20.jpg', '21.jpg', '22.jpg', '23.jpg'].each do |f|
+      avatars.push(File.open(Rails.root.join('lib/tasks/population_data', f)))
+    end
+    avatars.push(nil)
 
     developer = User.find_by(email: 'j.smith@gmail.com')
     unless developer
@@ -48,11 +31,11 @@ namespace :db do
     end
 
     PROJECT_COUNT.times do
-      p = Project.create(
+      p = Project.create!(
         title: Faker::App.name,
         description: Faker::Lorem.sentence,
         creator: User.order("rand()").first,
-        visibility: rand > 0.5 ? 0 : 1,
+        visibility: rand > 0.2 ? 1 : 0,
       )
     end
 
@@ -83,7 +66,7 @@ def create_tasks_for(project, depth, developer)
       supertask_id: project.id,
     )
 
-    rand(1..MAX_ROLE_COUNT).times do
+    rand(1..MAX_ASSIGNMENT_COUNT).times do
       user_id = project.members.order("rand()").first.id
       p.becomes(Task).assignments.create(assignee_id: user_id, creator_id: developer.id) unless p.becomes(Task).assignee_ids.include?(user_id)
     end

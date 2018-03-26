@@ -4,14 +4,14 @@ class Taskscape.Views.Projects.ShowView extends Taskscape.Views.Projects.Project
   template: JST["backbone/templates/projects/show"]
 
   events:
-    "wheel svg" : "on_mousewheel"
+    "wheel svg"       : "on_mousewheel"
+    "click .btn-edit" : "edit_project"
 
   initialize: ->
     super
     window.focused_view = null
 
   render: ->
-    @$el.html(@template(@model.toJSON()))
     super
 
     # render members side bar
