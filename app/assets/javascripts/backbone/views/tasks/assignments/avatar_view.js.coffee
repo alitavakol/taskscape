@@ -11,11 +11,6 @@ class Taskscape.Views.Tasks.Assignments.AvatarView extends Backbone.View
     @listenTo @model, 'change', (model, response, options) -> @render()
     @listenTo @model, 'destroy', -> @remove()
 
-  destroy: () ->
-    @model.destroy()
-    this.remove()
-    false
-
   render: ->
     @$el.html @template _.extend @model.toJSON(), rotation_coefficient: @rotation_coefficient
     @$el.data('view_object', @)

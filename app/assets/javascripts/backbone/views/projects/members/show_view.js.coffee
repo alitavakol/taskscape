@@ -18,29 +18,13 @@ class Taskscape.Views.Projects.Members.ShowView extends Backbone.View
 
     .popover('show')
 
-    .on 'hidden.bs.popover', -> # triggered when dialog disappeared
-
-    # .on 'save.bs.popover', => # triggered when save button of the dialog is pushed
-    #   # save task with provided title and color
-    #   task.save {}, 
-    #     pick: ['title', 'x', 'y', 'color', 'supertask_id', 'description']
-    #     error: (model, response) -> 
-    #       # restore original model attributes
-    #       model.set
-    #         title: attributes.title
-    #         color: attributes.color
-    #         description: attributes.description
-
-    #       # call optional handler
-    #       options.error(model, response) if options.error
-
-    #   # close the popover dialog
-    #   $('#popover').popover('dispose')
-
-    # # respond to keyboard enter
-    # $('#new-task-title').keyup (e) ->
-    #   if e.keyCode == 13 && e.target.value.length > 0
-    #     $('.popover .btn-success').trigger 'click'
-    #     return
+    $('.popover .btn-delete').off('click').on 'click', =>
+      @delete_membership()
+      $('#popover').popover('dispose')
+      false
 
     @
+
+  delete_membership: ->
+    @model.destroy wait: true
+    false

@@ -9,6 +9,9 @@ class Taskscape.Views.Projects.Members.MemberView extends Backbone.View
 
   tagName: "li"
 
+  initialize: ->
+    @listenTo @model, 'destroy', -> @remove()
+
   render: ->
     @$el.html @template(@model.toJSON())
     @$('img').data('view_object', @)

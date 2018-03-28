@@ -29,10 +29,4 @@ class Assignment < ApplicationRecord
   def create_membership_in_task
     task.memberships.where(member_id: assignee_id, creator_id: creator_id).first_or_create
   end
-
-  # remove membership in all subtasks after removing their assignment from the task
-  before_destroy :destroy_membership
-  def destroy_membership
-    task.memberships.where(member_id: assignee_id).destroy_all
-  end
 end
