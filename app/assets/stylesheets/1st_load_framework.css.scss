@@ -75,7 +75,7 @@ section {
 .authform {
   padding-top: 30px;
   padding-bottom: 30px;
-  max-width: 360px;
+  max-width: 420px;
   margin: 0 auto;
 }
 .authform form {
@@ -96,13 +96,25 @@ section {
 .authform fieldset {
   @extend .card;
 }
-#error_explanation:not(:empty) {
-  @extend .alert;
-  @extend .alert-danger;
+#error_explanation {
+  &:not(:empty) {
+    @extend .alert;
+    @extend .alert-danger;
+  }
+
+  h2 {
+    font-size: 16px;
+  }
 }
-#error_explanation h2 {
-  font-size: 16px;
+
+.field_with_errors {
+  width: 100%;
+
+  input {
+    @extend .is-invalid;
+  }
 }
+
 .button-xs {
   @extend .btn;
   @extend .btn-primary;

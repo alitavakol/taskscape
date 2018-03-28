@@ -1,0 +1,13 @@
+%form{style: "padding-left: 16px; padding-right: 16px;"}
+  .form-group
+    %img.rounded{src: "#{@avatar}"}
+
+  .form-group
+    %div
+      %strong= @name
+    %a{href: "mailto:#{@email}"}= @email
+
+  -if @editable
+    %button.btn.btn-sm.btn-danger.btn-delete{type: "button"}
+      %i.fa.fa-remove
+      Remove membership

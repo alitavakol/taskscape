@@ -27,6 +27,7 @@ namespace :db do
     if User.count < USER_COUNT
       (USER_COUNT-1).times do
         User.create!(name: Faker::Name.name, email: Faker::Internet.email, password: '5iveL!fe', role: rand(0..2), avatar: avatars.sample)
+        User.confirm
       end
     end
 

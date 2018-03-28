@@ -14,7 +14,7 @@ body {
 
 .field_with_errors {
   padding: 2px;
-  background-color: red;
+  color: red;
   display: table;
 }
 
@@ -56,4 +56,8 @@ svg {
   // white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.alert {
+  margin-top: 16px;
 }

@@ -63,18 +63,6 @@ class User < ApplicationRecord
   has_many :assignments, foreign_key: "assignee_id", dependent: :destroy
   has_many :tasks, through: :assignments # tasks that this user is assigned to do
 
-  has_many :created_projects, class_name: "Task", foreign_key: "creator_id", dependent: :nullify # projects/tasks created by this user
+  has_many :created_projects, class_name: "Project", foreign_key: "creator_id", dependent: :nullify # projects/tasks created by this user
 
-  def attrs
-    attributes.slice('id', 'name', 'email').merge(
-      avatar: avatar.url(:thumb),
-      confirmed: self.confirmed?
-    )
-  end
-
-  protected
-
-  def confirmation_required?
-    Rails.env.production? && !admin?
-  end
 end

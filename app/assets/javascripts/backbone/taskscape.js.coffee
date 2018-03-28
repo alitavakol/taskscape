@@ -12,13 +12,22 @@ window.Taskscape =
   Views: {}
 
   initialize: ->
+    $('.alert').hide() # hide messages bar (alerts)
+
     router.on 'route', (route, params) ->
       # destroy any open dialog on route change
-      $('#edit-project-dialog').modal('dispose')
+      $('.modal-dlg').modal('dispose')
       $('body > .modal-backdrop').remove() # workaround
 
       # hide any open popover dialog
-      $('#popover').popover('dispose')
+      $('.popover-dlg').popover('dispose')
+
+    # hide any open popover dialog if clicked an element that is not a child of the popover dialog element
+    $('main').off('mousedown').on 'mousedown', (e) ->
+      return true if $(e.target).closest('.popover').length
+
+      $('.popover-dlg').popover('hide')
+      return false
 
 # https://www.npmjs.com/package/coffeescript-mixins
 # Function::include = (mixin) ->
@@ -88,7 +97,3 @@ $(document).ajaxError (e, jqxhr, settings, thrownError) ->
       toastr["error"]("Could not connect to server", "Network Error")
 
   @
-
-$('main').click (e) ->
-  # hide any open popover dialog if clicked an element that is not a child of the popover dialog element
-  $('#popover').popover('hide') unless $(e.target).closest('.popover').length

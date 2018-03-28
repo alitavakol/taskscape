@@ -6020,7 +6020,14 @@ var domUtils = {
       while (parent.parentNode !== parent.ownerDocument) {
         dropzoneParents.unshift(parent);
         parent = parent.parentNode;
+  
+        // fix: handle the case when object disappears while dragging
+        if (parent == null)
+          break;
       }
+      // fix: handle the case when object disappears while dragging
+      if (parent == null)
+        continue;
 
       n = 0;
 

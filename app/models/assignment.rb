@@ -18,10 +18,6 @@ class Assignment < ApplicationRecord
   validates_presence_of :creator, :assignee, :task
   validates_uniqueness_of :task_id, scope: :assignee_id
 
-  def attrs
-    attributes.slice('id', 'assignee_id', 'task_id')
-  end
-
   # assigned user should be a member of the supertask (the parent project/task of this task)
   before_create :create_membership_in_project
   def create_membership_in_project

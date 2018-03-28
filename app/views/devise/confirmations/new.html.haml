@@ -1,0 +1,11 @@
+.authform
+  = simple_form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :post }) do |f|
+    %h3 Resend confirmation instructions
+    = devise_error_messages!
+
+    .form-group
+      = f.input :email, autofocus: true, value: (resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email), input_html: { class: 'form-control' }
+
+    = f.button :submit, "Resend confirmation", class: 'button right'
+
+  / = render "devise/shared/links"

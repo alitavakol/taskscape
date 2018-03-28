@@ -24,6 +24,6 @@ class MembershipPolicy
   end
 
   def destroy?
-    self.create?
+    @current_user.id != @membership.member_id && self.create?
   end
 end

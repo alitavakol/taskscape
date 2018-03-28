@@ -1,13 +1,18 @@
 .col
   .row
     .col.col-12{style: "display: flex; flex-direction: row;"}
-      .section-name.ellipsize{style: "flex: auto; margin-right: 5px; background-color: #{tinycolor(@color).darken().darken().toHexString()}; border-color: #{tinycolor(@color).darken().darken().toHexString()};", title: "#{@description}"} #{@title}
-      %button.btn.btn-sm.btn-primary.btn-edit{type: 'button', title: "Edit task title and color", style: "margin-right: 5px; margin-left: 0;"}
-        %i.fa.fa-pencil
+      .section-name.ellipsize{style: "flex: auto; margin-right: 5px; max-width: 60%; background-color: #{tinycolor(@color).darken().darken().toHexString()}; border-color: #{tinycolor(@color).darken().darken().toHexString()};", title: "#{@description}"} #{@title}
+
+      - if @editable
+        %button.btn.btn-sm.btn-primary.btn-edit{type: 'button', title: "Edit task title and color", style: "margin-right: 5px; margin-left: 0;"}
+          %i.fa.fa-pencil
+
       %a.btn.btn-sm.btn-primary{href: "#/#{@id}", role: 'button', title: "Navigate down to task as project", style: "margin-right: 5px;"}
         %i.fa.fa-arrow-down
-      %button.btn.btn-danger.btn-sm.btn-delete.float-right{type: 'button', title: 'Delete task', style: "margin-left: 16px; "}
-        %i.fa.fa-trash
+
+      - if @editable
+        %button.btn.btn-danger.btn-sm.btn-delete.float-right{type: 'button', title: 'Delete task', style: "margin-left: 16px; "}
+          %i.fa.fa-trash
 
   .row
     %br

@@ -1,4 +1,4 @@
-#edit-project-dialog.modal.fade{tabindex: -1, role: "dialog", "area-hidden" => "true"}
+#edit-project-dialog.modal.fade.modal-dlg{tabindex: -1, role: "dialog", "area-hidden" => "true"}
   .modal-dialog{role: 'document'}
     .modal-content
       .modal-header

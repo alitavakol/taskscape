@@ -60,20 +60,6 @@ class Task < Project
     self.y ||= 0
   end
 
-  # returns attributes of the task
-  def attrs_recursive
-    attrs_recursive_brief
-      .merge(attributes.slice('description', 'visibility', 'importance', 'due_date')).merge(
-        # assignees: assignees.map { |m| m.attrs.merge(task_id: id) },
-        assignments: assignments.map { |r| r.attrs.except('task_id').merge r.assignee.attrs.slice('name', :avatar) }
-      )
-  end
-
-  # returns minimal set of attributes (for index view)
-  def attrs_recursive_brief
-    attributes.slice('id', 'status', 'urgency', 'archived', 'x', 'y', 'color', 'effort', 'title', 'supertask_id')
-  end
-
   # make it a public if parent project (supertask) is public
   after_create :set_visibility
   def set_visibility

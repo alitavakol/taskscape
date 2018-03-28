@@ -46,6 +46,7 @@ group :development do
   gem 'rb-inotify', :require=>false
   gem 'spring-commands-rspec'
   gem 'annotate'
+  gem "letter_opener" # opens email body in a new browser tab instead of actually sending it
 end
 group :development, :test do
   gem 'factory_bot_rails'
@@ -73,4 +74,7 @@ gem "paperclip", "~> 5.2.1"
 # https://github.com/CodeSeven/toastr
 gem 'toastr-rails'
 
+# progress bar for client-side ajax
 gem 'nprogress-rails'
+
+gem 'simple_form'

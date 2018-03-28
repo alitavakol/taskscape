@@ -131,20 +131,21 @@ class Taskscape.Views.Projects.ShowView extends Taskscape.Views.Projects.Project
       ondragenter: (e) ->
         dropped_object = $(e.relatedTarget).data('view_object')
         dropzone = $(e.target).data('view_object')
-        dropzone.handle_drag_enter dropped_object ? e
+        dropzone.handle_drag_enter(dropped_object ? e) if dropzone
         window.hot_dropzone = dropzone
 
       ondragleave: (e) ->
         dropped_object = $(e.relatedTarget).data('view_object')
         dropzone = $(e.target).data('view_object')
-        dropzone.handle_drag_leave dropped_object ? e
+        dropzone.handle_drag_leave(dropped_object ? e) if dropzone
         window.hot_dropzone = null
 
       ondrop: (e) ->
         dropped_object = $(e.relatedTarget).data('view_object')
         dropzone = $(e.target).data('view_object')
-        dropzone.handle_drag_leave dropped_object ? e
-        dropzone.handle_drop dropped_object ? e
+        if dropzone
+          dropzone.handle_drag_leave dropped_object ? e
+          dropzone.handle_drop dropped_object ? e
         @
 
       ondropdeactivate: (e) ->

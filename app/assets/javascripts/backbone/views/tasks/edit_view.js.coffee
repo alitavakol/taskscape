@@ -8,7 +8,7 @@ class Taskscape.Views.Tasks.EditView extends Backbone.View
     # backup original model attributes
     attributes = _.clone task.attributes
 
-    $('#popover').popover
+    $('#popover').trigger('hidden.bs.popover').popover('dispose').popover
       title: if task.id then 'Edit task' else 'Create a new task'
       content: @template(task.toJSON())
       html: true
@@ -21,11 +21,7 @@ class Taskscape.Views.Tasks.EditView extends Backbone.View
 
     .popover('show')
 
-    # .on 'shown.bs.popover', -> console.log 'shown.bs.popover'
-
     .on 'hidden.bs.popover', => # triggered when dialog disappeared
-      $('#popover').popover('dispose')
-
       # restore original model attributes
       task.set
         title: attributes.title
@@ -75,4 +71,4 @@ class Taskscape.Views.Tasks.EditView extends Backbone.View
         $('.popover .btn-success').trigger 'click'
         return
 
-  @
+    @

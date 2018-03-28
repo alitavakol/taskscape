@@ -18,10 +18,6 @@ class Membership < ApplicationRecord
   validates_presence_of :creator, :member, :project
   validates_uniqueness_of :project_id, scope: :member_id
 
-  def attrs
-    attributes.slice('id', 'project_id', 'member_id')
-  end
-
   # un-assign all subtasks of this project from removed member
   before_destroy :destroy_assignments
   def destroy_assignments

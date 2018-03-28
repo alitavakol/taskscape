@@ -48,20 +48,4 @@ class Project < ApplicationRecord
     self.visibility ||= :private_project
     self.archived ||= false
   end
-
-  # returns attributes as a project (i.e. supertask)
-  def attrs_recursive
-    attributes.slice('id', 'archived', 'title', 'description', 'visibility').merge(
-      memberships: memberships.map { |m| m.attrs.except('project_id').merge m.member.attrs.except('id') },
-      tasks: tasks.map { |t| t.attrs_recursive }
-    )
-  end
-
-  # returns minimal list of attributes (for index view)
-  def attrs_recursive_brief
-    attributes.slice('id', 'visibility', 'archived', 'title', 'visibility').merge(
-      tasks: tasks.map { |t| t.attrs_recursive_brief },
-      members_count: members.count
-    )
-  end
 end
