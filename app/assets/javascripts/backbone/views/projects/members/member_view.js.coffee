@@ -11,6 +11,11 @@ class Taskscape.Views.Projects.Members.MemberView extends Backbone.View
 
   initialize: ->
     @listenTo @model, 'destroy', -> @remove()
+    dispatcher.on 'close', @close, @ # https://stackoverflow.com/a/9963360/1994239
+
+  close: ->
+    @remove()
+    dispatcher.off 'close' # https://stackoverflow.com/a/9963360/1994239
 
   render: ->
     @$el.html @template(@model.toJSON())

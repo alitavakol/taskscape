@@ -26,6 +26,7 @@
 #= require toastr
 #= require nprogress
 #= require nprogress-ajax
+#= require jquery.tokeninput
 #= require_tree .
 
 # NProgress.configure

@@ -65,4 +65,42 @@ class User < ApplicationRecord
 
   has_many :created_projects, class_name: "Project", foreign_key: "creator_id", dependent: :nullify # projects/tasks created by this user
 
+  # return list of users whose name/email match the specified query string
+  # for client-side token-input (like jQuery token-input)
+  def self.tokens(query)
+    matches = where("name like ?", "%#{query}%").map { |m| { 'id' => m.id, 'name' => m.name } }
+    matches += where("email like ?", "%#{query}%").map { |m| { 'id' => m.id, 'name' => m.email } }
+
+    # if query is an email, add a token object with 
+    # id equal to "<<<email>>>" to indicate that the user is not in database, and needs to be invited
+    if query =~ Devise::email_regexp && ( matches.empty? || matches.select { |t| t['name'] == query }.count == 0 )
+      matches += [{ id: "<<<#{query}>>>", name: "Invite and add: \"#{query}\""}]
+    end
+
+    matches.uniq { |m| m['id'] } # remove duplicate array elements
+  end
+
+  # given a collection of user ids, possibly containing an element like "<<<email>>>", 
+  # this function replaces that specific email with the actual user id, 
+  # after sending an invitation email for that user, and creating it in database,
+  # and returns the new array of user ids
+  def self.ids_from_tokens(tokens)
+    # iterate through all tokens, and replace id matching "<<<email>>>" 
+    # with actual database id after creating and inviting the user
+    tokens.gsub!(/<<<(.+?)>>>/) {
+      # create the invitation but do not send it
+      user = invite!(email: $1) do |u|
+        u.skip_invitation = true
+      end
+
+      # send the invitation in a parallel thread
+      Thread.new(user) { |user| user.deliver_invitation }
+
+      user.id
+    }
+
+    # convert string to integer array
+    tokens.split(',').map(&:to_i)
+  end
+
 end

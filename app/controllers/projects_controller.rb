@@ -1,5 +1,6 @@
 class ProjectsController < ApplicationController
   before_action :set_project, only: [:show, :update, :destroy]
+  before_action :process_member_tokens, only: [:create, :update]
 
   # GET /projects
   # GET /projects.json
@@ -84,6 +85,7 @@ class ProjectsController < ApplicationController
   end
 
   private
+
     # Use callbacks to share common setup or constraints between actions.
     def set_project
       @project = Project.find(params[:id])
@@ -91,6 +93,24 @@ class ProjectsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def project_params
-      params.require(:project).permit(:title, :description, :visibility, :status, :due_date, :creator_id, :archived)
+      result = params.require(:project).permit(:title, :description, :visibility, :status, :due_date, :creator_id, :archived, memberships_attributes: [:member_id])
+
+      if result.has_key? :memberships_attributes
+        result[:memberships_attributes].each { |membership| membership.merge! creator_id: current_user.id }
+      end
+
+      return result
     end
+
+    # process member_tokens parameter:
+    # call User model to create new users (if they were not already in DB) and send invitation to them,
+    # then replace the parameter with nested attributes for project memberships: params[:project][:memberships_attributes]
+    def process_member_tokens
+      h = params.require(:project)
+      return unless h.has_key?(:member_tokens)
+
+      new_member_ids = User.ids_from_tokens(h[:member_tokens])
+      params[:project][:memberships_attributes] = Array.new(new_member_ids.length) { |i| { member_id: new_member_ids[i] } }
+    end
+
 end

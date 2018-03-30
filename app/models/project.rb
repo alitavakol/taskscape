@@ -38,6 +38,9 @@ class Project < ApplicationRecord
 
   validates_presence_of :creator, :title
 
+  validates_associated :memberships
+  accepts_nested_attributes_for :memberships
+
   after_create :make_creator_member
   def make_creator_member
     memberships.create(member_id: creator_id, creator_id: creator_id)

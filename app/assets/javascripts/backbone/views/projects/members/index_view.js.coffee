@@ -10,6 +10,7 @@ class Taskscape.Views.Projects.Members.IndexView extends Backbone.View
     "click #btn-add" : "add_member"
 
   initialize: ->
+    @collection = @model.get('memberships')
     @collection.bind('reset', @addAll)
 
   addAll: ->
@@ -91,4 +92,10 @@ class Taskscape.Views.Projects.Members.IndexView extends Backbone.View
         @avatar = null
 
   add_member: ->
-    console.log 'add new member'
+    view = new Taskscape.Views.Projects.EditView(model: @model)
+    view.add_member_dialog = true
+
+    $('#modal-container').html view.render().el
+    view.show()
+
+    false # do not remove this

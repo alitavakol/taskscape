@@ -30,7 +30,7 @@ class AssignmentsController < ApplicationController
     authorize @assignment
 
     respond_to do |format|
-      if @assignment.update(assignment_params)
+      if @assignment.update assignment_params.merge creator_id: current_user.id
         format.json { render :show, status: :ok, location: @assignment }
       else
         format.json { render json: @assignment.errors, status: :unprocessable_entity }

@@ -1,7 +1,16 @@
 class UsersController < ApplicationController
   def index
-    @users = User.all
     authorize User
+
+    if params.has_key? :q
+      # respond with tokens if query paramater is provided
+      # useful for client-side token-input (like jQuery token-input)
+      @users = User.tokens(params[:q])
+      render json: @users
+
+    else
+      @users = User.all
+    end
   end
 
   def show

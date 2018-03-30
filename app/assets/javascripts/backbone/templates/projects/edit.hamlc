@@ -2,29 +2,37 @@
   .modal-dialog{role: 'document'}
     .modal-content
       .modal-header
-        %h4.modal-title 
-          = if @id then 'Edit' else 'New'
-          project
+        %h4.modal-title
+          - unless @add_member_dialog
+            = if @id then 'Edit' else 'New'
+            project
+
+          - else
+            Add new members to project
+
         %button.close{type: "button", "data-dismiss" => "modal", "area-hidden" => "true", "aria-label" => 'close'}
           %span{"aria-hidden" => "true"} &times;
 
       .modal-body
-        .form-group
-          %label.control-label{for: "new-project-title"} Project Title
-          %input#new-project-title.form-control{type: "text",  placeholder: "Enter title here", value: "#{@title}"}
+        - unless @add_member_dialog
+          .form-group
+            %label.control-label{for: "new-project-title"} Project Title
+            %input#new-project-title.form-control{type: "text",  placeholder: "Enter title here", value: "#{@title}"}
 
-        .form-group
-          %label{for: "new-project-description"} Description
-          %textarea#new-project-description.form-control{placeholder: 'Explain more about the project…'}= @description
+          .form-group
+            %label{for: "new-project-description"} Description
+            %textarea#new-project-description.form-control{placeholder: 'Explain more about the project…'}= @description
 
-        / .form-group
-        /   %label.control-label{for: "project-member-tokens"} Project members (optional)
-        /   %input#project-member-tokens.form-control{type: "text", placeholder: "Enter email addresses here..."}
+        - if @add_member_dialog || !@id
+          .form-group
+            %label.control-label{for: "member_tokens"} Share this project with friends
+            %input#member-tokens.form-control{type: "text", placeholder: "Enter name or email addresses here…"}
 
-        .form-group
-          .form-check
-            %input.form-check-input#new-project-visibility{type: 'checkbox', checked: "#{@visibility == 'public_project'}"}
-            %label.form-check-label{for: 'new-project-visibility'} Make it visible to any logged-in user.
+        - unless @add_member_dialog
+          .form-group
+            .form-check
+              %input.form-check-input#new-project-visibility{type: 'checkbox', checked: "#{@visibility == 'public_project'}"}
+              %label.form-check-label{for: 'new-project-visibility'} Make it visible to any logged-in user.
 
       .modal-footer
         %button.btn.btn-default.btn-sm{type: "button", "data-dismiss" => "modal"} Cancel

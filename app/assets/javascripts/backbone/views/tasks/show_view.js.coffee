@@ -31,8 +31,14 @@ class Taskscape.Views.Tasks.ShowView extends Backbone.View
     @listenTo @model, 'change:color', (model, response, options) -> 
       @update_plate()
       @render_title()
+      @render_status()
 
+    dispatcher.on 'close', @close, @ # https://stackoverflow.com/a/9963360/1994239
     @
+
+  close: ->
+    @remove()
+    dispatcher.off 'close' # https://stackoverflow.com/a/9963360/1994239
 
   # this function renders task's skeleton and calls render_* to render attributes
   render: ->

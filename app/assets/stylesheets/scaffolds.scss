@@ -61,3 +61,17 @@ svg {
 .alert {
   margin-top: 16px;
 }
+
+.modal-open .modal {
+  overflow-y: hidden !important;
+}
+
+.token-input-list-facebook {
+  width: 100% !important;
+  color: #495057 !important;
+  background-color: #fff !important;
+  background-clip: padding-box !important;
+  border: 1px solid #ced4da !important;
+  border-radius: 0.25rem !important;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out !important;
+}

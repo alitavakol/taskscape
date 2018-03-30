@@ -13,6 +13,9 @@ class Taskscape.Routers.ProjectsRouter extends Backbone.Router
     @projects ?= new Taskscape.Collections.ProjectsCollection()
     @projects.fetch
       success: (c) ->
+        # https://stackoverflow.com/a/9963360/1994239
+        dispatcher.trigger('close')
+
         view = new Taskscape.Views.Projects.IndexView(collection: c)
         $("#projects").html(view.render().el)
         view.post_render()
@@ -21,6 +24,9 @@ class Taskscape.Routers.ProjectsRouter extends Backbone.Router
     project = Taskscape.Models.Project.find(id) ? new Taskscape.Models.Project(id: id)
     project.fetch
       success: (m) ->
+        # https://stackoverflow.com/a/9963360/1994239
+        dispatcher.trigger('close')
+
         view = new Taskscape.Views.Projects.ShowView
           model: m
           className: 'remove-gutters'

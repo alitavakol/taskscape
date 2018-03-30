@@ -38,6 +38,13 @@ class Taskscape.Views.Projects.ProjectView extends Backbone.View
     @listenTo @model, 'destroy', ->
       @remove()
 
+    dispatcher.on 'close', @close, @ # https://stackoverflow.com/a/9963360/1994239
+    window.focused_view = null
+
+  close: ->
+    @remove()
+    dispatcher.off 'close' # https://stackoverflow.com/a/9963360/1994239
+
   render: ->
     @$el.html @template(@model.toJSON())
     @objects = []
@@ -160,7 +167,7 @@ class Taskscape.Views.Projects.ProjectView extends Backbone.View
   edit_project: ->
     view = new Taskscape.Views.Projects.EditView(model: @model)
     $('#modal-container').html view.render().el
-    view.show {}
+    view.show()
     false # do not remove this
 
   delete_project: ->

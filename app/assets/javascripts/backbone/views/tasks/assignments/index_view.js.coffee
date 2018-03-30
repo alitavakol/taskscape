@@ -8,6 +8,11 @@ class Taskscape.Views.Tasks.Assignments.IndexView extends Backbone.View
 
   initialize: ->
     @listenTo @collection, 'add remove reset', (model, response, options) -> @render()
+    dispatcher.on 'close', @close, @ # https://stackoverflow.com/a/9963360/1994239
+
+  close: ->
+    @remove()
+    dispatcher.off 'close' # https://stackoverflow.com/a/9963360/1994239
 
   addAll: ->
     @collection.forEach (assignment, idx, collection) =>

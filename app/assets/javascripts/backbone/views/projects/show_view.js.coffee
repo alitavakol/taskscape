@@ -7,15 +7,11 @@ class Taskscape.Views.Projects.ShowView extends Taskscape.Views.Projects.Project
     "wheel svg"       : "on_mousewheel"
     "click .btn-edit" : "edit_project"
 
-  initialize: ->
-    super
-    window.focused_view = null
-
   render: ->
     super
 
     # render members side bar
-    members_view = new Taskscape.Views.Projects.Members.IndexView(collection: @model.get('memberships'))
+    members_view = new Taskscape.Views.Projects.Members.IndexView(model: @model)
     @$("#project-members-sidebar").append members_view.render().el
 
     @enable_drag() # enable dragging tasks

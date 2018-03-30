@@ -3,20 +3,23 @@ Taskscape.Views.Projects ||= {}
 class Taskscape.Views.Projects.EditView extends Backbone.View
   template: JST["backbone/templates/projects/edit"]
 
-  render: ->
-    @$el.html @template(@model.toJSON())
+  initialize: ->
+    # variable indicating whether this dialog is opened for adding new members to the project
+    @add_member_dialog = false
+
+  render: (options) ->
+    @$el.html @template _.extend @model.toJSON(), add_member_dialog: @add_member_dialog
     @
 
   show: (options) ->
-    $('#edit-project-dialog').modal
+    options ?= {}
+
+    $('#edit-project-dialog').modal('dispose').modal
       backdrop: 'static'
       keyboard: false
 
-    .on 'shown.bs.modal', ->
-      $('#new-project-title').focus()
-
-    .on 'hidden.bs.modal', -> # triggered when dialog disappeared
-      $('#edit-project-dialog').modal('dispose')
+    .on 'shown.bs.modal', =>
+      (if @add_member_dialog then $('.modal-dlg input') else $('#new-project-title')).focus()
 
     .on 'save.bs.modal', => # triggered when apply button of the dialog is pushed
       # disable dialog buttons on start of sync
@@ -27,12 +30,13 @@ class Taskscape.Views.Projects.EditView extends Backbone.View
         title: $('#new-project-title').val()
         visibility: if $('#new-project-visibility').is(':checked') then 'public_project' else 'private_project'
         description: $('#new-project-description').val()
+        member_tokens: $('#member-tokens').val()
       ,
         wait: true
-        pick: ['title', 'description', 'visibility']
+        pick: ['title', 'description', 'visibility', 'member_tokens']
 
         success: (model, response) ->
-          $('#edit-project-dialog').modal('hide')
+          window.close_dialogs()
           options.success(model, response) if options.success
 
         error: (model, response) ->
@@ -50,5 +54,14 @@ class Taskscape.Views.Projects.EditView extends Backbone.View
     # respond to keyboard enter
     $('#new-project-title').keyup (e) ->
       $('#edit-project-dialog .btn-success').trigger('click') if e.keyCode == 13 && e.target.value.length > 0
+
+    @$('#member-tokens').tokenInput "/users.json",
+      theme: 'facebook'
+      hintText: 'type to search'
+      preventDuplicates: true
+      minChars: 3
+      hintText: 'Type name or email to add new project members'
+
+    $(".token-input-dropdown-facebook").detach().appendTo('#edit-project-dialog')
 
     @

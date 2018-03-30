@@ -16,18 +16,17 @@ window.Taskscape =
 
     router.on 'route', (route, params) ->
       # destroy any open dialog on route change
-      $('.modal-dlg').modal('dispose')
-      $('body > .modal-backdrop').remove() # workaround
+      window.close_dialogs()
 
       # hide any open popover dialog
       $('.popover-dlg').popover('dispose')
 
     # hide any open popover dialog if clicked an element that is not a child of the popover dialog element
     $('main').off('mousedown').on 'mousedown', (e) ->
-      return true if $(e.target).closest('.popover').length
+      unless $(e.target).closest('.popover').length
+        $('.popover-dlg').popover('hide')
 
-      $('.popover-dlg').popover('hide')
-      return false
+      return true
 
 # https://www.npmjs.com/package/coffeescript-mixins
 # Function::include = (mixin) ->
@@ -75,7 +74,9 @@ $.ajaxSetup
   cache: false
 
 $(document).keyup (e) ->
-  $('#popover').popover('hide') if e.keyCode == 27 # hide any open popover dialog
+  if e.keyCode == 27
+    $('#popover').popover('hide') # hide any open popover dialog
+    window.close_dialogs() # hide any open modal dialog
 
 # global ajax error handler
 # shows a toast notification
@@ -90,6 +91,9 @@ $(document).ajaxError (e, jqxhr, settings, thrownError) ->
         for attribute, messages of jqxhr.responseJSON
           toastr["error"]("#{attribute} #{message}", "#{thrownError} (#{jqxhr.status})") for message in messages
 
+      else if jqxhr.status == 500
+        toastr["error"]("Sorry for the inconvenience.", "#{thrownError} (#{jqxhr.status})")
+
       else # some response error other than 422
         toastr["error"](jqxhr.responseJSON.error || jqxhr.responseText, "#{thrownError} (#{jqxhr.status})")
 
@@ -97,3 +101,12 @@ $(document).ajaxError (e, jqxhr, settings, thrownError) ->
       toastr["error"]("Could not connect to server", "Network Error")
 
   @
+
+window.close_dialogs = ->
+  $('.modal-dlg').modal('hide')
+  $('body > .modal-backdrop').remove() # workaround
+  $('#modal-container div').remove() # workaround
+  @
+
+# https://stackoverflow.com/a/9963360/1994239
+window.dispatcher = _.clone(Backbone.Events)

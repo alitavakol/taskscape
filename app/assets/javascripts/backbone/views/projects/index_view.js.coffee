@@ -9,6 +9,11 @@ class Taskscape.Views.Projects.IndexView extends Backbone.View
   initialize: () ->
     @listenTo @collection, 'add', (model, response, options) -> @add(model)
     @listenTo @collection, 'remove', (model, response, options) -> @objects = @objects.filter (o) -> o.model.cid != model.cid
+    dispatcher.on 'close', @close, @ # https://stackoverflow.com/a/9963360/1994239
+
+  close: ->
+    @remove()
+    dispatcher.off 'close' # https://stackoverflow.com/a/9963360/1994239
 
   addAll: () ->
     @collection.each @add
