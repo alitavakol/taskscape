@@ -17,9 +17,11 @@ class Taskscape.Views.Projects.Members.IndexView extends Backbone.View
     @collection.each(@addOne)
 
   addOne: (member) =>
-    view = new Taskscape.Views.Projects.Members.MemberView
-      model: member
-    @$el.prepend(view.render().el)
+    view = new Taskscape.Views.Projects.Members.MemberView(model: member)
+    view.project = @model
+
+    @$el.append(view.render().el)
+    @$('#btn-add').appendTo @$el # move add member button to bottom
 
   render: ->
     @$el.html @template(members: @collection.toJSON())

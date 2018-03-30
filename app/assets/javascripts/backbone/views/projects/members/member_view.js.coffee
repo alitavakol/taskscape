@@ -24,6 +24,7 @@ class Taskscape.Views.Projects.Members.MemberView extends Backbone.View
 
   show_member_details: (e) ->
     view = new Taskscape.Views.Projects.Members.ShowView(model: @model)
+    view.project = @project
 
     rc = e.currentTarget.getBoundingClientRect()
 

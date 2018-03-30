@@ -1,13 +1,19 @@
 %form{style: "padding-left: 16px; padding-right: 16px;"}
   .form-group
-    %img.rounded{src: "#{@avatar}"}
+    %img.rounded{src: "#{@avatar}", style: "display: inline-block;"}
 
-  .form-group
-    %div
-      %strong= @name
-    %a{href: "mailto:#{@email}"}= @email
+    %div{style: "display: inline-block; vertical-align: bottom; margin-left: 8px;"}
+      %div
+        %strong= @name
+      %div
+        %a{href: "mailto:#{@email}"}= @email
 
   -if @editable
-    %button.btn.btn-sm.btn-danger.btn-delete{type: "button"}
+    %button.btn.btn-sm.btn-danger.btn-delete{type: "button", title: "Remove member from project"}
       %i.fa.fa-remove
-      Remove membership
+      Remove
+
+  -unless @invitation_accepted
+    %button.btn.btn-sm.btn-info.btn-invite{type: "button", title: "Resend invitation email"}
+      %i.fa.fa-envelope
+      Re-invite

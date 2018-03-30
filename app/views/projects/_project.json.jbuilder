@@ -6,7 +6,7 @@ result = json.merge!(
       .merge membership.member.attributes.slice('name', 'email')
       .merge(
         avatar: membership.member.avatar.url(:thumb),
-        confirmed: membership.member.confirmed?,
+        invitation_accepted: !membership.member.invited_to_sign_up? || membership.member.invitation_accepted?,
         editable: MembershipPolicy.new(@current_user, membership).destroy?
       )
     },

@@ -39,7 +39,7 @@ class Project < ApplicationRecord
   validates_presence_of :creator, :title
 
   validates_associated :memberships
-  accepts_nested_attributes_for :memberships
+  accepts_nested_attributes_for :memberships, reject_if: :reject_duplicates
 
   after_create :make_creator_member
   def make_creator_member
@@ -51,4 +51,11 @@ class Project < ApplicationRecord
     self.visibility ||= :private_project
     self.archived ||= false
   end
+
+  private
+
+    def reject_duplicates(attributes)
+      member_ids.include?(attributes[:member_id])
+    end
+
 end
