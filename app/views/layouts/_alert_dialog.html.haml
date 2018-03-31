@@ -1,0 +1,17 @@
+#alert-dialog.modal.fade.modal-dlg{tabindex: -1, role: "dialog", "aria-labelledby" => "alert-dialog-label", "aria-hidden" => "true"}
+  .modal-dialog{role: "document"}
+    .modal-content
+      .modal-header
+        %h5.modal-title#alert-dialog-label Alert
+        %button{type: "button", class: "close", "data-dismiss" => "modal", "aria-label" => "Close"}
+          %span{"aria-hidden" => "true"} &times;
+
+      .modal-body
+
+      .modal-footer
+        %button.btn.btn-secondary.btn-sm{type: "button", "data-dismiss" => "modal"}
+          %i.fa.fa-remove
+          Cancel
+        %button.btn.btn-danger.btn-sm{type: "button", onclick: "$('#alert-dialog').trigger('accept.bs.modal');"}
+          %i.fa.fa-check
+          Accept

@@ -18,10 +18,10 @@ class Taskscape.Views.Projects.EditView extends Backbone.View
       backdrop: 'static'
       keyboard: false
 
-    .on 'shown.bs.modal', =>
+    .off('shown.bs.modal').on 'shown.bs.modal', =>
       (if @add_member_dialog then $('.modal-dlg input') else $('#new-project-title')).focus()
 
-    .on 'save.bs.modal', => # triggered when apply button of the dialog is pushed
+    .off('save.bs.modal').on 'save.bs.modal', => # triggered when apply button of the dialog is pushed
       # disable dialog buttons on start of sync
       $('#edit-project-dialog .btn-success').prop('disabled', true)
       $('#edit-project-dialog .btn-default').prop('disabled', true)

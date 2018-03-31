@@ -41,5 +41,11 @@ class Taskscape.Views.Tasks.DetailsView extends Backbone.View
         model.set JSON.parse("{\"#{attribute}\": \"#{options.previous_value}\"}")
 
   delete_task: ->
-    @model.destroy
-      wait: true
+    show_alert "Are you share want to <strong>delete task #{@model.get('title')}</strong>?",
+      accept: =>
+        @$('.btn-delete').prop('disabled', true)
+        @model.destroy
+          wait: true
+          error: => @$('.btn-delete').prop('disabled', false)
+
+    false

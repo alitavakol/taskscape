@@ -171,4 +171,11 @@ class Taskscape.Views.Projects.ProjectView extends Backbone.View
     false # do not remove this
 
   delete_project: ->
-    @model.destroy wait: true
+    show_alert "Are you share want to <strong>delete project #{@model.get('title')}</strong>?",
+      accept: =>
+        @$('.btn-delete').prop('disabled', true)
+        @model.destroy
+          wait: true
+          error: => @$('.btn-delete').prop('disabled', false)
+
+    false

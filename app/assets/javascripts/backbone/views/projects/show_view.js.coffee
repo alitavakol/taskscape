@@ -24,7 +24,7 @@ class Taskscape.Views.Projects.ShowView extends Taskscape.Views.Projects.Project
       @svg.data('padding-left', 1.2 * @$('#project-members-sidebar').width())
       @svg.data('padding-right', if window.focused_view == @ then 0 else @$('#task-details-sidebar').width())
       SVG.update_viewbox_variables @svg
-      SVG.ensure_visible(window.focused_view.$el, window.focused_view.x, window.focused_view.y) if window.focused_view != @
+      SVG.ensure_visible(window.focused_view.$el, window.focused_view.x, window.focused_view.y) if window.focused_view && window.focused_view != @
 
     @
 

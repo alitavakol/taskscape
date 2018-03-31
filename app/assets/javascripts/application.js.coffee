@@ -49,3 +49,18 @@ toastr.options =
   hideEasing: "linear"
   showMethod: "fadeIn"
   hideMethod: "fadeOut"
+
+# a customized alert dialog using bootstrap modal
+window.show_alert = (message, options) ->
+  options ?= {}
+
+  $('#alert-dialog').modal('dispose').modal
+    backdrop: 'static'
+    keyboard: true
+
+  .off('shown.bs.modal').on 'shown.bs.modal', ->
+    $(this).find('.modal-body').html(message)
+
+  .off('accept.bs.modal').on 'accept.bs.modal', -> # triggered when accept button of the dialog is pushed
+    window.close_dialogs()
+    options.accept() if options.accept

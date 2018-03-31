@@ -19,7 +19,8 @@ class Taskscape.Views.Projects.Members.ShowView extends Backbone.View
     .popover('show')
 
     $('.popover .btn-delete').off('click').on 'click', =>
-      @delete_membership()
+      show_alert "Are you share want to <strong>remove #{@model.get('name')} from project #{@project.get('title')}</strong>?",
+        accept: => @delete_membership()
       $('#popover').popover('dispose')
       false
 
