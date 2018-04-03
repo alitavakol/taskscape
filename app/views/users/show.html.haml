@@ -1,12 +1,9 @@
 %br
 
+%h2= @user.name
+
+%br
 =image_tag @user.avatar.url(:small), :class => 'rounded', title: "#{@user.name}"
-
-%div 
-  %b= @user.name if @user.name
-
-%div
-  %b= mail_to(@user.email)
 
 - if user_signed_in? && @user == current_user
   %br

@@ -12,7 +12,7 @@
         Database Administration
 
   %li.nav-item.dropdown#navbarDropdownUserMenu
-    %a.nav-link.dropdown-toggle#navbarDropdownUserMenuLink{"data-toggle" => "dropdown", "aria-expanded" => false, "aria-haspopup": "true", title: "#{current_user.name}#{' (VIP)'if current_user.vip?}#{' (Administrator)'if current_user.admin?}"}
+    %a.nav-link.dropdown-toggle#navbarDropdownUserMenuLink{"data-toggle" => "dropdown", "aria-expanded" => false, "aria-haspopup": "true", title: "#{current_user.name}#{' (VIP)' if current_user.vip?}#{' (Administrator)' if current_user.admin?}"}
       =image_tag current_user.avatar.url(:thumb, timestamp: false), :class => "rounded", style: "width: 32px; height: 32px; margin-top: -12px; margin-bottom: -10px;"
 
     .dropdown-menu.dropdown-menu-right{"aria-labelledby": "navbarDropdownUserMenuLink"}
@@ -24,10 +24,12 @@
       /   %i.fa.fa-gear.fa-fw
       /   Preferences
 
-      / =link_to 'Edit account', edit_user_registration_path
+      =link_to edit_user_registration_path, class: "dropdown-item" do
+        %i.fa.fa-user
+        Preferences
 
       / %li.divider
 
       =link_to destroy_user_session_path, method: 'delete', class: "dropdown-item" do
-        %i.fa.fa-sign-out.fa-fw
+        %i.fa.fa-sign-out
         Sign out

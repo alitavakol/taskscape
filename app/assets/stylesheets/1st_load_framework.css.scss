@@ -107,8 +107,11 @@ section {
   }
 }
 
-.field_with_errors {
+.field_with_errors, .has-error {
   width: 100%;
+  padding: 2px;
+  color: red;
+  display: table;
 
   input {
     @extend .is-invalid;

@@ -24,7 +24,7 @@ class Taskscape.Views.Projects.Members.IndexView extends Backbone.View
     @$('#btn-add').appendTo @$el # move add member button to bottom
 
   render: ->
-    @$el.html @template(members: @collection.toJSON())
+    @$el.html @template editable: @model.get('editable')
     @addAll()
 
     # enable dragging user avatars into tasks and other drop zones

@@ -19,8 +19,8 @@ class MembershipPolicy
   end
 
   def create?
-    # user can create membership only if she can view referenced project
-    ProjectPolicy.new(@current_user, Project.find(@membership.project_id)).show?
+    # user can create membership only if she can edit referenced project
+    ProjectPolicy.new(@current_user, Project.find(@membership.project_id)).update?
   end
 
   def destroy?

@@ -1,45 +1,68 @@
-.authform
-  %h3
-    Edit 
-    = resource_name.to_s.humanize
+.row
+  .col-sm-3
+    .nav.flex-column.nav-pills#v-pills-tab{role: "tablist", "aria-orientation" => "vertical", style: "margin-top: 16px; margin-bottom: 24px;"}
+      %a.nav-link.active#v-pills-profile-tab{"data-toggle" => "pill", href: "#v-pills-profile", role: "tab", "aria-controls" => "v-pills-profile", "aria-selected" => "true"}
+        %i.fa.fa-user
+        Profile
 
-  = form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, role: 'form'}) do |f|
-    = devise_error_messages!
-    .form-group
-      = f.label :name
-      = f.text_field :name, autofocus: true, class: 'form-control'
+      %a.nav-link#v-pills-delete-tab{"data-toggle" => "pill", href: "#v-pills-delete", role: "tab", "aria-controls" => "v-pills-delete", "aria-selected" => "false"}
+        %i.fa.fa-trash
+        Delete Account
 
-    .form-group
-      = f.label :email
-      = f.email_field :email, class: 'form-control'
-      - if devise_mapping.confirmable? && resource.pending_reconfirmation?
-        %div
-          Currently waiting confirmation for: 
-          = resource.unconfirmed_email
+  .col-sm-9
+    .tab-content#v-pills-tabContent{style: "margin-top: 16px; margin-bottom: 24px;"}
+      .tab-pane.fade.show.active#v-pills-profile{role: "tabpanel", "aria-labelledby" => "v-pills-profile-tab"}
+        .form
+          = simple_form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, role: 'form'}) do |f|
+            = devise_error_messages!
 
-    %fieldset
-      .panel.panel-default
-        .panel-body
-          %p Leave these fields blank if you don't want to change your password.
+            .form-group
+              = image_tag @user.avatar.url(:small), :class => 'rounded', title: "#{@user.name}"
 
-          .form-group
-            = f.label :password
-            = f.password_field :password, autocomplete: 'off', class: 'form-control'
+            .form-group
+              = f.input :avatar, label: false
 
-          .form-group
-            = f.label :password_confirmation
-            = f.password_field :password_confirmation, class: 'form-control'
+            .form-group
+              = f.label :name
+              = f.text_field :name, autofocus: true, class: 'form-control'
 
-    %fieldset
-      %p You must enter your current password to make changes.
-      .form-group
-        = f.label :current_password
-        = f.password_field :current_password, class: 'form-control'
+            .form-group
+              = f.label :email
+              = f.email_field :email, class: 'form-control'
+              - if devise_mapping.confirmable? && resource.pending_reconfirmation?
+                %div
+                  Currently waiting confirmation for: 
+                  = resource.unconfirmed_email
 
-    = f.submit 'Update', class: 'button right'
+            .form-group{style: "border: 1px dashed #ced4da; border-radius: 0.25rem; margin-top: 8px; margin-bottom: 8px; padding: 16px; background-color: #f3f3f3;"}
+              .panel.panel-default
+                .panel-body
+                  .form-group
+                    = f.label :password, label: 'New password'
+                    = f.password_field :password, autocomplete: 'off', class: 'form-control', "aria-describedby" => "new-password-help"
+                    %small#new-password-help Leave these fields blank if you don't want to change your password.
 
-.authform
-  %h3 Cancel Account
-  %p
-    Unhappy? We'll be sad to see you go.
-    = button_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?" }, method: :delete, class: 'button right'
+                  .form-group
+                    = f.label :password_confirmation, label: 'New password confirmation'
+                    = f.password_field :password_confirmation, class: 'form-control', "aria-describedby" => "new-password-confirmation-help"
+                    %small#new-password-confirmation-help Leave these fields blank if you don't want to change your password.
+
+            .form-group
+              = f.label :current_password, required: true
+              = f.password_field :current_password, class: 'form-control', "aria-describedby" => "password-help"
+              %small#password-help You must enter your current password to make changes.
+
+            = f.submit 'Update Account', class: 'btn btn-primary float-right btn-sm'
+
+      .tab-pane.fade#v-pills-delete{role: "tabpanel", "aria-labelledby" => "v-pills-delete-tab"}
+        %p
+          Unhappy?
+          %br
+          We'll be sad to see you go.
+
+        #delete-user-form-container{style: "display: none;"}
+          = button_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?" }, method: :delete
+
+        %button.btn.btn-danger.btn-sm{onclick: "show_alert('You will be removed.', { accept: function() { $('#delete-user-form-container form').submit(); } });"}
+          %i.fa.fa-trash
+          Cancel my account

@@ -28,8 +28,9 @@ class Taskscape.Views.Projects.ProjectView extends Backbone.View
       # show canvas hint text if no object is on it
       @$('#canvas-hint').show() unless @objects.length > 0
 
-      # restore other tasks to their original position (their position may have been changed to remove overlaps)
-      @objects.forEach (o) -> o.move animation: true
+      # restore other tasks to their original position, after cancelling drop of a task (their position may have been changed to remove overlaps)
+      unless model.id # if removed task was new (dropped and then cancelled)
+        @objects.forEach (o) -> o.move animation: true
 
     @listenTo @model, 'change', ->
       @render()

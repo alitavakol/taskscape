@@ -7,7 +7,7 @@
       =link_to user.name, user
 
     %td{style: "vertical-align:middle;"}
-      =mail_to user.email
+      = mail_to user.email, nil, target: "_blank"
 
     %td{style: "vertical-align:middle;"}
       =f.select :role, User.roles.keys.map {|role| [role.titleize,role]}, {}, class: 'form-control input-sm'

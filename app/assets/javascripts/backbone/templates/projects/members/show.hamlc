@@ -6,7 +6,7 @@
       %div
         %strong= @name
       %div
-        %a{href: "mailto:#{@email}"}= @email
+        %a{href: "mailto:#{@email}", target: "_blank"}= @email
 
   -if @editable
     %button.btn.btn-sm.btn-danger.btn-delete{type: "button", title: "Remove member from project"}
