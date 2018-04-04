@@ -50,13 +50,14 @@ group :development do
 end
 group :development, :test do
   gem 'factory_bot_rails'
-  gem 'faker'
   gem 'rspec-rails'
 end
 group :test do
   gem 'database_cleaner'
   gem 'launchy'
 end
+
+gem 'faker'
 
 # javascript MVC library for the client side
 # I customized backbone.js, so comment the gem and add it manually into vendor/assets
@@ -78,3 +79,6 @@ gem 'toastr-rails'
 gem 'nprogress-rails'
 
 gem 'simple_form'
+
+gem 'pg', group: :production
+gem 'rails_12factor'

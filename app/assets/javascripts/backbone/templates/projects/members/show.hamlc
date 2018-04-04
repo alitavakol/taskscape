@@ -1,6 +1,6 @@
 %form{style: "padding-left: 16px; padding-right: 16px;"}
   .form-group
-    %img.rounded{src: "#{@avatar}", style: "display: inline-block;"}
+    %img.rounded{src: "#{@avatar}", style: "display: inline-block; width: 15mm;"}
 
     %div{style: "display: inline-block; vertical-align: bottom; margin-left: 8px;"}
       %div

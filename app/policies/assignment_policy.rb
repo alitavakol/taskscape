@@ -14,10 +14,6 @@ class AssignmentPolicy
     @current_user
   end
 
-  def show?
-    self.create?
-  end
-
   def update?
     self.create? && self.destroy?
   end

@@ -43,7 +43,8 @@ class User < ApplicationRecord
     self.role ||= :user
   end
 
-  has_attached_file :avatar, styles: { small: "200x200#", thumb: "48x48#" }, default_url: "/images/:style/missing.png"
+  has_attached_file :avatar, { styles: { small: "200x200#", thumb: "48x48#" } }.merge( ENV['I_AM_HEROKU'] ? { :url => "http://i.pravatar.cc/200?u=:id", default_url: "http://i.pravatar.cc/200?u=:id", escape_url: false } : { default_url: "/images/:style/missing.png" } ) # Heroku does not support file storage, so use http://pravatar.cc/ if app is hosted there
+
   validates_attachment_content_type :avatar, content_type: /\Aimage\/.*\z/
 
   before_save :defaults

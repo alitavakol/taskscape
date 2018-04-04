@@ -1,13 +1,6 @@
 class MembershipsController < ApplicationController
   before_action :set_membership, only: [:show, :destroy]
 
-  # GET /memberships/1
-  # GET /memberships/1.json
-  def show
-    authorize @membership
-    respond_to :json
-  end
-
   # POST /memberships
   # POST /memberships.json
   def create

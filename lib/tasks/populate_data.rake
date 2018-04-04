@@ -1,4 +1,4 @@
-PROJECT_COUNT = 15
+PROJECT_COUNT = 10
 USER_COUNT = 50
 MAX_MEMBER_COUNT = 15
 MAX_ASSIGNMENT_COUNT = 6
@@ -14,8 +14,10 @@ namespace :db do
     Project.destroy_all
 
     avatars = Array.new
-    ['1.jpg', '2.jpg', '3.png', '4.jpg', '5.jpg', '6.jpg', '7.jpg', '8.jpg', '9.jpg', '10.jpg', '11.jpg', '12.jpg', '13.jpg', '14.jpg', '15.jpg', '16.jpg', '17.jpg', '18.jpg', '20.png', '23.png', '24.png', '19.jpg', '21.png', '22.png', '20.jpg', '21.jpg', '22.jpg', '23.jpg'].each do |f|
-      avatars.push(File.open(Rails.root.join('lib/tasks/population_data', f)))
+    unless ENV['I_AM_HEROKU'] # heroku does not support file storage
+      ['1.jpg', '2.jpg', '3.png', '4.jpg', '5.jpg', '6.jpg', '7.jpg', '8.jpg', '9.jpg', '10.jpg', '11.jpg', '12.jpg', '13.jpg', '14.jpg', '15.jpg', '16.jpg', '17.jpg', '18.jpg', '20.png', '23.png', '24.png', '19.jpg', '21.png', '22.png', '20.jpg', '21.jpg', '22.jpg', '23.jpg'].each do |f|
+        avatars.push(File.open(Rails.root.join('lib/tasks/population_data', f)))
+      end
     end
     avatars.push(nil)
 
@@ -26,8 +28,8 @@ namespace :db do
 
     if User.count < USER_COUNT
       (USER_COUNT-1).times do
-        User.create!(name: Faker::Name.name, email: Faker::Internet.email, password: '5iveL!fe', role: rand(0..2), avatar: avatars.sample)
-        User.confirm
+        u = User.create!(name: Faker::Name.name, email: Faker::Internet.email, password: '5iveL!fe', role: rand(0..2), avatar: avatars.sample)
+        user.confirm
       end
     end
 
@@ -35,7 +37,7 @@ namespace :db do
       p = Project.create!(
         title: Faker::App.name,
         description: Faker::Lorem.sentence,
-        creator: User.order("rand()").first,
+        creator: User.offset(rand(User.count)).first,
         visibility: rand > 0.2 ? 1 : 0,
       )
     end
@@ -63,12 +65,12 @@ def create_tasks_for(project, depth, developer)
       color: ("#%06x" % (rand * 0xffffff)),
       importance: rand(4), status: rand(4),
       effort: rand(4),
-      creator_id: project.members.order("rand()").first.id,
+      creator_id: project.members.offset(rand(project.members.count)).first.id,
       supertask_id: project.id,
     )
 
     rand(1..MAX_ASSIGNMENT_COUNT).times do
-      user_id = project.members.order("rand()").first.id
+      user_id = project.members.offset(rand(project.members.count)).first.id
       p.becomes(Task).assignments.create(assignee_id: user_id, creator_id: developer.id) unless p.becomes(Task).assignee_ids.include?(user_id)
     end
 
@@ -77,6 +79,6 @@ def create_tasks_for(project, depth, developer)
 end
 
 def add_or_invite_user
-  User.order("rand()").first
+  User.offset(rand(User.count)).first
   # User.create!(name: Faker::Name.name, email: Faker::Internet.email, password: '5iveL!fe', role: rand(0..2))
 end

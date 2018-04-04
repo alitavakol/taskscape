@@ -1,13 +1,6 @@
 class AssignmentsController < ApplicationController
   before_action :set_assignment, only: [:show, :update, :destroy]
 
-  # GET /assignments/1
-  # GET /assignments/1.json
-  def show
-    authorize @assignment
-    respond_to :json
-  end
-
   # POST /assignments
   # POST /assignments.json
   def create

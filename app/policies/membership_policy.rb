@@ -14,10 +14,6 @@ class MembershipPolicy
     @current_user
   end
 
-  def show?
-    self.create?
-  end
-
   def create?
     # user can create membership only if she can edit referenced project
     ProjectPolicy.new(@current_user, Project.find(@membership.project_id)).update?

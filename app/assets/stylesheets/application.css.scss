@@ -42,6 +42,7 @@
 
 .sub-header-left {
   margin-top: 8px;
+  z-index: 2;
 
   & > *:not(:first-child) {
     margin-left: 12px;
