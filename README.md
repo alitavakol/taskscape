@@ -3,7 +3,7 @@ Taskscape
 
 The pleasing view of tasks —task management web app for teams and freelancers.
 
-![Taskscape Overview](https://media.giphy.com/media/gKqwEeoXgaEA5gLCVK/giphy.gif)
+![Taskscape Preview](/preview.gif?raw=true "Preview")
 
 **Taskscape** is a combination of task and scape! Definition of -scape suffix form [dictionary.com](http://www.dictionary.com/browse/scape) is:
 >a combining form extracted from **landscape**, denoting “an extensive view, scenery,” or “a picture or representation” of such a view, as specified by the initial element: <br>*cityscape; moonscape; seascape*.
